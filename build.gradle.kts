@@ -1,5 +1,6 @@
 plugins {
     id("java")
+    id("application")
 
 }
 
@@ -9,6 +10,16 @@ version = "1.0-SNAPSHOT"
 repositories {
     mavenCentral()
 
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
+application {
+    mainClass.set("com.haadlit_sp.Main")
 }
 
 dependencies {

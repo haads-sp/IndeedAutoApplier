@@ -1,52 +1,40 @@
 package com.haadlit_sp.appRenderLogic.pages;
 
-import javax.swing.*;
-
 import com.haadlit_sp.appRenderLogic.App;
+import com.haadlit_sp.appRenderLogic.theme.Theme;
 
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+
+
+/** Builds the footer navigation shared by the step pages. */
 public class PageUtil {
 
+    /**
+     * Footer with an optional Back button (left) and an optional forward button (right).
+     *
+     * @param backPage   page to return to, or {@code null} to omit the Back button
+     * @param nextLabel  label for the forward button (ignored when {@code nextAction} is null)
+     * @param nextAction what the forward button does, or {@code null} to omit it
+     */
+    public JPanel stepNav(App app, String backPage, String nextLabel, Runnable nextAction) {
+        JPanel footer = new JPanel(new BorderLayout());
+        footer.setOpaque(false);
+        footer.setBorder(Theme.pad(Theme.PAD, 0, 0, 0));
 
-    // Navigation buttons | 2 button implementation
-    public JPanel navButtons(App app, String pageX, String pageY) {
+        if (backPage != null) {
+            JButton back = Theme.secondaryButton("← Back");
+            back.addActionListener(e -> app.showPage(backPage));
+            footer.add(back, BorderLayout.WEST);
+        }
 
-        JPanel buttons = new JPanel();
+        if (nextAction != null) {
+            JButton next = Theme.primaryButton(nextLabel);
+            next.addActionListener(e -> nextAction.run());
+            footer.add(next, BorderLayout.EAST);
+        }
 
-        JButton backButton = new JButton("Go to " + pageX);
-        backButton.addActionListener(e -> app.showPage(pageX));
-
-        JButton nextButton = new JButton("Go to " + pageY);
-        nextButton.addActionListener(e -> app.showPage(pageY));
-
-        buttons.add(backButton);
-        buttons.add(nextButton);
-
-        return buttons;
+        return footer;
     }
-
-
-    // Navigation buttons | 3 button implementation
-    public JPanel navButtons(App app, String pageX, String pageY, String pageZ) {
-
-        JPanel buttons = new JPanel();
-
-        JButton xButton = new JButton("Go to " + pageX);
-        xButton.addActionListener(e -> app.showPage(pageX));
-
-        JButton yButton = new JButton("Go to " + pageY);
-        yButton.addActionListener(e -> app.showPage(pageY));
-
-        JButton zButton = new JButton("Go to " + pageZ);
-        zButton.addActionListener(e -> app.showPage(pageZ));
-
-        buttons.add(xButton);
-        buttons.add(yButton);
-        buttons.add(zButton);
-
-        return buttons;
-    }
-
-
-
-
 }
