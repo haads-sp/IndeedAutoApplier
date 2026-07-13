@@ -1,1 +1,1 @@
-rootProject.name = "JavaAppBoillerplate"
+rootProject.name = "IndeedAutoApplier"
