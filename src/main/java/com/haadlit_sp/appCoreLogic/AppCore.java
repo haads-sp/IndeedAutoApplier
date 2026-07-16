@@ -1,14 +1,24 @@
 package com.haadlit_sp.appCoreLogic;
 
+import com.haadlit_sp.appCoreLogic.browser.BrowserDriver;
+import com.haadlit_sp.appCoreLogic.browser.BrowserDriverFactory;
+import com.haadlit_sp.appCoreLogic.browser.ChromeProfile;
+import com.haadlit_sp.appCoreLogic.browser.IndeedSelectors;
 import com.haadlit_sp.appCoreLogic.model.HistoryEntry;
 import com.haadlit_sp.appCoreLogic.model.RunStatus;
 import com.haadlit_sp.appCoreLogic.model.SearchCriteria;
 import com.haadlit_sp.appCoreLogic.model.SessionDocuments;
+import com.haadlit_sp.appCoreLogic.session.LoginStrategy;
+import com.haadlit_sp.appCoreLogic.session.LoginStrategyFactory;
 
+import java.io.IOException;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 /**
@@ -23,7 +33,16 @@ public class AppCore {
 
     private static final Logger LOG = System.getLogger(AppCore.class.getName());
 
+    /** Single thread that owns the (thread-affine) browser driver and all its calls. */
+    private final ExecutorService browserWorker = Executors.newSingleThreadExecutor(r -> {
+        Thread t = new Thread(r, "browser-worker");
+        t.setDaemon(true);
+        return t;
+    });
+    private BrowserDriver driver;
+
     private volatile boolean loggedIn = false;
+    private volatile String loginMessage = "Not signed in.";
     private SessionDocuments documents = SessionDocuments.empty();
     private SearchCriteria criteria = SearchCriteria.blank();
     private volatile RunStatus status = RunStatus.idle();
@@ -31,16 +50,76 @@ public class AppCore {
 
     // ---- Session / login ----
 
-    public void startManualLogin() {
-        LOG.log(Level.INFO, "startManualLogin (stub) — will open a headful browser for the user to sign in");
+    /**
+     * Open a PLAIN Chrome window (no Playwright, no automation flags) on the dedicated profile so
+     * the user can sign in like a normal person. This is what keeps Google and Cloudflare from
+     * rejecting the sign-in. They must close that window before {@link #verifySignIn()} can drive it.
+     */
+    public void openSignInBrowser() {
+        String chrome = ChromeProfile.executable();
+        if (chrome == null) {
+            loginMessage = "Google Chrome not found — install Chrome to continue.";
+            return;
+        }
+        try {
+            Files.createDirectories(ChromeProfile.dir());
+            new ProcessBuilder(chrome,
+                    "--user-data-dir=" + ChromeProfile.dir(),
+                    IndeedSelectors.LOGIN_URL).start();
+            loginMessage = "Sign in, then CLOSE that Chrome window and click Verify.";
+        } catch (IOException e) {
+            LOG.log(Level.ERROR, "Could not launch Chrome", e);
+            loginMessage = "Could not launch Chrome: " + e.getMessage();
+        }
     }
 
-    public void loginWithCredentials(String email, char[] password) {
-        LOG.log(Level.INFO, "loginWithCredentials (stub) for {0}", email);
+    /** Reopen the saved profile under automation and confirm it is still signed in. */
+    public void verifySignIn() {
+        runLogin(LoginStrategyFactory.manual());
+    }
+
+    /** Runs a login strategy on the browser worker; UI polls {@link #isLoggedIn()} / {@link #loginMessage()}. */
+    private void runLogin(LoginStrategy strategy) {
+        loggedIn = false;
+        loginMessage = "Opening the saved Chrome profile…";
+        browserWorker.submit(() -> {
+            try {
+                if (driver == null) {
+                    driver = BrowserDriverFactory.create();
+                }
+                loggedIn = strategy.login(driver, msg -> loginMessage = msg);
+            } catch (Exception e) {
+                LOG.log(Level.ERROR, "Sign-in check failed", e);
+                loginMessage = describeLoginFailure(e);
+            }
+        });
+    }
+
+    /** Chrome locks its profile directory, which is the failure users will hit most often. */
+    private static String describeLoginFailure(Exception e) {
+        String message = e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage();
+        if (message.contains("user data directory") || message.contains("ProcessSingleton")) {
+            return "Close the Chrome window you signed in with, then click Verify again.";
+        }
+        return "Sign-in check failed: " + message;
     }
 
     public boolean isLoggedIn() {
         return loggedIn;
+    }
+
+    public String loginMessage() {
+        return loginMessage;
+    }
+
+    /** Close the browser and stop the worker. Called when the app window closes. */
+    public void shutdown() {
+        browserWorker.submit(() -> {
+            if (driver != null) {
+                driver.close();
+            }
+        });
+        browserWorker.shutdown();
     }
 
     // ---- Documents ----

@@ -12,6 +12,8 @@ import com.haadlit_sp.appRenderLogic.theme.AppInfo;
 import com.haadlit_sp.appRenderLogic.theme.Theme;
 
 import java.awt.CardLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class App {
     private final JFrame frame;
@@ -25,6 +27,14 @@ public class App {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(900, 640);
         frame.setLocationRelativeTo(null);
+
+        // Close the browser and void the session when the window closes.
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                core.shutdown();
+            }
+        });
 
         // Create CardLayout manager
         cardLayout = new CardLayout();
