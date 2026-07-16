@@ -16,10 +16,12 @@ import com.haadlit_sp.appRenderLogic.theme.Theme;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,6 +43,11 @@ public class App {
         frame.setSize(1120, 780);
         frame.setMinimumSize(new java.awt.Dimension(920, 640));
         frame.setLocationRelativeTo(null);
+
+        List<Image> icons = AppInfo.icons();
+        if (!icons.isEmpty()) {
+            frame.setIconImages(icons);
+        }
 
         // Close the browser and void the session when the window closes.
         frame.addWindowListener(new WindowAdapter() {

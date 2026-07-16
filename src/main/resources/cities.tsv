@@ -1,8 +1,10 @@
 # City data from GeoNames (https://www.geonames.org) - licensed CC BY 4.0.
 # name<TAB>region<TAB>country - ordered by population (descending).
+Lahore	Punjab	Pakistan
 Mumbai	Maharashtra	India
 São Paulo	São Paulo	Brazil
 Mexico City	Mexico City	Mexico
+Karachi	Sindh	Pakistan
 Delhi	Delhi	India
 Tokyo	Tokyo	Japan
 Johannesburg	Gauteng	South Africa
@@ -16,13 +18,18 @@ Sydney	New South Wales	Australia
 Singapore		Singapore
 Melbourne	Victoria	Australia
 Cape Town	Western Cape	South Africa
+Peshawar	Khyber Pakhtunkhwa	Pakistan
+Jeddah	Mecca Region	Saudi Arabia
 Chennai	Tamil Nadu	India
 Kolkata	West Bengal	India
 Surat	Gujarat	India
+Riyadh	Riyadh Region	Saudi Arabia
 Los Angeles	California	United States
+Faisalabad	Punjab	Pakistan
 Dubai	Dubai	United Arab Emirates
 Yokohama	Kanagawa	Japan
 Berlin	State of Berlin	Germany
+Rawalpindi	Punjab	Pakistan
 Durban	KwaZulu-Natal	South Africa
 Madrid	Madrid	Spain
 Pune	Maharashtra	India
@@ -36,6 +43,7 @@ Belo Horizonte	Minas Gerais	Brazil
 Salvador	Bahia	Brazil
 Chicago	Illinois	United States
 Navi Mumbai	Maharashtra	India
+Gujranwala	Punjab	Pakistan
 Lucknow	Uttar Pradesh	India
 Nagpur	Maharashtra	India
 Fortaleza	Ceará	Brazil
@@ -46,6 +54,7 @@ Queens	New York	United States
 Houston	Texas	United States
 Manaus	Amazonas	Brazil
 Brasília	Federal District	Brazil
+Multan	Punjab	Pakistan
 Paris	Île-de-France	France
 Coimbatore	Tamil Nadu	India
 Pretoria	Gauteng	South Africa
@@ -54,6 +63,7 @@ Hamburg	Hamburg	Germany
 Sapporo	Hokkaido	Japan
 Curitiba	Paraná	Brazil
 Tijuana	Baja California	Mexico
+Hyderabad	Sindh	Pakistan
 Thāne	Maharashtra	India
 Iztapalapa	Mexico City	Mexico
 Vadodara	Gujarat	India
@@ -77,7 +87,9 @@ Ludhiana	Punjab	India
 Fukuoka	Fukuoka	Japan
 Santiago de Querétaro	Querétaro	Mexico
 León de los Aldama	Guanajuato	Mexico
+Makkah	Mecca Region	Saudi Arabia
 Philadelphia	Pennsylvania	United States
+Quetta	Balochistan	Pakistan
 Auckland	Auckland	New Zealand
 Kawasaki	Kanagawa	Japan
 Goiânia	Goiás	Brazil
@@ -103,14 +115,17 @@ Guadalajara	Jalisco	Mexico
 The Bronx	New York	United States
 Milan	Lombardy	Italy
 Najafgarh	Delhi	India
+Bannu	Khyber Pakhtunkhwa	Pakistan
 Guarulhos	São Paulo	Brazil
 Jamshedpur	Jharkhand	India
 Dallas	Texas	United States
 Saitama	Saitama	Japan
 Gorakhpur	Haryana	India
 Calgary	Alberta	Canada
+Madinah	Medina Region	Saudi Arabia
 Pimpri	Maharashtra	India
 Kalyān	Maharashtra	India
+Dammam	Eastern Province	Saudi Arabia
 Dombivali	Maharashtra	India
 Meerut	Uttar Pradesh	India
 Virār	Maharashtra	India
@@ -157,10 +172,12 @@ Shivaji Nagar	Maharashtra	India
 San Jose	California	United States
 Sholapur	Maharashtra	India
 Chiba	Chiba	Japan
+Sargodha	Punjab	Pakistan
 Austin	Texas	United States
 Chandigarh	Chandigarh	India
 Tiruppur	Tamil Nadu	India
 Guwahati	Assam	India
+Sulţānah	Medina Region	Saudi Arabia
 Hubballi	Karnataka	India
 Kitakyushu	Fukuoka	Japan
 Setagaya	Tokyo	Japan
@@ -169,9 +186,11 @@ Mysuru	Karnataka	India
 Salem	Tamil Nadu	India
 São Luís	Maranhão	Brazil
 Columbus	Ohio	United States
+Sialkot	Punjab	Pakistan
 Charlotte	North Carolina	United States
 Naples	Campania	Italy
 Campo Grande	Mato Grosso do Sul	Brazil
+Bahawalpur	Punjab	Pakistan
 Natal	Rio Grande do Norte	Brazil
 Cancún	Quintana Roo	Mexico
 Indianapolis	Indiana	United States
@@ -185,6 +204,7 @@ Jalandhar	Punjab	India
 Rotterdam	South Holland	Netherlands
 Duque de Caxias	Rio de Janeiro	Brazil
 Rohini	Delhi	India
+Arifwala	Punjab	Pakistan
 Kanayannur	Kerala	India
 Turin	Piedmont	Italy
 Al Ain City	Abu Dhabi	United Arab Emirates
@@ -202,15 +222,18 @@ Bhayandar	Maharashtra	India
 Culiacán	Sinaloa	Mexico
 Narela	Delhi	India
 Niigata	Niigata	Japan
+Muscat	Muscat	Oman
 Hamamatsu	Shizuoka	Japan
 Thiruvananthapuram	Kerala	India
 Seattle	Washington	United States
+Dera Ismail Khan	Khyber Pakhtunkhwa	Pakistan
 Sorocaba	São Paulo	Brazil
 Uberlândia	Minas Gerais	Brazil
 Alīgarh	Uttar Pradesh	India
 Winnipeg	Manitoba	Canada
 Ōta	Tokyo	Japan
 Bareilly	Uttar Pradesh	India
+Buraydah	Al-Qassim Region	Saudi Arabia
 Morelia	Michoacán	Mexico
 Amsterdam	North Holland	Netherlands
 Kumamoto	Kumamoto	Japan
@@ -221,6 +244,7 @@ São José dos Campos	São Paulo	Brazil
 Álvaro Obregón	Mexico City	Mexico
 Aihara	Kanagawa	Japan
 Evaton	Gauteng	South Africa
+Muzaffarābād	Azad Kashmir	Pakistan
 Okayama	Okayama	Japan
 San Luis Potosí	San Luis Potosí	Mexico
 Aguascalientes	Aguascalientes	Mexico
@@ -230,12 +254,14 @@ Mississauga	Ontario	Canada
 Saltillo	Coahuila	Mexico
 Warangal	Telangana	India
 Dhārāvi	Maharashtra	India
+Battagram	Khyber Pakhtunkhwa	Pakistan
 Ribeirão Preto	São Paulo	Brazil
 Edogawe	Tokyo	Japan
 Adachi	Tokyo	Japan
 Shizuoka	Shizuoka	Japan
 Washington	District of Columbia	United States
 Nashville	Tennessee	United States
+Ta’if	Mecca Region	Saudi Arabia
 Zaragoza	Aragon	Spain
 Sevilla	Andalusia	Spain
 Oklahoma City	Oklahoma	United States
@@ -244,6 +270,7 @@ Gorakhpur	Uttar Pradesh	India
 Guadalupe	Nuevo León	Mexico
 Wrocław	Lower Silesia	Poland
 Guntur	Andhra Pradesh	India
+Tabuk	Tabuk Region	Saudi Arabia
 Aracaju	Sergipe	Brazil
 Joinville	Santa Catarina	Brazil
 Santo André	São Paulo	Brazil
@@ -268,6 +295,8 @@ Las Vegas	Nevada	United States
 New South Memphis	Tennessee	United States
 Gold Coast	Queensland	Australia
 Łódź	Łódź Voivodeship	Poland
+Al Aḩmadī	Al Aḩmadī	Kuwait
+Chunian	Punjab	Pakistan
 Kochi	Kerala	India
 Memphis	Tennessee	United States
 Bhilai	Chhattisgarh	India
@@ -283,14 +312,18 @@ Cuttack	Odisha	India
 Borivli	Maharashtra	India
 Gothenburg	Västra Götaland	Sweden
 Kawaguchi	Saitama	Japan
+Jhang Sadr	Punjab	Pakistan
+Ha'il	Ha'il Region	Saudi Arabia
 Bhavnagar	Gujarat	India
 Benoni	Gauteng	South Africa
 Tuxtla	Chiapas	Mexico
+Islamabad	Islamabad	Pakistan
 Sāngli	Maharashtra	India
 Jamnagar	Gujarat	India
 Kagoshima	Kagoshima	Japan
 Essen	North Rhine-Westphalia	Germany
 Málaga	Andalusia	Spain
+Shekhupura	Punjab	Pakistan
 Reynosa	Tamaulipas	Mexico
 Dortmund	North Rhine-Westphalia	Germany
 Suginami	Ibaraki	Japan
@@ -301,6 +334,7 @@ Genoa	Liguria	Italy
 Hachiōji	Tokyo	Japan
 Jammu	Jammu and Kashmir	India
 Tlalpan	Mexico City	Mexico
+Gujrat	Punjab	Pakistan
 South Boston	Massachusetts	United States
 Hamilton	Ontario	Canada
 Manchester	England	United Kingdom
@@ -308,6 +342,7 @@ Surrey	British Columbia	Canada
 Dresden	Saxony	Germany
 Albuquerque	New Mexico	United States
 Bokāro	Jharkhand	India
+Sukkur	Sindh	Pakistan
 Milwaukee	Wisconsin	United States
 Bloemfontein	Free State	South Africa
 Sheffield	England	United Kingdom
@@ -324,9 +359,11 @@ Tucson	Arizona	United States
 Ajmer	Rajasthan	India
 Fresno	California	United States
 Juiz de Fora	Minas Gerais	Brazil
+Sahiwal	Punjab	Pakistan
 Leeds	England	United Kingdom
 Poznań	Greater Poland	Poland
 Ananindeua	Pará	Brazil
+Okara	Punjab	Pakistan
 Québec	Quebec	Canada
 Cuauhtémoc	Mexico City	Mexico
 Himeji	Hyōgo	Japan
@@ -342,6 +379,7 @@ Utsunomiya	Tochigi	Japan
 Victoria de Durango	Durango	Mexico
 Belford Roxo	Rio de Janeiro	Brazil
 Lisbon	Lisbon	Portugal
+Rahim Yar Khan	Punjab	Pakistan
 Ulhasnagar	Maharashtra	India
 Loni	Uttar Pradesh	India
 Siliguri	West Bengal	India
@@ -355,19 +393,24 @@ Toulouse	Occitanie	France
 Thembisa	Gauteng	South Africa
 Matsuyama	Ehime	Japan
 Bilimora	Gujarat	India
+Kasur	Punjab	Pakistan
 Atlanta	Georgia	United States
 Heroica Matamoros	Tamaulipas	Mexico
 Florianópolis	Santa Catarina	Brazil
 Newcastle	New South Wales	Australia
+Najrān	Najran Region	Saudi Arabia
 Karol Bāgh	Delhi	India
 Leipzig	Saxony	Germany
 Duisburg	North Rhine-Westphalia	Germany
 Āsansol	West Bengal	India
+Jalalpur Pirwala	Punjab	Pakistan
 Mangaluru	Karnataka	India
 Matsudo	Chiba	Japan
 Liverpool	England	United Kingdom
 Ichikawa	Chiba	Japan
+Dera Ghazi Khan	Punjab	Pakistan
 Higashiosaka	Osaka	Japan
+Pindi Bhattian	Punjab	Pakistan
 Belagavi	Karnataka	India
 Ajman	Ajman	United Arab Emirates
 Toluca	México	Mexico
@@ -396,6 +439,7 @@ Gaya	Bihar	India
 Murcia	Murcia	Spain
 Mesa	Arizona	United States
 Halifax	Nova Scotia	Canada
+Seeb	Muscat	Oman
 Fukuyama	Hiroshima	Japan
 Staten Island	New York	United States
 Ciudad Apodaca	Nuevo León	Mexico
@@ -430,11 +474,14 @@ Machida	Tokyo	Japan
 Venustiano Carranza	Mexico City	Mexico
 Akola	Maharashtra	India
 Veracruz	Veracruz	Mexico
+Tando Bago	Sindh	Pakistan
 Toyota	Aichi	Japan
+Al Kharj	Riyadh Region	Saudi Arabia
 Xalapa de Enríquez	Veracruz	Mexico
 Rajpur Sonarpur	West Bengal	India
 Shinagawa	Ehime	Japan
 London	Ontario	Canada
+Tando Allahyar	Sindh	Pakistan
 Boa Vista	Roraima	Brazil
 Rio Branco	Acre	Brazil
 Oakland	California	United States
@@ -466,6 +513,7 @@ Gifu	Gifu	Japan
 Caruaru	Pernambuco	Brazil
 Toyonaka	Osaka	Japan
 Miyazaki	Miyazaki	Japan
+Wah Cantt	Punjab	Pakistan
 Bhāgalpur	Bihar	India
 Agartala	Tripura	India
 Dayrah	Dubai	United Arab Emirates
@@ -478,12 +526,14 @@ Bologna	Emilia-Romagna	Italy
 Diadema	São Paulo	Brazil
 Bauru	São Paulo	Brazil
 Arlington	Texas	United States
+Khamis Mushait	'Asir Region	Saudi Arabia
 Carapicuíba	São Paulo	Brazil
 Petrolina	Pernambuco	Brazil
 Ojo de Agua	México	Mexico
 Bochum	North Rhine-Westphalia	Germany
 Suita	Osaka	Japan
 Benito Juárez	Mexico City	Mexico
+Chak Jhumra	Punjab	Pakistan
 Grajaú	São Paulo	Brazil
 Okazaki	Aichi	Japan
 Xico	México	Mexico
@@ -491,6 +541,7 @@ Iztacalco	Mexico City	Mexico
 Kākināda	Andhra Pradesh	India
 Betim	Minas Gerais	Brazil
 Las Palmas de Gran Canaria	Canary Islands	Spain
+Bawshar	Muscat	Oman
 Latur	Maharashtra	India
 Wellington	Wellington Region	New Zealand
 Mazatlán	Sinaloa	Mexico
@@ -505,6 +556,7 @@ Rajamahendravaram	Andhra Pradesh	India
 Dhule	Maharashtra	India
 Minato	Wakayama	Japan
 Rohtak	Haryana	India
+Bhawana	Punjab	Pakistan
 Rustenburg	North West	South Africa
 Bakersfield	California	United States
 Emalahleni	Mpumalanga	South Africa
@@ -526,10 +578,14 @@ Franca	São Paulo	Brazil
 Cleveland	Ohio	United States
 Etobicoke	Ontario	Canada
 Olinda	Pernambuco	Brazil
+Larkana	Sindh	Pakistan
+Nawabshah	Sindh	Pakistan
 New Orleans	Louisiana	United States
 Malmö	Skåne	Sweden
 Manukau City	Auckland	New Zealand
+Burewala	Punjab	Pakistan
 Blumenau	Santa Catarina	Brazil
+Mingora	Khyber Pakhtunkhwa	Pakistan
 Santarém	Pará	Brazil
 Wuppertal	North Rhine-Westphalia	Germany
 Bhilwara	Rajasthan	India
@@ -538,6 +594,7 @@ Iwaki	Fukushima	Japan
 Wakayama	Wakayama	Japan
 Brahmapur	Odisha	India
 Benito Juarez	Mexico City	Mexico
+Sinjhoro	Sindh	Pakistan
 Kawagoe	Saitama	Japan
 Takatsuki	Osaka	Japan
 Muzaffarpur	Bihar	India
@@ -561,6 +618,7 @@ Koshigaya	Saitama	Japan
 Coventry	England	United Kingdom
 Logan City	Queensland	Australia
 Ōtsu	Shiga	Japan
+Doha	Baladiyat ad Dawhah	Qatar
 Kadapa	Andhra Pradesh	India
 Nakano	Tokyo	Japan
 Tokorozawa	Saitama	Japan
@@ -615,7 +673,9 @@ Lexington	Kentucky	United States
 Anápolis	Goiás	Brazil
 Jūnāgadh	Gujarat	India
 Islington	England	United Kingdom
+Hafizabad	Punjab	Pakistan
 Marne La Vallée	Île-de-France	France
+Chiniot	Punjab	Pakistan
 Reading	England	United Kingdom
 New Delhi	Delhi	India
 Naha	Okinawa	Japan
@@ -669,10 +729,12 @@ Hamburg-Mitte	Hamburg	Germany
 Augsburg	Bavaria	Germany
 South Dublin	Leinster	Ireland
 Valladolid	Castille and León	Spain
+Mardan	Khyber Pakhtunkhwa	Pakistan
 Swansea	Wales	United Kingdom
 Newcastle upon Tyne	England	United Kingdom
 Gundupālaiyam	Puducherry	India
 Gatineau	Quebec	Canada
+Malir Cantonment	Sindh	Pakistan
 Uruapan	Michoacán	Mexico
 Aomori	Aomori	Japan
 Bārāsat	West Bengal	India
@@ -696,13 +758,16 @@ Greater Noida	Uttar Pradesh	India
 Noida	Uttar Pradesh	India
 Vigo	Galicia	Spain
 Aizawl	Mizoram	India
+Al Hufūf	Eastern Province	Saudi Arabia
 Cholula	Puebla	Mexico
 Gandhinagar	Gujarat	India
 Dindigul	Tamil Nadu	India
 Ponta Grossa	Paraná	Brazil
+Kamoke	Punjab	Pakistan
 Limeira	São Paulo	Brazil
 Thanjavur	Tamil Nadu	India
 Kariega	Eastern Cape	South Africa
+Al Mubarraz	Eastern Province	Saudi Arabia
 Morioka	Iwate	Japan
 Karīmnagar	Telangana	India
 Victoria	British Columbia	Canada
@@ -743,21 +808,25 @@ St. Louis	Missouri	United States
 Sumaré	São Paulo	Brazil
 Coacalco	México	Mexico
 Imphal	Manipur	India
-Bedok New Town		Singapore
 Ulu Bedok		Singapore
+Bedok New Town		Singapore
+Abbottabad	Khyber Pakhtunkhwa	Pakistan
 Hakodate	Hokkaido	Japan
 Strasbourg	Grand Est	France
 Saugor	Madhya Pradesh	India
 Tsu	Mie	Japan
 Kushinagar	Uttar Pradesh	India
+Saddiqabad	Punjab	Pakistan
 Taboão da Serra	São Paulo	Brazil
 Rourkela	Odisha	India
 Yao	Osaka	Japan
 Imperatriz	Maranhão	Brazil
+Ar Rayyān	Baladiyat ar Rayyan	Qatar
 Polokwane	Limpopo	South Africa
 Gijón	Asturias	Spain
 Santa Maria	Rio Grande do Sul	Brazil
 Parnamirim	Rio Grande do Norte	Brazil
+Hafar Al-Batin	Eastern Province	Saudi Arabia
 Kakogawachō-honmachi	Hyōgo	Japan
 Capao Redondo	São Paulo	Brazil
 Mito	Ibaraki	Japan
@@ -767,6 +836,7 @@ Gelsenkirchen	North Rhine-Westphalia	Germany
 Southampton	England	United Kingdom
 Eimsbüttel	Hamburg	Germany
 Durg	Chhattisgarh	India
+Mirpur Khas	Sindh	Pakistan
 Sengkang New Town		Singapore
 Tokushima	Tokushima	Japan
 Anantapur	Andhra Pradesh	India
@@ -806,6 +876,7 @@ Minato City	Tokyo	Japan
 Fort Wayne	Indiana	United States
 Plymouth	England	United Kingdom
 Baranagar	West Bengal	India
+Skardu	Gilgit-Baltistan	Pakistan
 Tampines New Town		Singapore
 Jardim Sao Luis	São Paulo	Brazil
 Rondonópolis	Mato Grosso	Brazil
@@ -835,6 +906,7 @@ Germiston	Gauteng	South Africa
 Oaxaca	Oaxaca	Mexico
 Hobart	Tasmania	Australia
 Woodlands		Singapore
+Muridke	Punjab	Pakistan
 Novo Hamburgo	Rio Grande do Sul	Brazil
 Jurong West		Singapore
 Carabanchel	Madrid	Spain
@@ -859,6 +931,7 @@ Tiruvottiyūr	Tamil Nadu	India
 Cidade Ademar	São Paulo	Brazil
 Burnaby	British Columbia	Canada
 Lubbock	Texas	United States
+Thuqbah	Eastern Province	Saudi Arabia
 Yamagata	Yamagata	Japan
 Tehuacán	Puebla	Mexico
 Montpellier	Occitanie	France
@@ -872,6 +945,7 @@ Americana	São Paulo	Brazil
 Mau	Uttar Pradesh	India
 Northampton	England	United Kingdom
 Fuji	Shizuoka	Japan
+Shahkot	Punjab	Pakistan
 Groningen	Groningen	Netherlands
 Braunschweig	Lower Saxony	Germany
 São José de Ribamar	Maranhão	Brazil
@@ -889,6 +963,7 @@ Hāpur	Uttar Pradesh	India
 Chigasaki	Kanagawa	Japan
 Chōfu	Tokyo	Japan
 Yamato	Kanagawa	Japan
+Bahawalnagar	Punjab	Pakistan
 Tsukuba	Ibaraki	Japan
 Winston-Salem	North Carolina	United States
 Farrukhābād	Uttar Pradesh	India
@@ -912,8 +987,10 @@ Sri Ganganagar	Rajasthan	India
 Marília	São Paulo	Brazil
 Freiburg	Baden-Wurttemberg	Germany
 Athlone	Western Cape	South Africa
+Al Jubayl	Eastern Province	Saudi Arabia
 Oldham	England	United Kingdom
 Hialeah	Florida	United States
+Kunri	Sindh	Pakistan
 Paarl	Western Cape	South Africa
 Garland	Texas	United States
 Scottsdale	Arizona	United States
@@ -925,12 +1002,14 @@ Sant Martí	Catalonia	Spain
 Eindhoven	North Brabant	Netherlands
 Boise	Idaho	United States
 Rewa	Madhya Pradesh	India
+Muzaffargarh	Punjab	Pakistan
 Chesapeake	Virginia	United States
 Uluberiya	West Bengal	India
 Ipatinga	Minas Gerais	Brazil
 North Las Vegas	Nevada	United States
 Elche	Valencia	Spain
 Sivakasi	Tamil Nadu	India
+Digri	Sindh	Pakistan
 Karur	Tamil Nadu	India
 Rāichūr	Karnataka	India
 Pallāvaram	Tamil Nadu	India
@@ -951,6 +1030,7 @@ Spokane	Washington	United States
 Longueuil	Quebec	Canada
 Yishun New Town		Singapore
 Vizianagaram	Andhra Pradesh	India
+Şabyā	Jazan Region	Saudi Arabia
 Ciudad Lineal	Madrid	Spain
 Bexley	England	United Kingdom
 Rennes	Brittany	France
@@ -998,12 +1078,14 @@ Mirzāpur	Uttar Pradesh	India
 Oviedo	Asturias	Spain
 Messina	Sicily	Italy
 Kharagpur	West Bengal	India
+Jacobabad	Sindh	Pakistan
 Oberhausen	North Rhine-Westphalia	Germany
 Santa Luzia	Minas Gerais	Brazil
 Samambaia	Federal District	Brazil
 Erfurt	Thuringia	Germany
 Terrassa	Catalonia	Spain
 Barking	England	United Kingdom
+Khuzdar	Balochistan	Pakistan
 Eluru	Andhra Pradesh	India
 Rāniganj	Telangana	India
 Badalona	Catalonia	Spain
@@ -1013,6 +1095,7 @@ Cabo de Santo Agostinho	Pernambuco	Brazil
 Arakawa	Tokyo	Japan
 Jamaica	New York	United States
 Buenavista	México	Mexico
+Gilgit	Gilgit-Baltistan	Pakistan
 Sobral	Ceará	Brazil
 Trondheim	Trøndelag	Norway
 Raurkela Industrial Township	Odisha	India
@@ -1031,6 +1114,7 @@ Jabaquara	São Paulo	Brazil
 Passo Fundo	Rio Grande do Sul	Brazil
 Kure	Hiroshima	Japan
 Des Moines	Iowa	United States
+Gojra	Punjab	Pakistan
 Cartagena	Murcia	Spain
 Oakville	Ontario	Canada
 Munger	Bihar	India
@@ -1047,6 +1131,7 @@ Santa Cruz de Tenerife	Canary Islands	Spain
 Panchkula	Haryana	India
 Modesto	California	United States
 Itaquera	São Paulo	Brazil
+Abha	'Asir Region	Saudi Arabia
 Burhānpur	Madhya Pradesh	India
 Morvi	Gujarat	India
 Jebel Ali	Dubai	United Arab Emirates
@@ -1071,6 +1156,7 @@ Nāngloi Jāt	Delhi	India
 Kishiwada	Osaka	Japan
 Mdantsane	Eastern Cape	South Africa
 Itaim Paulista	São Paulo	Brazil
+Shikarpur	Sindh	Pakistan
 Linz	Upper Austria	Austria
 Córdoba	Veracruz	Mexico
 Trieste	Friuli Venezia Giulia	Italy
@@ -1095,15 +1181,20 @@ Rio Claro	São Paulo	Brazil
 Townsville	Queensland	Australia
 Yonkers	New York	United States
 Glendale	California	United States
+Dadu	Sindh	Pakistan
 Cypress	Texas	United States
 Khandwa	Madhya Pradesh	India
 Aurora	Illinois	United States
 Puri	Odisha	India
 Morena	Madhya Pradesh	India
 Brescia	Lombardy	Italy
+Yanbu	Medina Region	Saudi Arabia
 Nagareyama	Chiba	Japan
 Charleroi	Wallonia	Belgium
+Talhar	Sindh	Pakistan
 Gyānpur	Uttar Pradesh	India
+Dajal	Punjab	Pakistan
+Qadirpur Ran	Punjab	Pakistan
 Yachiyo	Chiba	Japan
 Dudley	England	United Kingdom
 Hagen	North Rhine-Westphalia	Germany
@@ -1114,6 +1205,7 @@ Kodaira	Tokyo	Japan
 Plano Piloto	Federal District	Brazil
 Amarillo	Texas	United States
 Bulandshahr	Uttar Pradesh	India
+Lusail	Al Daayen	Qatar
 Aberdeen	Scotland	United Kingdom
 Taranto	Apulia	Italy
 Cachoeiro de Itapemirim	Espírito Santo	Brazil
@@ -1128,6 +1220,7 @@ Ciudad Madero	Tamaulipas	Mexico
 Bhālswa Jahangirpur	Delhi	India
 Toruń	Kujawsko-Pomorskie	Poland
 Almería	Andalusia	Spain
+Ahmadpur East	Punjab	Pakistan
 Higashihiroshima	Hiroshima	Japan
 Reims	Grand Est	France
 Vancouver	Washington	United States
@@ -1139,6 +1232,7 @@ Sambhal	Uttar Pradesh	India
 Bhiwāni	Haryana	India
 Ciudad Lázaro Cárdenas	Michoacán	Mexico
 Suzuka	Mie	Japan
+Hub	Balochistan	Pakistan
 Kamirenjaku	Tokyo	Japan
 Panvel	Maharashtra	India
 Montgomery	Alabama	United States
@@ -1148,10 +1242,12 @@ Ambāla	Haryana	India
 Grand Rapids	Michigan	United States
 Prato	Tuscany	Italy
 Kumarapalayam	Tamil Nadu	India
+Dhirkot	Azad Kashmir	Pakistan
 Yamaguchi	Yamaguchi	Japan
 Alcalá de Henares	Madrid	Spain
 Taguatinga	Federal District	Brazil
 Braga	Braga	Portugal
+Garhi Khairo	Sindh	Pakistan
 Uji	Kyoto	Japan
 Machilīpatnam	Andhra Pradesh	India
 Kielce	Świętokrzyskie	Poland
@@ -1161,6 +1257,7 @@ Zabrze	Silesia	Poland
 Cidade Tiradentes	São Paulo	Brazil
 Hamilton	Waikato Region	New Zealand
 Ciudad del Carmen	Campeche	Mexico
+Khairpur Mir’s	Sindh	Pakistan
 Business Bay	Dubai	United Arab Emirates
 Peoria	Arizona	United States
 Providence	Rhode Island	United States
@@ -1168,6 +1265,7 @@ Mahesāna	Gujarat	India
 Knoxville	Tennessee	United States
 Fuenlabrada	Madrid	Spain
 Hino	Tokyo	Japan
+Jhelum	Punjab	Pakistan
 Mahbūbnagar	Telangana	India
 Nova Friburgo	Rio de Janeiro	Brazil
 Kofu	Yamanashi	Japan
@@ -1216,6 +1314,7 @@ Breda	North Brabant	Netherlands
 Sūjāngarh	Rajasthan	India
 Tachikawa	Tokyo	Japan
 Cergy-Pontoise	Île-de-France	France
+Unaizah	Al-Qassim Region	Saudi Arabia
 Mobile	Alabama	United States
 St Helens	England	United Kingdom
 Fort Lauderdale	Florida	United States
@@ -1275,6 +1374,7 @@ Bragança Paulista	São Paulo	Brazil
 Teresópolis	Rio de Janeiro	Brazil
 San Luis Río Colorado	Sonora	Mexico
 Eugene	Oregon	United States
+Al Muharraq	Muharraq	Bahrain
 Bielsko-Biala	Silesia	Poland
 Almere Stad	Flevoland	Netherlands
 Burgos	Castille and León	Spain
@@ -1298,6 +1398,7 @@ Hitachi	Ibaraki	Japan
 Timon	Maranhão	Brazil
 Bhetia	Jharkhand	India
 Pathānkot	Punjab	India
+Tando Adam	Sindh	Pakistan
 Badlapur	Maharashtra	India
 Sakura	Chiba	Japan
 Ube	Yamaguchi	Japan
@@ -1358,6 +1459,7 @@ Cuauhtémoc	Chihuahua	Mexico
 Araraquara	São Paulo	Brazil
 Angers	Pays de la Loire	France
 Ilford	England	United Kingdom
+Hasilpur	Punjab	Pakistan
 Rio das Ostras	Rio de Janeiro	Brazil
 Horta-Guinardó	Catalonia	Spain
 Kushiro	Hokkaido	Japan
@@ -1372,6 +1474,7 @@ Linhares	Espírito Santo	Brazil
 Clarksville	Tennessee	United States
 Linköping	Östergötland	Sweden
 Iwata	Shizuoka	Japan
+Kamalia	Punjab	Pakistan
 Pembroke Pines	Florida	United States
 Obihiro	Hokkaido	Japan
 Fatehpur	Uttar Pradesh	India
@@ -1380,6 +1483,7 @@ Nou Barris	Catalonia	Spain
 Comitán	Chiapas	Mexico
 Niiza	Saitama	Japan
 Greater Sudbury	Ontario	Canada
+Khobar	Eastern Province	Saudi Arabia
 Deer Valley	Arizona	United States
 São Caetano do Sul	São Paulo	Brazil
 Murfreesboro	Tennessee	United States
@@ -1397,14 +1501,17 @@ Alandur	Tamil Nadu	India
 Lajeado	São Paulo	Brazil
 Solingen	North Rhine-Westphalia	Germany
 Corona	California	United States
+Ḩawallī	Hawalli	Kuwait
 Bhadrāvati	Karnataka	India
 Hadano	Kanagawa	Japan
 Vapi	Gujarat	India
 Bournemouth	England	United Kingdom
 Pedreira	São Paulo	Brazil
+‘Ibrī	Ad Dhahirah	Oman
 Moga	Punjab	India
 Peterborough	England	United Kingdom
 Ludwigshafen am Rhein	Rheinland-Pfalz	Germany
+Şalālah	Dhofar	Oman
 Rāj-Nāndgaon	Chhattisgarh	India
 McKinney	Texas	United States
 Floridsdorf	State of Vienna	Austria
@@ -1464,6 +1571,7 @@ Salinas	California	United States
 San Blas-Canillejas	Madrid	Spain
 Cuautla	Morelos	Mexico
 Salzburg	State of Salzburg	Austria
+Arif Wala	Balochistan	Pakistan
 Livorno	Tuscany	Italy
 Caxias	Maranhão	Brazil
 Enfield Town	England	United Kingdom
@@ -1483,6 +1591,7 @@ Hanumāngarh	Rajasthan	India
 São Mateus	São Paulo	Brazil
 Telford	England	United Kingdom
 Nilópolis	Rio de Janeiro	Brazil
+Jampur	Punjab	Pakistan
 Kawanishi	Hyōgo	Japan
 Thānesar	Haryana	India
 Hassan	Karnataka	India
@@ -1512,6 +1621,7 @@ Fyzābād	Uttar Pradesh	India
 Dinapore	Bihar	India
 Kansas City	Kansas	United States
 Porbandar	Gujarat	India
+Wazirabad	Punjab	Pakistan
 Washington Heights	New York	United States
 Lakewood	Colorado	United States
 Neuss	North Rhine-Westphalia	Germany
@@ -1522,32 +1632,40 @@ Higashimurayama	Tokyo	Japan
 Hindupur	Andhra Pradesh	India
 Stavanger	Rogaland	Norway
 Poole	England	United Kingdom
+Kohat	Khyber Pakhtunkhwa	Pakistan
 Regensburg	Bavaria	Germany
+Layyah	Punjab	Pakistan
 Bukit Merah Estate		Singapore
 Logroño	La Rioja	Spain
 Beāwar	Rajasthan	India
+Shujaabad	Punjab	Pakistan
 Garanhuns	Pernambuco	Brazil
 Escondido	California	United States
 La Laguna	Canary Islands	Spain
+Eminabad	Punjab	Pakistan
 Anantnag	Jammu and Kashmir	India
 Kukichūō	Saitama	Japan
 Badajoz	Extremadura	Spain
 Serilingampalle	Telangana	India
+Jaranwala	Punjab	Pakistan
 Piedras Negras	Coahuila	Mexico
 Astoria	New York	United States
 Musashino	Tokyo	Japan
 Paranaguá	Paraná	Brazil
 Raigarh	Chhattisgarh	India
-Gloucester	Ontario	Canada
 Vryheid	KwaZulu-Natal	South Africa
+Gloucester	Ontario	Canada
 Malkajgiri	Telangana	India
+Tordher	Khyber Pakhtunkhwa	Pakistan
 Shāntipur	West Bengal	India
+Chishtian	Punjab	Pakistan
 Playa del Carmen	Quintana Roo	Mexico
 Santa Rita	Paraíba	Brazil
 Ursynów	Mazovia	Poland
 Hollywood	Florida	United States
 Madrid Centro	Madrid	Spain
 Iguatemi	São Paulo	Brazil
+Harunabad	Punjab	Pakistan
 Shūnan	Yamaguchi	Japan
 Burnley	England	United Kingdom
 Cagliari	Sardinia	Italy
@@ -1565,6 +1683,7 @@ Jyväskylä	Central Finland	Finland
 Yonago	Tottori	Japan
 Rimini	Emilia-Romagna	Italy
 Coquitlam	British Columbia	Canada
+Arar	Northern Borders Region	Saudi Arabia
 Valencia	California	United States
 Tama	Tokyo	Japan
 Rockford	Illinois	United States
@@ -1583,13 +1702,16 @@ Paterson	New Jersey	United States
 Salamanca	Madrid	Spain
 Hājīpur	Bihar	India
 Mestre	Veneto	Italy
+As Sālimīyah	Hawalli	Kuwait
 Bridgeport	Connecticut	United States
 Sasarām	Bihar	India
 Iruma	Saitama	Japan
 Naperville	Illinois	United States
+Manama	Manama	Bahrain
 Colima	Colima	Mexico
 Bhimavaram	Andhra Pradesh	India
 Aix-en-Provence	Provence-Alpes-Côte d'Azur	France
+Jalalpur Jattan	Punjab	Pakistan
 Beed	Maharashtra	India
 Saint-Quentin-en-Yvelines	Île-de-France	France
 Blackburn	England	United Kingdom
@@ -1618,8 +1740,10 @@ Villeray–Saint-Michel–Parc-Extension	Quebec	Canada
 Mesquite	Texas	United States
 Ashikaga	Tochigi	Japan
 Kelowna	British Columbia	Canada
+Umarkot	Sindh	Pakistan
 Kakamigahara	Gifu	Japan
 Le Mans	Pays de la Loire	France
+Lodhran	Punjab	Pakistan
 Trois-Rivières	Quebec	Canada
 Tsuchiura	Ibaraki	Japan
 Balasore	Odisha	India
@@ -1649,11 +1773,13 @@ Teófilo Otoni	Minas Gerais	Brazil
 Mercier–Hochelaga-Maisonneuve	Quebec	Canada
 Okinawa	Okinawa	Japan
 Middlesbrough	England	United Kingdom
+Moro	Sindh	Pakistan
 Sant Andreu	Catalonia	Spain
 Rybnik	Silesia	Poland
 Metairie Terrace	Louisiana	United States
 eMbalenhle	Mpumalanga	South Africa
 Trindade	Goiás	Brazil
+Khanpur	Punjab	Pakistan
 Columbia	South Carolina	United States
 Pasadena	California	United States
 Toowoomba	Queensland	Australia
@@ -1661,6 +1787,7 @@ Paderborn	North Rhine-Westphalia	Germany
 Misato, Saitama	Saitama	Japan
 Chhatarpur	Madhya Pradesh	India
 Kimberley	Northern Cape	South Africa
+Attock City	Punjab	Pakistan
 Mandsaur	Madhya Pradesh	India
 Chas	Jharkhand	India
 Tours	Centre-Val de Loire	France
@@ -1684,6 +1811,7 @@ Fullerton	California	United States
 Killeen	Texas	United States
 Lleida	Catalonia	Spain
 Coimbra	Coimbra	Portugal
+Manjhand	Sindh	Pakistan
 Vila Curuca	São Paulo	Brazil
 Nigel	Gauteng	South Africa
 Paris 12e Arrondissement	Île-de-France	France
@@ -1691,9 +1819,11 @@ McAllen	Texas	United States
 Lakhīmpur	Uttar Pradesh	India
 Ishinomaki	Miyagi	Japan
 Mpumalanga	KwaZulu-Natal	South Africa
+Mian Channun	Punjab	Pakistan
 Zaanstad	North Holland	Netherlands
 Kuwana	Mie	Japan
 Chamartín	Madrid	Spain
+Şaḩam	Al Batinah North	Oman
 Amersfoort	Utrecht	Netherlands
 Darwin	Northern Territory	Australia
 Bellevue	Washington	United States
@@ -1705,6 +1835,7 @@ Haldwani	Uttarakhand	India
 Gama	Federal District	Brazil
 Koga	Ibaraki	Japan
 Hābra	West Bengal	India
+Şabāḩ as Sālim	Mubārak al Kabīr	Kuwait
 Balneário Camboriú	Santa Catarina	Brazil
 Lausanne	Vaud	Switzerland
 Barcarena	Pará	Brazil
@@ -1768,6 +1899,7 @@ Pātan	Gujarat	India
 Würzburg	Bavaria	Germany
 Randfontein	Gauteng	South Africa
 Gondā City	Uttar Pradesh	India
+Madīnat Ḩamad	Northern	Bahrain
 Ōme	Tokyo	Japan
 Jaú	São Paulo	Brazil
 Thornton	Colorado	United States
@@ -1804,6 +1936,7 @@ Palwal	Haryana	India
 Bielany	Mazovia	Poland
 Abiko	Chiba	Japan
 Kadoma	Osaka	Japan
+Bhakkar	Punjab	Pakistan
 Rio Pequeno	São Paulo	Brazil
 Villeurbanne	Rhône-Alpes	France
 Rānīganj	West Bengal	India
@@ -1812,8 +1945,9 @@ Denton	Texas	United States
 Etah	Uttar Pradesh	India
 Pīlibhīt	Uttar Pradesh	India
 Matsubara	Osaka	Japan
-Circoiscrizione III	Piedmont	Italy
 Exeter	England	United Kingdom
+Circoiscrizione III	Piedmont	Italy
+Narowal	Punjab	Pakistan
 Rajapalayam	Tamil Nadu	India
 Cedar Rapids	Iowa	United States
 Botad	Gujarat	India
@@ -1822,14 +1956,18 @@ Roseville	California	United States
 Kembangan		Singapore
 Colchester	England	United Kingdom
 Umeå	Västerbotten	Sweden
+Chaman	Balochistan	Pakistan
 Apucarana	Paraná	Brazil
 Visalia	California	United States
+Nankana Sahib	Punjab	Pakistan
 Tottenham	England	United Kingdom
 Tychy	Silesia	Poland
 Cambridge	Ontario	Canada
 Zwolle	Overijssel	Netherlands
 Salford	England	United Kingdom
+Mandi Bahauddin	Punjab	Pakistan
 Deoria	Uttar Pradesh	India
+Mianwali	Punjab	Pakistan
 Coral Springs	Florida	United States
 Sherbrooke	Quebec	Canada
 Jardim Helena	São Paulo	Brazil
@@ -1846,6 +1984,7 @@ Iwakuni	Yamaguchi	Japan
 Białołeka	Mazovia	Poland
 Zacatecas	Zacatecas	Mexico
 Elizabeth	New Jersey	United States
+Daur	Sindh	Pakistan
 Copacabana	Rio de Janeiro	Brazil
 Stamford	Connecticut	United States
 Ōsaki	Miyagi	Japan
@@ -1856,6 +1995,7 @@ Nimach	Rajasthan	India
 Bosque Saúde	São Paulo	Brazil
 Besançon	Bourgogne	France
 Khardah	West Bengal	India
+Sakakah	Al Jawf Region	Saudi Arabia
 Jose Bonifacio	São Paulo	Brazil
 Yavatmāl	Maharashtra	India
 Hālīsahar	West Bengal	India
@@ -1880,11 +2020,14 @@ Vila Mariana	São Paulo	Brazil
 Mustafābād	Delhi	India
 Mataró	Catalonia	Spain
 Kent	Washington	United States
+Daska Kalan	Punjab	Pakistan
 Sertãozinho	São Paulo	Brazil
 Hāthras	Uttar Pradesh	India
 Villaverde	Madrid	Spain
 Simi Valley	California	United States
+Shakargarh	Punjab	Pakistan
 Jorhat	Assam	India
+Pakpattan	Punjab	Pakistan
 Circoiscrizione V	Piedmont	Italy
 Solihull	England	United Kingdom
 East Los Angeles	California	United States
@@ -1905,6 +2048,7 @@ Watford	England	United Kingdom
 Kanhangad	Kerala	India
 Jagdalpur	Chhattisgarh	India
 Kuopio	North Savo	Finland
+Mailsi	Punjab	Pakistan
 Ntuzuma	KwaZulu-Natal	South Africa
 Tsuruoka	Yamagata	Japan
 Saint Peters	England	United Kingdom
@@ -1912,6 +2056,8 @@ Barbacena	Minas Gerais	Brazil
 Uruma	Okinawa	Japan
 Abilene	Texas	United States
 Ottawa South	Ontario	Canada
+Dokri	Sindh	Pakistan
+Az Zulfī	Riyadh Region	Saudi Arabia
 Jagādhri	Haryana	India
 Huixquilucan	México	Mexico
 Arapongas	Paraná	Brazil
@@ -1921,6 +2067,7 @@ Ciudad Valles	San Luis Potosí	Mexico
 Kashihara-shi	Nara	Japan
 Leeuwarden	Friesland	Netherlands
 Monza	Lombardy	Italy
+New Mirpur City	Azad Kashmir	Pakistan
 Ji Paraná	Rondônia	Brazil
 Koreatown	California	United States
 Targówek	Mazovia	Poland
@@ -1939,6 +2086,7 @@ Itaituba	Pará	Brazil
 Telde	Canary Islands	Spain
 Kirishima	Kagoshima	Japan
 Orizaba	Veracruz	Mexico
+Toba Tek Singh	Punjab	Pakistan
 Honmachi	Kumamoto	Japan
 Wolfsburg	Lower Saxony	Germany
 Niihama	Ehime	Japan
@@ -1954,6 +2102,7 @@ Virginia	Free State	South Africa
 Brits	North West	South Africa
 Barretos	São Paulo	Brazil
 Recklinghausen	North Rhine-Westphalia	Germany
+Haveli Lakha	Punjab	Pakistan
 Maastricht	Limburg	Netherlands
 Amherst	New York	United States
 Igarassu	Pernambuco	Brazil
@@ -1991,6 +2140,7 @@ Uruguaiana	Rio Grande do Sul	Brazil
 Ikoma	Nara	Japan
 Heilbronn	Baden-Wurttemberg	Germany
 Trento	Trentino-Alto Adige	Italy
+Shahdad Kot	Sindh	Pakistan
 Ingolstadt	Bavaria	Germany
 Toa Payoh New Town		Singapore
 Guará	Federal District	Brazil
@@ -1999,19 +2149,23 @@ Mandoli	Delhi	India
 Włocławek	Kujawsko-Pomorskie	Poland
 Allentown	Pennsylvania	United States
 Satara	Maharashtra	India
+Charsadda	Khyber Pakhtunkhwa	Pakistan
 Chūru	Rajasthan	India
 Perugia	Umbria	Italy
 Gangāpur	Rajasthan	India
-Dubai Marina	Dubai	United Arab Emirates
+Rustaq	Al Batinah South	Oman
 International City	Dubai	United Arab Emirates
+Dubai Marina	Dubai	United Arab Emirates
 Saint-Louis-de-Terrebonne	Quebec	Canada
 Evansville	Indiana	United States
 Bottrop	North Rhine-Westphalia	Germany
+Ghotki	Sindh	Pakistan
 Almirante Tamandaré	Paraná	Brazil
 Palm Bay	Florida	United States
 Leiden	South Holland	Netherlands
 Ajax	Ontario	Canada
 Bergedorf	Hamburg	Germany
+Sambrial	Punjab	Pakistan
 Pescara	Abruzzo	Italy
 Nobeoka	Miyazaki	Japan
 Paulo Afonso	Bahia	Brazil
@@ -2064,6 +2218,7 @@ Pudukkottai	Tamil Nadu	India
 Rotherham	England	United Kingdom
 Ciudad de Villa de Álvarez	Colima	Mexico
 Narasaraopet	Andhra Pradesh	India
+Badin	Sindh	Pakistan
 Camboriú	Santa Catarina	Brazil
 Clearwater	Florida	United States
 Independence	Missouri	United States
@@ -2080,8 +2235,8 @@ Pinhais	Paraná	Brazil
 Cadiz	Andalusia	Spain
 Dąbrowa Górnicza	Silesia	Poland
 Hōfu	Yamaguchi	Japan
-Serangoon		Singapore
 Serangoon New Town		Singapore
+Serangoon		Singapore
 Baripāda	Odisha	India
 Kōnosu	Saitama	Japan
 Muktsar	Punjab	India
@@ -2113,12 +2268,14 @@ São Gonçalo do Amarante	Rio Grande do Norte	Brazil
 Nasushiobara	Tochigi	Japan
 Catanduva	São Paulo	Brazil
 Várzea Paulista	São Paulo	Brazil
+Taunsa	Punjab	Pakistan
 Urasoe	Okinawa	Japan
 Santana	São Paulo	Brazil
 Parla	Madrid	Spain
 Ribeirão Pires	São Paulo	Brazil
 Recanto das Emas	Federal District	Brazil
 Baidyabāti	West Bengal	India
+Ar Rifā‘	Southern Governorate	Bahrain
 Arvada	Colorado	United States
 Otaru	Hokkaido	Japan
 Beaumont	Texas	United States
@@ -2132,9 +2289,11 @@ Ambur	Tamil Nadu	India
 Gorzów Wielkopolski	Lubusz	Poland
 Simões Filho	Bahia	Brazil
 Giridih	Jharkhand	India
+Phool Nagar	Punjab	Pakistan
 Ichinoseki	Iwate	Japan
 Odessa	Texas	United States
 Catalão	Goiás	Brazil
+Tando Muhammad Khan	Sindh	Pakistan
 Springfield	Illinois	United States
 Somaroboro	Mpumalanga	South Africa
 Codó	Maranhão	Brazil
@@ -2147,6 +2306,7 @@ Worthing	England	United Kingdom
 Navojoa	Sonora	Mexico
 Tōkai	Aichi	Japan
 Wardha	Maharashtra	India
+Pattoki	Punjab	Pakistan
 Hikone	Shiga	Japan
 Nagahama	Shiga	Japan
 Fujimino	Saitama	Japan
@@ -2157,13 +2317,16 @@ Chorzów	Silesia	Poland
 Porz am Rhein	North Rhine-Westphalia	Germany
 Elmhurst	New York	United States
 Itabira	Minas Gerais	Brazil
+Shahdadpur	Sindh	Pakistan
 Costa Mesa	California	United States
+Jauharabad	Punjab	Pakistan
 Miami Gardens	Florida	United States
 Chesterfield	England	United Kingdom
 North Peoria	Illinois	United States
 Fairfield	California	United States
 Hammanskraal	North West	South Africa
 Ōshū	Iwate	Japan
+Vihari	Punjab	Pakistan
 Youkaichi	Shiga	Japan
 Kazo	Saitama	Japan
 Jönköping	Jönköping	Sweden
@@ -2176,14 +2339,15 @@ Reutlingen	Baden-Wurttemberg	Germany
 Bushwick	New York	United States
 Tangará da Serra	Mato Grosso	Brazil
 Itacoatiara	Amazonas	Brazil
-Cubatão	São Paulo	Brazil
 Itanhaém	São Paulo	Brazil
+Cubatão	São Paulo	Brazil
 Ermelino Matarazzo	São Paulo	Brazil
 Achalpur	Maharashtra	India
 Planaltina	Goiás	Brazil
 Gravesend	New York	United States
 Rochester	Minnesota	United States
 Gondal	Gujarat	India
+Chichawatni	Punjab	Pakistan
 Elgin	Illinois	United States
 Dharashiv	Maharashtra	India
 Port Blair	Andaman and Nicobar	India
@@ -2281,6 +2445,7 @@ Bānsbāria	West Bengal	India
 La Cité-Limoilou	Quebec	Canada
 Dagenham	England	United Kingdom
 North Charleston	South Carolina	United States
+Sohar	Al Batinah North	Oman
 Tadpatri	Andhra Pradesh	India
 Everett	Washington	United States
 Luis Eduardo Magalhães	Bahia	Brazil
@@ -2293,17 +2458,20 @@ Mandurah	Western Australia	Australia
 Basingstoke	England	United Kingdom
 Maidstone	England	United Kingdom
 Koszalin	West Pomerania	Poland
-Bolzano	Trentino-Alto Adige	Italy
 South Fulton	Georgia	United States
+Bolzano	Trentino-Alto Adige	Italy
 Circoiscrizione VI	Piedmont	Italy
 Koblenz	Rheinland-Pfalz	Germany
 Itaperuna	Rio de Janeiro	Brazil
 Siegen	North Rhine-Westphalia	Germany
 Mangalagiri	Andhra Pradesh	India
 Thohoyandou	Limpopo	South Africa
+As Suwayq	Al Batinah North	Oman
 Norwalk	California	United States
+Dera Murad Jamali	Balochistan	Pakistan
 Bedford	England	United Kingdom
 Boulder	Colorado	United States
+Kotri	Sindh	Pakistan
 Broken Arrow	Oklahoma	United States
 Daly City	California	United States
 Açailândia	Maranhão	Brazil
@@ -2333,6 +2501,7 @@ Ourense	Galicia	Spain
 Nāgaur	Rajasthan	India
 Riacho Fundo II	Federal District	Brazil
 Green Bay	Wisconsin	United States
+Jizan	Jazan Region	Saudi Arabia
 Texcoco de Mora	México	Mexico
 Santa Maria	California	United States
 Nancy	Grand Est	France
@@ -2361,6 +2530,7 @@ Toride	Ibaraki	Japan
 Kamloops	British Columbia	Canada
 Lakeland	Florida	United States
 Helsingborg	Skåne	Sweden
+Kot Addu	Punjab	Pakistan
 Clovis	California	United States
 Muriaé	Minas Gerais	Brazil
 Lewisville	Texas	United States
@@ -2374,6 +2544,7 @@ Lincoln	England	United Kingdom
 Novo Gama	Goiás	Brazil
 Poá	São Paulo	Brazil
 Bacabal	Maranhão	Brazil
+Sangla Hill	Punjab	Pakistan
 Tyler	Texas	United States
 El Cajon	California	United States
 Mandaqui	São Paulo	Brazil
@@ -2401,12 +2572,17 @@ Rialto	California	United States
 West Bromwich	England	United Kingdom
 Ghazīpur	Uttar Pradesh	India
 Hildesheim	Lower Saxony	Germany
+Kharian	Punjab	Pakistan
 Bendigo	Victoria	Australia
 Amaravati	Andhra Pradesh	India
 Nagapattinam	Tamil Nadu	India
+Qurayyat	Al Jawf Region	Saudi Arabia
 Buxar	Bihar	India
+Khushāb	Punjab	Pakistan
 Caieiras	São Paulo	Brazil
 Lyon 03	Rhône-Alpes	France
+Pasrur	Punjab	Pakistan
+Pano Aqil	Sindh	Pakistan
 Erlangen	Bavaria	Germany
 Tepexpan	México	Mexico
 Davenport	Iowa	United States
@@ -2420,6 +2596,7 @@ Ciutat Vella	Catalonia	Spain
 Hillsboro	Oregon	United States
 Mormugao	Goa	India
 Seoni	Madhya Pradesh	India
+Shabqadar	Khyber Pakhtunkhwa	Pakistan
 Mitte	State of Berlin	Germany
 Tsuyama	Okayama	Japan
 Limerick	Munster	Ireland
@@ -2428,6 +2605,7 @@ Ituiutaba	Minas Gerais	Brazil
 Japeri	Rio de Janeiro	Brazil
 Kani	Gifu	Japan
 Ōnojō	Fukuoka	Japan
+Kot Radha Kishan	Punjab	Pakistan
 Venlo	Limburg	Netherlands
 Mairiporã	São Paulo	Brazil
 Novara	Piedmont	Italy
@@ -2457,6 +2635,7 @@ Dartmouth	Nova Scotia	Canada
 Orihuela	Valencia	Spain
 Kallang		Singapore
 Albany	New York	United States
+Chakwal	Punjab	Pakistan
 Gillingham	England	United Kingdom
 Tokuyama	Yamaguchi	Japan
 Standerton	Mpumalanga	South Africa
@@ -2472,8 +2651,8 @@ Chirmiri	Chhattisgarh	India
 Chikusei	Ibaraki	Japan
 Arezzo	Tuscany	Italy
 Rosarito	Baja California	Mexico
-Itārsi	Madhya Pradesh	India
 Chinatown	California	United States
+Itārsi	Madhya Pradesh	India
 Vasco da Gama	Goa	India
 Barakaldo	Basque Country	Spain
 Ermelo	Mpumalanga	South Africa
@@ -2489,27 +2668,35 @@ Phagwāra	Punjab	India
 Izumisano	Osaka	Japan
 Trier	Rheinland-Pfalz	Germany
 Ginowan	Okinawa	Japan
+Renala Khurd	Punjab	Pakistan
 Roanoke	Virginia	United States
+Model Town	Punjab	Pakistan
 Airoli	Maharashtra	India
+Sabt Alalayah	'Asir Region	Saudi Arabia
+Raja Jang	Punjab	Pakistan
 Colonia Lindavista	México	Mexico
 Becontree	England	United Kingdom
 Luckeesarai	Bihar	India
 Śródmieście	Mazovia	Poland
 San Angelo	Texas	United States
 Kenosha	Wisconsin	United States
+Dipalpur	Punjab	Pakistan
 Niagara Falls	Ontario	Canada
 Andria	Apulia	Italy
 Clinton Township	Michigan	United States
 Shikohābād	Uttar Pradesh	India
 Columbia	Maryland	United States
 Tucuruvi	São Paulo	Brazil
+Dhahran	Eastern Province	Saudi Arabia
 Santiago de Compostela	Galicia	Spain
 Roubaix	Hauts-de-France	France
 Erie	Pennsylvania	United States
 Kāsganj	Uttar Pradesh	India
 Campo Mourão	Paraná	Brazil
+Qubo Saeed Khan	Sindh	Pakistan
 Khambhāt	Gujarat	India
 Tourcoing	Hauts-de-France	France
+Kandhkot	Sindh	Pakistan
 Saku	Nagano	Japan
 Śródmieście	Lower Silesia	Poland
 Portsmouth Heights	Virginia	United States
@@ -2536,6 +2723,7 @@ Landstraße	State of Vienna	Austria
 League City	Texas	United States
 Flint	Michigan	United States
 Silvassa	Dadra and Nagar Haveli and Daman and Diu	India
+Al Qaţīf	Eastern Province	Saudi Arabia
 Kōnan	Aichi	Japan
 Santa Cruz do Capibaribe	Pernambuco	Brazil
 Balāngīr	Odisha	India
@@ -2562,6 +2750,7 @@ Rochdale	England	United Kingdom
 Rio Largo	Alagoas	Brazil
 Villupuram	Tamil Nadu	India
 Amalner	Maharashtra	India
+Swabi	Khyber Pakhtunkhwa	Pakistan
 Deventer	Overijssel	Netherlands
 Tellicherry	Kerala	India
 Kameoka	Kyoto	Japan
@@ -2571,10 +2760,12 @@ Cesena	Emilia-Romagna	Italy
 Manjeri	Kerala	India
 Munakata	Fukuoka	Japan
 Molenbeek-Saint-Jean	Brussels Capital	Belgium
+Dijkot	Punjab	Pakistan
 Vicente Pires	Federal District	Brazil
 Ariquemes	Rondônia	Brazil
 Vacaville	California	United States
 Ventura	California	United States
+Khurarianwala	Punjab	Pakistan
 Highlands Ranch	Colorado	United States
 Francisco Beltrão	Paraná	Brazil
 Lawton	Oklahoma	United States
@@ -2662,6 +2853,7 @@ Hayes	England	United Kingdom
 Ashiya	Hyōgo	Japan
 Lawrence	Kansas	United States
 Dhār	Madhya Pradesh	India
+Gambat	Sindh	Pakistan
 Gesundbrunnen	State of Berlin	Germany
 The Woodlands	Texas	United States
 West Albany	New York	United States
@@ -2721,9 +2913,10 @@ Rajpura	Punjab	India
 Lucas do Rio Verde	Mato Grosso	Brazil
 Serra Talhada	Pernambuco	Brazil
 Sakai	Fukui	Japan
-Vila Formosa	São Paulo	Brazil
 Arden-Arcade	California	United States
+Vila Formosa	São Paulo	Brazil
 Ballarpur	Maharashtra	India
+Rohri	Sindh	Pakistan
 Westminster	California	United States
 Alessandria	Piedmont	Italy
 Longmont	Colorado	United States
@@ -2732,6 +2925,7 @@ Ponta Porã	Mato Grosso do Sul	Brazil
 Paranavaí	Paraná	Brazil
 Kot Kapūra	Punjab	India
 Tepatitlán de Morelos	Jalisco	Mexico
+Kabirwala	Punjab	Pakistan
 Sassari	Sardinia	Italy
 Gravatá	Pernambuco	Brazil
 Manhuaçu	Minas Gerais	Brazil
@@ -2764,6 +2958,7 @@ Newmarket	Ontario	Canada
 Lünen	North Rhine-Westphalia	Germany
 Launceston	Tasmania	Australia
 Ga-Rankuwa	North West	South Africa
+Kunjah	Punjab	Pakistan
 Imizu	Toyama	Japan
 Meridian	Idaho	United States
 San Leandro	California	United States
@@ -2777,18 +2972,20 @@ Valparai	Tamil Nadu	India
 Bela Bela	Limpopo	South Africa
 Huddinge	Stockholm	Sweden
 Pollachi	Tamil Nadu	India
+Daharki	Sindh	Pakistan
 Araripina	Pernambuco	Brazil
 New Plymouth	Taranaki Region	New Zealand
 Kāvali	Andhra Pradesh	India
 Edmond	Oklahoma	United States
 Wembley	England	United Kingdom
 Airdrie	Alberta	Canada
-Kanata	Ontario	Canada
 Roha	Maharashtra	India
 Chinatown	New York	United States
 Dubai Silicon Oasis	Dubai	United Arab Emirates
+Kanata	Ontario	Canada
 Ancona	The Marches	Italy
 Mancherial	Telangana	India
+Dinga	Punjab	Pakistan
 Ponte Rasa	São Paulo	Brazil
 Nampa	Idaho	United States
 Patrocínio	Minas Gerais	Brazil
@@ -2801,8 +2998,8 @@ Trenton	New Jersey	United States
 Kōka	Shiga	Japan
 Maitland	New South Wales	Australia
 Sandy Hills	Utah	United States
-Gurupi	Tocantins	Brazil
 Aricanduva	São Paulo	Brazil
+Gurupi	Tocantins	Brazil
 Murādnagar	Uttar Pradesh	India
 Tuggeranong	Australian Capital Territory	Australia
 Ankleshwar	Gujarat	India
@@ -2829,6 +3026,7 @@ Contai	West Bengal	India
 Hanau am Main	Hesse	Germany
 Sangrūr	Punjab	India
 Campo di Marte	Tuscany	Italy
+Thul	Sindh	Pakistan
 Centro	Canary Islands	Spain
 Norwalk	Connecticut	United States
 Waukegan	Illinois	United States
@@ -2837,6 +3035,7 @@ Takayama	Gifu	Japan
 La Haute-Saint-Charles	Quebec	Canada
 Hawthorne	California	United States
 Nirmal	Telangana	India
+Al Bahah	Al Bahah Region	Saudi Arabia
 Fukuroi	Shizuoka	Japan
 El Puerto de Santa María	Andalusia	Spain
 Mobara	Chiba	Japan
@@ -2850,6 +3049,7 @@ Sugar Land	Texas	United States
 Livermore	California	United States
 Neyyāttinkara	Kerala	India
 Tāndā	Uttar Pradesh	India
+Nowshera Kalan	Khyber Pakhtunkhwa	Pakistan
 Nashua	New Hampshire	United States
 Kolar	Madhya Pradesh	India
 Reading	Pennsylvania	United States
@@ -2864,8 +3064,8 @@ Velbert	North Rhine-Westphalia	Germany
 Madgaon	Goa	India
 Ludwigsburg	Baden-Wurttemberg	Germany
 Indio	California	United States
-Enchanted Hills	New Mexico	United States
 Rio Rancho	New Mexico	United States
+Enchanted Hills	New Mexico	United States
 Santa Fe	New Mexico	United States
 Sandy	Utah	United States
 Settsu	Osaka	Japan
@@ -2893,6 +3093,7 @@ Brigittenau	State of Vienna	Austria
 Jharia	Jharkhand	India
 Hacienda Santa Fe	Jalisco	Mexico
 Cacoal	Rondônia	Brazil
+Ad Dawādimī	Riyadh Region	Saudi Arabia
 Montréal-Nord	Quebec	Canada
 Louis Trichardt	Limpopo	South Africa
 Kāraikāl	Puducherry	India
@@ -2911,6 +3112,7 @@ Paraiso	Tabasco	Mexico
 Unaí	Minas Gerais	Brazil
 Gotemba	Shizuoka	Japan
 Toledo	Castille-La Mancha	Spain
+Al Farwānīyah	Al Farwaniyah	Kuwait
 Anakapalle	Andhra Pradesh	India
 Hamakita	Shizuoka	Japan
 Bloomington	Minnesota	United States
@@ -2936,8 +3138,8 @@ Ar Rumaylah	Ajman	United Arab Emirates
 Melilla	Melilla	Spain
 Poitiers	New Aquitaine	France
 Dausa	Rajasthan	India
-Galway	Connacht	Ireland
 Coari	Amazonas	Brazil
+Galway	Connacht	Ireland
 Bukit Timah		Singapore
 Lichterfelde	State of Berlin	Germany
 Parādīp Garh	Odisha	India
@@ -2959,6 +3161,7 @@ Ogden	Utah	United States
 Versailles	Île-de-France	France
 Sandnes	Rogaland	Norway
 Khalifah A City	Abu Dhabi	United Arab Emirates
+Tārūt	Eastern Province	Saudi Arabia
 Los Reyes Acaquilpan	México	Mexico
 Santo Amaro	São Paulo	Brazil
 Torre del Greco	Campania	Italy
@@ -3052,6 +3255,7 @@ Buena Park	California	United States
 Harihar	Karnataka	India
 Chilla Soroda Bāngar	Delhi	India
 Carpina	Pernambuco	Brazil
+Fort Abbas	Punjab	Pakistan
 Sirsilla	Telangana	India
 Ceuta	Ceuta	Spain
 Pori	Satakunta	Finland
@@ -3060,8 +3264,8 @@ Picos	Piauí	Brazil
 Amakusa	Kumamoto	Japan
 Echizen	Fukui	Japan
 Kimitsu	Chiba	Japan
-Kamigyō-ku	Kyoto	Japan
 Mid-City	California	United States
+Kamigyō-ku	Kyoto	Japan
 Karauli	Rajasthan	India
 Mānsa	Punjab	India
 Uccle	Brussels Capital	Belgium
@@ -3079,8 +3283,8 @@ Shikokuchūō	Ehime	Japan
 Bayeux	Paraíba	Brazil
 Atlantis	Western Cape	South Africa
 Pau	New Aquitaine	France
-Algorta	Basque Country	Spain
 Halifax	England	United Kingdom
+Algorta	Basque Country	Spain
 Torrevieja	Valencia	Spain
 Jacobina	Bahia	Brazil
 Lyon 07	Rhône-Alpes	France
@@ -3088,8 +3292,8 @@ Jangipur	West Bengal	India
 Saint-Hubert	Quebec	Canada
 Lake Forest	California	United States
 Merced	California	United States
-Pozuelo de Alarcón	Madrid	Spain
 Sant Boi de Llobregat	Catalonia	Spain
+Pozuelo de Alarcón	Madrid	Spain
 Limão	São Paulo	Brazil
 Hengelo	Overijssel	Netherlands
 Reef Al Fujairah City	Fujairah	United Arab Emirates
@@ -3109,19 +3313,23 @@ Westland	Michigan	United States
 Edmonton	England	United Kingdom
 Tamworth	England	United Kingdom
 Gosport	England	United Kingdom
+Ratodero	Sindh	Pakistan
 Saunda	Jharkhand	India
 Akiruno	Tokyo	Japan
 Moema	São Paulo	Brazil
 Maraimalainagar	Tamil Nadu	India
 Coslada	Madrid	Spain
 Ashoknagar	Madhya Pradesh	India
+Qal‘at Bīshah	'Asir Region	Saudi Arabia
 Sesto San Giovanni	Lombardy	Italy
 Villingen-Schwenningen	Baden-Wurttemberg	Germany
 Lucca	Tuscany	Italy
 Phulwari Sharif	Bihar	India
+Ar Rass	Al-Qassim Region	Saudi Arabia
 Mhow	Madhya Pradesh	India
 Warwick	Rhode Island	United States
 Luzern	Lucerne	Switzerland
+Barkā’	Al Batinah South	Oman
 Concórdia	Santa Catarina	Brazil
 Lakewood	California	United States
 São Sebastião	São Paulo	Brazil
@@ -3135,6 +3343,7 @@ Kadi	Gujarat	India
 Chapadinha	Maranhão	Brazil
 Farmington Hills	Michigan	United States
 San Tan Valley	Arizona	United States
+Fatehjang	Punjab	Pakistan
 Mount Pleasant	South Carolina	United States
 Konstanz	Baden-Wurttemberg	Germany
 Tatebayashi	Gunma	Japan
@@ -3167,17 +3376,18 @@ Curvelo	Minas Gerais	Brazil
 Mijas	Andalusia	Spain
 Bargarh	Odisha	India
 Aulnay-sous-Bois	Île-de-France	France
-Kharghar	Maharashtra	India
 Tepeji del Río de Ocampo	Hidalgo	Mexico
+Kharghar	Maharashtra	India
 Kōtari	Kyoto	Japan
 Chatham	England	United Kingdom
 Varese	Lombardy	Italy
 Tustin	California	United States
+Samā’il	Ad Dakhiliyah	Oman
 Casa Verde	São Paulo	Brazil
 Bani Yas City	Abu Dhabi	United Arab Emirates
 Água Rasa	Minas Gerais	Brazil
-Serrinha	Bahia	Brazil
 Mountain View	California	United States
+Serrinha	Bahia	Brazil
 Napa	California	United States
 Kairāna	Uttar Pradesh	India
 Brajarajnagar	Odisha	India
@@ -3192,10 +3402,12 @@ Neumünster	Schleswig-Holstein	Germany
 João Monlevade	Minas Gerais	Brazil
 Piotrków Trybunalski	Łódź Voivodeship	Poland
 Purmerend	North Holland	Netherlands
+Alahabad	Punjab	Pakistan
 Cachoeira do Sul	Rio Grande do Sul	Brazil
 Gamagōri	Aichi	Japan
 Manmād	Maharashtra	India
 Srikalahasti	Andhra Pradesh	India
+Khewra	Punjab	Pakistan
 Dorsten	North Rhine-Westphalia	Germany
 Stockton-on-Tees	England	United Kingdom
 Parma	Ohio	United States
@@ -3214,7 +3426,9 @@ Pleasanton	California	United States
 Saint-Léonard	Quebec	Canada
 São Roque	São Paulo	Brazil
 Willowdale	Ontario	Canada
+Talagang	Punjab	Pakistan
 Lüdenscheid	North Rhine-Westphalia	Germany
+Kahna Nau	Punjab	Pakistan
 Tefé	Amazonas	Brazil
 Sant Cugat del Vallès	Catalonia	Spain
 Nawābganj	Uttar Pradesh	India
@@ -3301,6 +3515,7 @@ Aalst	Flanders	Belgium
 Lubin	Lower Silesia	Poland
 Mechelen	Flanders	Belgium
 Lisburn	Northern Ireland	United Kingdom
+Kambar	Sindh	Pakistan
 Balrāmpur	Uttar Pradesh	India
 Tsubame	Niigata	Japan
 Jelenia Góra	Lower Silesia	Poland
@@ -3328,8 +3543,9 @@ Dhuliān	West Bengal	India
 Nabari	Mie	Japan
 Auburn	Washington	United States
 Rabkavi-Banhatti	Karnataka	India
-Dubai Festival City	Dubai	United Arab Emirates
 Les Rivières	Quebec	Canada
+Dubai Festival City	Dubai	United Arab Emirates
+Zahir Pir	Punjab	Pakistan
 Mawāna	Uttar Pradesh	India
 Tsurusaki	Oita	Japan
 Santa Rosa	Rio Grande do Sul	Brazil
@@ -3341,6 +3557,7 @@ Kundla	Gujarat	India
 Fishers	Indiana	United States
 Shrewsbury	England	United Kingdom
 Saint Joseph	Missouri	United States
+Al Maţār al ‘Atīq	Baladiyat ad Dawhah	Qatar
 Biguaçu	Santa Catarina	Brazil
 Mmabatho	North West	South Africa
 Visnagar	Gujarat	India
@@ -3359,12 +3576,13 @@ Fylde	England	United Kingdom
 Badagara	Kerala	India
 Fazilka	Punjab	India
 Rheine	North Rhine-Westphalia	Germany
+Hujra Shah Muqim	Punjab	Pakistan
 Bunbury	Western Australia	Australia
 Shiki	Saitama	Japan
 Upland	California	United States
 Crewe	England	United Kingdom
-Oss	North Brabant	Netherlands
 Viçosa	Minas Gerais	Brazil
+Oss	North Brabant	Netherlands
 Fünfhaus	State of Vienna	Austria
 Antibes	Provence-Alpes-Côte d'Azur	France
 Crateús	Ceará	Brazil
@@ -3372,8 +3590,8 @@ Stoney Creek	Ontario	Canada
 Folsom	California	United States
 Bebedouro	São Paulo	Brazil
 Odendaalsrus	Free State	South Africa
-Electronic City Phase I	Karnataka	India
 Aira	Kagoshima	Japan
+Electronic City Phase I	Karnataka	India
 Baytown	Texas	United States
 Sant'Ana do Livramento	Rio Grande do Sul	Brazil
 Furukawa	Miyagi	Japan
@@ -3393,6 +3611,7 @@ Yurihonjō	Akita	Japan
 Lake Charles	Louisiana	United States
 Chintamani	Karnataka	India
 Kalamazoo	Michigan	United States
+Paharpur	Khyber Pakhtunkhwa	Pakistan
 Brick	New Jersey	United States
 Cinisello Balsamo	Lombardy	Italy
 Itapema	Santa Catarina	Brazil
@@ -3408,6 +3627,7 @@ Sankt Gallen	Saint Gallen	Switzerland
 Takefu	Fukui	Japan
 Waterford	Michigan	United States
 Madhubani	Bihar	India
+Turbat	Balochistan	Pakistan
 Bodināyakkanūr	Tamil Nadu	India
 Khadki	Maharashtra	India
 Battersea	England	United Kingdom
@@ -3430,6 +3650,7 @@ Döbling	State of Vienna	Austria
 Saint-Maur-des-Fossés	Île-de-France	France
 Srivilliputhur	Tamil Nadu	India
 Anhanguera	São Paulo	Brazil
+Bariq	'Asir Region	Saudi Arabia
 Benipur	Bihar	India
 Kai	Yamanashi	Japan
 East Kilbride	Scotland	United Kingdom
@@ -3455,6 +3676,7 @@ Jaora	Madhya Pradesh	India
 Bethlehem	Pennsylvania	United States
 Gävle	Gävleborg	Sweden
 Arnsberg	North Rhine-Westphalia	Germany
+Topi	Khyber Pakhtunkhwa	Pakistan
 Tura	Meghalaya	India
 Gūdūr	Andhra Pradesh	India
 Albany	Georgia	United States
@@ -3463,10 +3685,12 @@ Yotsuya	Tokyo	Japan
 Troisdorf	North Rhine-Westphalia	Germany
 Aylesbury	England	United Kingdom
 Valdemoro	Madrid	Spain
+Bhalwal	Punjab	Pakistan
 Ciudad Real	Castille-La Mancha	Spain
 Helmond	North Brabant	Netherlands
 Schaumburg	Illinois	United States
 Parque Do Carmo	São Paulo	Brazil
+Mirpur Mathelo	Sindh	Pakistan
 Jōyō	Kyoto	Japan
 Narnaul	Haryana	India
 Cannes	Provence-Alpes-Côte d'Azur	France
@@ -3505,6 +3729,7 @@ Fort Myers	Florida	United States
 Inuyama	Aichi	Japan
 Bela	Uttar Pradesh	India
 Ostrowiec Świętokrzyski	Świętokrzyskie	Poland
+Sarai Alamgir	Punjab	Pakistan
 Boynton Beach	Florida	United States
 Wattenscheid	North Rhine-Westphalia	Germany
 Bocholt	North Rhine-Westphalia	Germany
@@ -3523,14 +3748,16 @@ Caçador	Santa Catarina	Brazil
 Goianésia	Goiás	Brazil
 Logan Square	Illinois	United States
 Oudtshoorn	Western Cape	South Africa
-Bawāna	Delhi	India
 Detmold	North Rhine-Westphalia	Germany
+Bawāna	Delhi	India
+Al Buraymī	Al Buraimi	Oman
 Kasama	Ibaraki	Japan
 Shāhābād	Uttar Pradesh	India
 Virudhachalam	Tamil Nadu	India
 Rapid City	South Dakota	United States
 Chāndpur	Uttar Pradesh	India
 Pirassununga	São Paulo	Brazil
+Bat Khela	Khyber Pakhtunkhwa	Pakistan
 Warner Robins	Georgia	United States
 Kāsipālaiyam	Tamil Nadu	India
 Rochester Hills	Michigan	United States
@@ -3554,6 +3781,7 @@ Rubí	Catalonia	Spain
 Jurong East		Singapore
 Bayreuth	Bavaria	Germany
 Russas	Ceará	Brazil
+Rābigh	Mecca Region	Saudi Arabia
 Lappeenranta	South Karelia	Finland
 Ostrów Wielkopolski	Greater Poland	Poland
 Saint George	Utah	United States
@@ -3568,6 +3796,7 @@ Cascavel	Ceará	Brazil
 Barra do Garças	Mato Grosso	Brazil
 Daytona Beach	Florida	United States
 Franklin	Tennessee	United States
+Sitrah	Manama	Bahrain
 Rio do Sul	Santa Catarina	Brazil
 Gaspar	Santa Catarina	Brazil
 Nutana Sector	Saskatchewan	Canada
@@ -3589,6 +3818,7 @@ Adelaide Hills	South Australia	Australia
 Guanajuato	Guanajuato	Mexico
 West Ridge	Illinois	United States
 Chiryū	Aichi	Japan
+Ash Shafā	Mecca Region	Saudi Arabia
 Apple Valley	California	United States
 Santo Antônio do Descoberto	Goiás	Brazil
 Sarnia	Ontario	Canada
@@ -3596,10 +3826,13 @@ Mysłowice	Silesia	Poland
 Payyanur	Kerala	India
 Ōtawara	Tochigi	Japan
 Casa Nova	Bahia	Brazil
+Nizwá	Ad Dakhiliyah	Oman
 Sault Ste. Marie	Ontario	Canada
+Sakrand	Sindh	Pakistan
 Itapira	São Paulo	Brazil
-Bromma	Stockholm	Sweden
+Al Līth	Mecca Region	Saudi Arabia
 Purley	England	United Kingdom
+Bromma	Stockholm	Sweden
 Lynwood	California	United States
 Waukesha	Wisconsin	United States
 Gouda	South Holland	Netherlands
@@ -3611,13 +3844,14 @@ Goianira	Goiás	Brazil
 Canton	Ohio	United States
 Guildford	England	United Kingdom
 Koyilandy	Kerala	India
-Landshut	Bavaria	Germany
 Santa Lucía	Canary Islands	Spain
+Landshut	Bavaria	Germany
 Gulfport	Mississippi	United States
 Jaboticabal	São Paulo	Brazil
 Saint John	New Brunswick	Canada
 São Sebastião do Paraíso	Minas Gerais	Brazil
 Farīdpur	Uttar Pradesh	India
+Tando Jam	Sindh	Pakistan
 Zaandam	North Holland	Netherlands
 Borås	Västra Götaland	Sweden
 Esbjerg	South Denmark	Denmark
@@ -3653,12 +3887,14 @@ Rāyagada	Odisha	India
 Guasave	Sinaloa	Mexico
 Fernandópolis	São Paulo	Brazil
 Zahirābād	Telangana	India
+Sur	Southeastern Governorate	Oman
 Carpi	Emilia-Romagna	Italy
 Khopoli	Maharashtra	India
 San Francisco del Rincón	Guanajuato	Mexico
 Centreville	Virginia	United States
 Ratangarh	Rajasthan	India
 Lafayette	Indiana	United States
+Hala	Sindh	Pakistan
 Mārkāpur	Andhra Pradesh	India
 Passaic	New Jersey	United States
 Billstedt	Hamburg	Germany
@@ -3673,17 +3909,18 @@ Celle	Lower Saxony	Germany
 Bolpur	West Bengal	India
 Panjim	Goa	India
 Rānāghāt	West Bengal	India
-Horizonte	Ceará	Brazil
 Pacajus	Ceará	Brazil
+Horizonte	Ceará	Brazil
 Tanabe	Wakayama	Japan
 Aubervilliers	Île-de-France	France
 Wilmington	Delaware	United States
+Gwadar	Balochistan	Pakistan
 Musashimurayama	Tokyo	Japan
 Vila Nova de Gaia	Porto	Portugal
 Uwajima	Ehime	Japan
+Södertälje	Stockholm	Sweden
 Bāpatla	Andhra Pradesh	India
 Fatehābād	Haryana	India
-Södertälje	Stockholm	Sweden
 Beypore	Kerala	India
 Janaúba	Minas Gerais	Brazil
 Koppal	Karnataka	India
@@ -3726,9 +3963,10 @@ Nallūr	Tamil Nadu	India
 Muncie	Indiana	United States
 Mineiros	Goiás	Brazil
 Bamberg	Bavaria	Germany
-Woodland Hills	California	United States
-Mira Mesa	California	United States
+Rabwah	Punjab	Pakistan
 Uxbridge	England	United Kingdom
+Mira Mesa	California	United States
+Woodland Hills	California	United States
 Fordon	Kujawsko-Pomorskie	Poland
 Weston	Florida	United States
 Imola	Emilia-Romagna	Italy
@@ -3738,8 +3976,10 @@ Mīthepur	Delhi	India
 Vaasa	Ostrobothnia	Finland
 Mérignac	New Aquitaine	France
 Māngrol	Gujarat	India
+Kahror Pakka	Punjab	Pakistan
 Basavakalyan	Karnataka	India
 Pul Pehlad	Delhi	India
+Abū ‘Arīsh	Jazan Region	Saudi Arabia
 Bairro Parque Nossa Senhora do Carmo	São Paulo	Brazil
 Brossard	Quebec	Canada
 Chāībāsa	Jharkhand	India
@@ -3754,7 +3994,10 @@ Pasco	Washington	United States
 Pittsburg	California	United States
 Tripunittura	Kerala	India
 Alenquer	Pará	Brazil
+Gujar Khan	Punjab	Pakistan
 Kungsholmen	Stockholm	Sweden
+Kot Malik Barkhurdar	Balochistan	Pakistan
+Chuhar Kana	Punjab	Pakistan
 Ridgewood	New York	United States
 Palatine	Illinois	United States
 Toyoake	Aichi	Japan
@@ -3792,6 +4035,7 @@ Gion	Hiroshima	Japan
 Knysna	Western Cape	South Africa
 Kayamkulam	Kerala	India
 Mount Vernon	New York	United States
+Darya Khan	Punjab	Pakistan
 Dharmapuri	Tamil Nadu	India
 Conroe	Texas	United States
 Dothan	Alabama	United States
@@ -3808,6 +4052,7 @@ Peruíbe	São Paulo	Brazil
 Framingham	Massachusetts	United States
 Sabae	Fukui	Japan
 Oriximiná	Pará	Brazil
+Al Faḩāḩīl	Al Aḩmadī	Kuwait
 Saldanha	Western Cape	South Africa
 Formiga	Minas Gerais	Brazil
 Attili	Andhra Pradesh	India
@@ -3865,6 +4110,7 @@ Victoria	Texas	United States
 Trapani	Sicily	Italy
 Paignton	England	United Kingdom
 Gaithersburg	Maryland	United States
+Shorkot	Khyber Pakhtunkhwa	Pakistan
 Buldāna	Maharashtra	India
 Montemorelos	Nuevo León	Mexico
 Dhenkānāl	Odisha	India
@@ -3882,14 +4128,15 @@ Sousa	Paraíba	Brazil
 Shiojiri	Nagano	Japan
 Lippstadt	North Rhine-Westphalia	Germany
 Tomaszów Mazowiecki	Łódź Voivodeship	Poland
+Minchinabad	Punjab	Pakistan
 Köpenick	State of Berlin	Germany
 Iranduba	Amazonas	Brazil
 Hāveri	Karnataka	India
 Dolores Hidalgo	Guanajuato	Mexico
 Kenner	Louisiana	United States
 Santa Cruz Xoxocotlán	Oaxaca	Mexico
-Washington	England	United Kingdom
 Aalen	Baden-Wurttemberg	Germany
+Washington	England	United Kingdom
 Jackson Heights	New York	United States
 Saint-Nazaire	Pays de la Loire	France
 Fukutsu	Fukuoka	Japan
@@ -3917,12 +4164,14 @@ Point Cook	Victoria	Australia
 Marysville	Washington	United States
 Siddipet	Telangana	India
 Unna	North Rhine-Westphalia	Germany
+Sayhāt	Eastern Province	Saudi Arabia
 Chiyoda	Tokyo	Japan
 Karlskrona	Blekinge	Sweden
 Bellampalli	Telangana	India
 South Jordan	Utah	United States
 Quartu Sant'Elena	Sardinia	Italy
 Aluche	Madrid	Spain
+Jidd Ḩafş	Manama	Bahrain
 Fort McMurray	Alberta	Canada
 Kurihara	Miyagi	Japan
 Oshkosh	Wisconsin	United States
@@ -3933,6 +4182,7 @@ Lençóis Paulista	São Paulo	Brazil
 Koratla	Telangana	India
 North Little Rock	Arkansas	United States
 Stalowa Wola	Subcarpathia	Poland
+Mansehra	Khyber Pakhtunkhwa	Pakistan
 Bayside	New York	United States
 Vicálvaro	Madrid	Spain
 Folkestone	England	United Kingdom
@@ -3961,6 +4211,7 @@ Zamość	Lublin	Poland
 Puliyankudi	Tamil Nadu	India
 Johnson City	Tennessee	United States
 Kitamoto	Saitama	Japan
+Ţurayf	Northern Borders Region	Saudi Arabia
 Dale City	Virginia	United States
 Cedar Park	Texas	United States
 Waterfront Communities-The Island	Ontario	Canada
@@ -3993,10 +4244,13 @@ Barreirinhas	Maranhão	Brazil
 Lādnūn	Rajasthan	India
 Fleetwood	British Columbia	Canada
 Bom Jesus da Lapa	Bahia	Brazil
+Basirpur	Punjab	Pakistan
 Piripiri	Piauí	Brazil
 San Clemente	California	United States
 West Lynchburg	Virginia	United States
+Al Manşūrah	Baladiyat ad Dawhah	Qatar
 Middletown	New Jersey	United States
+Dār Kulayb	Southern Governorate	Bahrain
 Torremolinos	Andalusia	Spain
 Supaul	Bihar	India
 Ellesmere Port Town	England	United Kingdom
@@ -4013,8 +4267,8 @@ Tultepec	México	Mexico
 Gangārāmpur	West Bengal	India
 Ramanathapuram	Tamil Nadu	India
 Herten	North Rhine-Westphalia	Germany
-Schenectady	New York	United States
 Jagraon	Punjab	India
+Schenectady	New York	United States
 Sinnar	Maharashtra	India
 Kopargaon	Maharashtra	India
 Acaraú	Ceará	Brazil
@@ -4022,6 +4276,7 @@ Capelle aan den IJssel	South Holland	Netherlands
 Gushikawa	Okinawa	Japan
 Ouricuri	Pernambuco	Brazil
 Alīpur Duār	West Bengal	India
+Lala Musa	Punjab	Pakistan
 Craigieburn	Victoria	Australia
 Villa de Vallecas	Madrid	Spain
 Januária	Minas Gerais	Brazil
@@ -4035,6 +4290,7 @@ Broomfield	Colorado	United States
 Ames	Iowa	United States
 Park Slope	New York	United States
 Shawnee	Kansas	United States
+King Faisal Military City	Eastern Province	Saudi Arabia
 Wrzeszcz	Pomerania	Poland
 Cricklewood	England	United Kingdom
 Reseda	California	United States
@@ -4058,12 +4314,13 @@ Khatauli	Uttar Pradesh	India
 Weimar	Thuringia	Germany
 Bertioga	São Paulo	Brazil
 Vīrarāghavapuram	Tamil Nadu	India
-West Bloomfield Township	Michigan	United States
 Asahi	Chiba	Japan
+West Bloomfield Township	Michigan	United States
 Tamarac	Florida	United States
 Monte Mor	São Paulo	Brazil
 Siuri	West Bengal	India
 Itaitinga	Ceará	Brazil
+Usta Muhammad	Balochistan	Pakistan
 Youngstown	Ohio	United States
 Taunton	England	United Kingdom
 Tomigusuku	Okinawa	Japan
@@ -4101,6 +4358,7 @@ Janesville	Wisconsin	United States
 Surubim	Pernambuco	Brazil
 West Des Moines	Iowa	United States
 Narutochō-mitsuishi	Tokushima	Japan
+Sibi	Balochistan	Pakistan
 Molina de Segura	Murcia	Spain
 Chinnachowk	Andhra Pradesh	India
 Bishnupur	West Bengal	India
@@ -4120,6 +4378,7 @@ Valence	Rhône-Alpes	France
 Newtownabbey	Northern Ireland	United Kingdom
 Cosenza	Calabria	Italy
 Quimper	Brittany	France
+Pindi Gheb	Punjab	Pakistan
 Fulda	Hesse	Germany
 Georgetown	Texas	United States
 Hull	Quebec	Canada
@@ -4127,8 +4386,8 @@ Jatani	Odisha	India
 Alpharetta	Georgia	United States
 Fujiidera	Osaka	Japan
 Arni	Tamil Nadu	India
-Genk	Flanders	Belgium
 Shimodate	Ibaraki	Japan
+Genk	Flanders	Belgium
 Chik Ballāpur	Karnataka	India
 Lorain	Ohio	United States
 Bowling Green	Kentucky	United States
@@ -4143,8 +4402,8 @@ Bergheim	North Rhine-Westphalia	Germany
 Nago	Okinawa	Japan
 Eden Prairie	Minnesota	United States
 North Bergen	New Jersey	United States
-Pittwater	New South Wales	Australia
 Zayed City	Abu Dhabi	United Arab Emirates
+Pittwater	New South Wales	Australia
 Great Yarmouth	England	United Kingdom
 El Prat de Llobregat	Catalonia	Spain
 Mitcham	England	United Kingdom
@@ -4164,6 +4423,7 @@ Gadwāl	Telangana	India
 Żory	Silesia	Poland
 Rogers	Arkansas	United States
 Medicine Hat	Alberta	Canada
+Qurayyāt	Muscat	Oman
 Fredericton	New Brunswick	Canada
 Pidugurālla	Andhra Pradesh	India
 Collado-Villalba	Madrid	Spain
@@ -4171,8 +4431,8 @@ Carol City	Florida	United States
 Halton Hills	Ontario	Canada
 Encinitas	California	United States
 Sheikhpura	Bihar	India
-Graaff Reinet	Eastern Cape	South Africa
 Bełchatów	Łódź Voivodeship	Poland
+Graaff Reinet	Eastern Cape	South Africa
 Campo Bom	Rio Grande do Sul	Brazil
 Sirsi	Karnataka	India
 Nipāni	Maharashtra	India
@@ -4194,13 +4454,14 @@ Icó	Ceará	Brazil
 Council Bluffs	Iowa	United States
 Pedro Leopoldo	Minas Gerais	Brazil
 Wellington	Florida	United States
-Sale	England	United Kingdom
 Vinukonda	Andhra Pradesh	India
+Sale	England	United Kingdom
 Tonypandy	Wales	United Kingdom
 West Coon Rapids	Minnesota	United States
 Portel	Pará	Brazil
 Drancy	Île-de-France	France
 Acton	England	United Kingdom
+Phalia	Punjab	Pakistan
 Shiroi	Chiba	Japan
 North Miami	Florida	United States
 Noisy-le-Grand	Île-de-France	France
@@ -4216,6 +4477,7 @@ Marechal Deodoro	Alagoas	Brazil
 La Seyne-sur-Mer	Provence-Alpes-Côte d'Azur	France
 Camocim	Ceará	Brazil
 Tulare	California	United States
+Ras Tanura	Eastern Province	Saudi Arabia
 Humaitá	Amazonas	Brazil
 Nagari	Andhra Pradesh	India
 Escada	Pernambuco	Brazil
@@ -4236,17 +4498,18 @@ Narwāna	Haryana	India
 Auburn	Alabama	United States
 Okha	Gujarat	India
 Floriano	Piauí	Brazil
+Sanghar	Sindh	Pakistan
 Downtown Vancouver	British Columbia	Canada
-Łomża	Podlasie	Poland
 Nova Odessa	São Paulo	Brazil
+Łomża	Podlasie	Poland
 Nani Daman	Dadra and Nagar Haveli and Daman and Diu	India
 Irun	Basque Country	Spain
 Lake Elsinore	California	United States
 Kuchāman	Rajasthan	India
 Miyoshi	Aichi	Japan
 Nīmbāhera	Rajasthan	India
-Marseille 14	Provence-Alpes-Côte d'Azur	France
 Picpus	Île-de-France	France
+Marseille 14	Provence-Alpes-Côte d'Azur	France
 Asker	Akershus	Norway
 Siddhapur	Gujarat	India
 Zamora	Castille and León	Spain
@@ -4258,8 +4521,8 @@ Tempelhof	State of Berlin	Germany
 San Andrés Tuxtla	Veracruz	Mexico
 Carmichael	California	United States
 Kokstad	KwaZulu-Natal	South Africa
-Rāyadrug	Andhra Pradesh	India
 Scarborough	England	United Kingdom
+Rāyadrug	Andhra Pradesh	India
 Yamato-Takada	Nara	Japan
 Rāth	Uttar Pradesh	India
 Al Shamkhah City	Abu Dhabi	United Arab Emirates
@@ -4270,7 +4533,9 @@ Chambéry	Rhône-Alpes	France
 Kolding	South Denmark	Denmark
 Extremoz	Rio Grande do Norte	Brazil
 Cheruvannur	Kerala	India
+Ad Dir‘īyah	Riyadh Region	Saudi Arabia
 Ueno-ebisumachi	Mie	Japan
+Faqirwali	Punjab	Pakistan
 Taylor	Michigan	United States
 Alcoy	Valencia	Spain
 Hasuda	Saitama	Japan
@@ -4332,8 +4597,8 @@ Grosseto	Tuscany	Italy
 União dos Palmares	Alagoas	Brazil
 Springfield	Oregon	United States
 Bethesda	Maryland	United States
-Norfolk County	Ontario	Canada
 Sirhind	Punjab	India
+Norfolk County	Ontario	Canada
 Jōsō	Ibaraki	Japan
 Aisai	Aichi	Japan
 Terre Haute	Indiana	United States
@@ -4343,6 +4608,7 @@ West Hollywood	Florida	United States
 Troyes	Grand Est	France
 North Delta	British Columbia	Canada
 Beckenham	England	United Kingdom
+Yazman	Punjab	Pakistan
 Seraing	Wallonia	Belgium
 Novo Repartimento	Pará	Brazil
 Republica	São Paulo	Brazil
@@ -4405,6 +4671,7 @@ La Mesa	California	United States
 Waterford	Munster	Ireland
 Pine Hills	Florida	United States
 Martínez de la Torre	Veracruz	Mexico
+Kuwait City	Al Asimah	Kuwait
 Melbourne City Centre	Victoria	Australia
 Zushi	Kanagawa	Japan
 Hyūga	Miyazaki	Japan
@@ -4413,16 +4680,17 @@ Bela Vista	São Paulo	Brazil
 São Borja	Rio Grande do Sul	Brazil
 Monte Alegre	Pará	Brazil
 Villa Vicente Guerrero	Tlaxcala	Mexico
-Bensonhurst	New York	United States
 Coney Island	New York	United States
-Chelsea	England	United Kingdom
 Gamonal	Castille and León	Spain
-Santutxu	Basque Country	Spain
-Valley Glen	California	United States
-Colonia Nativitas	Mexico City	Mexico
 Juan-les-Pins	Provence-Alpes-Côte d'Azur	France
-Bangaon	Bihar	India
+Faruka	Punjab	Pakistan
+Chelsea	England	United Kingdom
+Bensonhurst	New York	United States
 Rancho Penasquitos	California	United States
+Colonia Nativitas	Mexico City	Mexico
+Valley Glen	California	United States
+Bangaon	Bihar	India
+Santutxu	Basque Country	Spain
 Meriden	Connecticut	United States
 Narsimhapur	Madhya Pradesh	India
 Registro	São Paulo	Brazil
@@ -4470,8 +4738,8 @@ Mielec	Subcarpathia	Poland
 Shirakawa	Fukushima	Japan
 Itanagar	Arunachal Pradesh	India
 Drummondville	Quebec	Canada
-Huntington Park	California	United States
 Mölndal	Västra Götaland	Sweden
+Huntington Park	California	United States
 La Roche-sur-Yon	Pays de la Loire	France
 Chikuma	Nagano	Japan
 Ogōri	Fukuoka	Japan
@@ -4492,8 +4760,8 @@ Rio Bonito	Rio de Janeiro	Brazil
 Langenfeld	North Rhine-Westphalia	Germany
 Al Warqaa	Dubai	United Arab Emirates
 Umm Al Quwain City	Umm Al Quwain	United Arab Emirates
-Pierrefonds	Quebec	Canada
 Noblesville	Indiana	United States
+Pierrefonds	Quebec	Canada
 Panna	Madhya Pradesh	India
 Marietta	Georgia	United States
 Fairfield	Connecticut	United States
@@ -4536,8 +4804,8 @@ Orland Park	Illinois	United States
 Nūzvīd	Andhra Pradesh	India
 Frutal	Minas Gerais	Brazil
 Bartlett	Tennessee	United States
-Woodland	California	United States
 Toki	Gifu	Japan
+Woodland	California	United States
 Lonavla	Maharashtra	India
 Una	Gujarat	India
 São Gabriel	Rio Grande do Sul	Brazil
@@ -4562,6 +4830,7 @@ Sillod	Maharashtra	India
 Ocala	Florida	United States
 Clay	New York	United States
 Central City	Arizona	United States
+Ar Rumaythīyah	Hawalli	Kuwait
 Täby	Stockholm	Sweden
 South Vineland	New Jersey	United States
 Lorient	Brittany	France
@@ -4572,8 +4841,8 @@ Streatham	England	United Kingdom
 Göppingen	Baden-Wurttemberg	Germany
 Zgierz	Łódź Voivodeship	Poland
 Bowie	Maryland	United States
-Port Coquitlam	British Columbia	Canada
 Invercargill	Southland	New Zealand
+Port Coquitlam	British Columbia	Canada
 Kokomo	Indiana	United States
 Sarcelles	Île-de-France	France
 Acámbaro	Guanajuato	Mexico
@@ -4638,6 +4907,7 @@ Margate	Florida	United States
 Tiruvalla	Kerala	India
 Roshanpura	Delhi	India
 Ponnūru	Andhra Pradesh	India
+Chitral	Khyber Pakhtunkhwa	Pakistan
 South Whittier	California	United States
 Kollegāl	Karnataka	India
 Tinley Park	Illinois	United States
@@ -4652,15 +4922,17 @@ Chhibrāmau	Uttar Pradesh	India
 Tilhar	Uttar Pradesh	India
 New Brunswick	New Jersey	United States
 Annaka	Gunma	Japan
-Lunglei	Mizoram	India
 Grand Forks	North Dakota	United States
+Lunglei	Mizoram	India
+Jahangira	Khyber Pakhtunkhwa	Pakistan
 Emmen	Drenthe	Netherlands
 Fountain Valley	California	United States
 Hoskote	Karnataka	India
+Haripur	Khyber Pakhtunkhwa	Pakistan
 Minokamo	Gifu	Japan
 Stourbridge	England	United Kingdom
-Byasanagar	Odisha	India
 North Hills	California	United States
+Byasanagar	Odisha	India
 Manfredonia	Apulia	Italy
 Neu-Hohenschönhausen	State of Berlin	Germany
 Foligno	Umbria	Italy
@@ -4689,6 +4961,7 @@ San Vicent del Raspeig	Valencia	Spain
 Castlereagh	Northern Ireland	United Kingdom
 Kettering	England	United Kingdom
 Paudalho	Pernambuco	Brazil
+Jamrud	Khyber Pakhtunkhwa	Pakistan
 Tirūrangādi	Kerala	India
 Woluwe-Saint-Lambert	Brussels Capital	Belgium
 Hilden	North Rhine-Westphalia	Germany
@@ -4827,6 +5100,7 @@ Canterbury	England	United Kingdom
 Bhīmunipatnam	Andhra Pradesh	India
 Olímpia	São Paulo	Brazil
 União da Vitória	Paraná	Brazil
+Sharifabad	Punjab	Pakistan
 Canoinhas	Santa Catarina	Brazil
 Mawlai-Mawïong	Meghalaya	India
 Dunfermline	Scotland	United Kingdom
@@ -4843,6 +5117,7 @@ Cuenca	Castille-La Mancha	Spain
 Euskirchen	North Rhine-Westphalia	Germany
 Edgewater	Illinois	United States
 Pithāpuram	Andhra Pradesh	India
+Al Khafjī	Eastern Province	Saudi Arabia
 Jackson	New Jersey	United States
 Highland	California	United States
 Kāndi	West Bengal	India
@@ -4876,8 +5151,8 @@ Mūndka	Delhi	India
 San Bernardino Tlaxcalancingo	Puebla	Mexico
 Himimachi	Toyama	Japan
 Deglur	Maharashtra	India
-Meikle Earnock	Scotland	United Kingdom
 Hamilton	Scotland	United Kingdom
+Meikle Earnock	Scotland	United Kingdom
 Madhepura	Bihar	India
 Modica	Sicily	Italy
 Pocatello	Idaho	United States
@@ -4898,14 +5173,18 @@ Medianeira	Paraná	Brazil
 Ajaccio	Corsica	France
 Eisenzicken	Burgenland	Austria
 Macclesfield	England	United Kingdom
+Az̧ Z̧a‘āyin	Al Daayen	Qatar
 Teramo	Abruzzo	Italy
+Bahlā’	Ad Dakhiliyah	Oman
 Sidhi	Madhya Pradesh	India
 Zehlendorf	State of Berlin	Germany
 Guapimirim	Rio de Janeiro	Brazil
 Spring	Texas	United States
 Allapattah	Florida	United States
-Durbanville	Western Cape	South Africa
 Okaya	Nagano	Japan
+Durbanville	Western Cape	South Africa
+Dullewala	Punjab	Pakistan
+Pir Jo Goth	Sindh	Pakistan
 Hietzing	State of Vienna	Austria
 Gravesend	England	United Kingdom
 Zürich (Kreis 11)	Zurich	Switzerland
@@ -5027,8 +5306,8 @@ Mubarakpur	Uttar Pradesh	India
 Consolação	São Paulo	Brazil
 Taquara	Rio Grande do Sul	Brazil
 Ōami	Chiba	Japan
-Amalāpuram	Andhra Pradesh	India
 Gilroy	California	United States
+Amalāpuram	Andhra Pradesh	India
 Arsikere	Karnataka	India
 Vallecas	Madrid	Spain
 Phaltan	Maharashtra	India
@@ -5091,6 +5370,7 @@ Delano	California	United States
 Universitäts- und Hansestadt Greifswald	Mecklenburg-Vorpommern	Germany
 West Sacramento	California	United States
 Huntersville	North Carolina	United States
+Pabbi	Khyber Pakhtunkhwa	Pakistan
 Venkatagiri	Andhra Pradesh	India
 Perth Amboy	New Jersey	United States
 Sherman Oaks	California	United States
@@ -5110,17 +5390,20 @@ Dabhel	Dadra and Nagar Haveli and Daman and Diu	India
 Amora	Setúbal	Portugal
 Saint Peters	Missouri	United States
 Downtown DC	District of Columbia	United States
+Lalian	Punjab	Pakistan
 Harrisonburg	Virginia	United States
 Corroios	Setúbal	Portugal
 Biswān	Uttar Pradesh	India
 Peabody	Massachusetts	United States
 Placentia	California	United States
-Kosi	Uttar Pradesh	India
+Qabula	Punjab	Pakistan
 Siruguppa	Karnataka	India
+Kosi	Uttar Pradesh	India
 Jette	Brussels Capital	Belgium
 Lenexa	Kansas	United States
 DeSoto	Texas	United States
 Mollet del Vallès	Catalonia	Spain
+Pir Mahal	Punjab	Pakistan
 Burlington	North Carolina	United States
 Sironj	Madhya Pradesh	India
 Menden	North Rhine-Westphalia	Germany
@@ -5132,6 +5415,7 @@ Albi	Occitanie	France
 Campos do Jordão	São Paulo	Brazil
 Jangaon	Telangana	India
 Esher	England	United Kingdom
+Mithi	Sindh	Pakistan
 Daudnagar	Bihar	India
 Metrotown	British Columbia	Canada
 Hannan	Osaka	Japan
@@ -5139,8 +5423,8 @@ Elkhart	Indiana	United States
 Bergkamen	North Rhine-Westphalia	Germany
 Kamifukuoka	Saitama	Japan
 Frechen	North Rhine-Westphalia	Germany
-La Crosse	Wisconsin	United States
 Óbidos	Pará	Brazil
+La Crosse	Wisconsin	United States
 Ramapuram	Tamil Nadu	India
 Dandeli	Karnataka	India
 Welland	Ontario	Canada
@@ -5168,6 +5452,7 @@ Tarbes	Occitanie	France
 Albany Park	Illinois	United States
 Fontenay-sous-Bois	Île-de-France	France
 Mouscron	Wallonia	Belgium
+Ar Riqqah	Al Aḩmadī	Kuwait
 Parobé	Rio Grande do Sul	Brazil
 Thodupuzha	Kerala	India
 Methuen	Massachusetts	United States
@@ -5182,8 +5467,8 @@ Lyon 09	Rhône-Alpes	France
 Dunstable	England	United Kingdom
 Port Macquarie	New South Wales	Australia
 University Heights	Saskatchewan	Canada
-Queens Village	New York	United States
 San Severo	Apulia	Italy
+Queens Village	New York	United States
 Roskilde	Zealand	Denmark
 Brookhaven	Georgia	United States
 Évry	Île-de-France	France
@@ -5199,6 +5484,7 @@ Willich	North Rhine-Westphalia	Germany
 Puertollano	Castille-La Mancha	Spain
 Joplin	Missouri	United States
 Coruripe	Alagoas	Brazil
+Baljurashi	Al Bahah Region	Saudi Arabia
 Enid	Oklahoma	United States
 Calvià	Balearic Islands	Spain
 Lower Sackville	Nova Scotia	Canada
@@ -5298,12 +5584,14 @@ Hilsa	Bihar	India
 Staines	England	United Kingdom
 Hikari	Yamaguchi	Japan
 Rampura Phul	Punjab	India
+Kot Mumin	Punjab	Pakistan
 The Hammocks	Florida	United States
 Ţarīf Kalbā	Fujairah	United Arab Emirates
+Ubauro	Sindh	Pakistan
 Fatwa	Bihar	India
 Tūndla	Uttar Pradesh	India
-Żoliborz	Mazovia	Poland
 Acayucan	Veracruz	Mexico
+Żoliborz	Mazovia	Poland
 la Vila de Gràcia	Catalonia	Spain
 Royal Leamington Spa	England	United Kingdom
 Mannārakkāt	Kerala	India
@@ -5330,6 +5618,7 @@ Belleville	Ontario	Canada
 Hinckley	England	United Kingdom
 Yasu	Shiga	Japan
 Aspern	State of Vienna	Austria
+Rajanpur	Punjab	Pakistan
 Saint-Malo	Brittany	France
 Lakewood	Ohio	United States
 Yūki	Ibaraki	Japan
@@ -5337,12 +5626,13 @@ Nanjangūd	Karnataka	India
 Skien	Telemark	Norway
 Ōi	Saitama	Japan
 Jaru	Rondônia	Brazil
-Vila-real	Valencia	Spain
 Ibbenbueren	North Rhine-Westphalia	Germany
+Vila-real	Valencia	Spain
 Herning	Central Jutland	Denmark
 Passau	Bavaria	Germany
 Clacton-on-Sea	England	United Kingdom
 Gronau	North Rhine-Westphalia	Germany
+Zhob	Balochistan	Pakistan
 Cumbernauld	Scotland	United Kingdom
 Laval	Pays de la Loire	France
 Hyères	Provence-Alpes-Côte d'Azur	France
@@ -5360,6 +5650,7 @@ Vargem Grande Paulista	São Paulo	Brazil
 Boa Viagem	Ceará	Brazil
 Schwerte	North Rhine-Westphalia	Germany
 Taxco de Alarcón	Guerrero	Mexico
+Matli	Sindh	Pakistan
 North Bay	Ontario	Canada
 Sunabeda	Odisha	India
 Gajraula	Uttar Pradesh	India
@@ -5368,6 +5659,7 @@ Kirkcaldy	Scotland	United Kingdom
 Barriera di Milano	Piedmont	Italy
 Speyer	Rheinland-Pfalz	Germany
 Saint-Hyacinthe	Quebec	Canada
+Jahanian	Punjab	Pakistan
 Modimolle	Limpopo	South Africa
 Vīrapāndi	Tamil Nadu	India
 Nanao	Ishikawa	Japan
@@ -5378,6 +5670,7 @@ Rovigo	Veneto	Italy
 Asakura	Fukuoka	Japan
 Midori	Gunma	Japan
 Rasipuram	Tamil Nadu	India
+Al Khābūrah	Al Batinah North	Oman
 Saint-Gilles	Brussels Capital	Belgium
 Ventas	Madrid	Spain
 Sālūr	Andhra Pradesh	India
@@ -5394,8 +5687,8 @@ Poway	California	United States
 Hodal	Haryana	India
 Edina	Minnesota	United States
 Minnetonka Mills	Minnesota	United States
-Katanawa	Fukuoka	Japan
 Zacapu	Michoacán	Mexico
+Katanawa	Fukuoka	Japan
 Bhadrāchalam	Telangana	India
 Pijijiapan	Chiapas	Mexico
 Alt-Hohenschönhausen	State of Berlin	Germany
@@ -5403,16 +5696,18 @@ Capivari	São Paulo	Brazil
 Heidenheim an der Brenz	Baden-Wurttemberg	Germany
 Tateyama	Chiba	Japan
 Campo Novo do Parecis	Mato Grosso	Brazil
-Werribee	Victoria	Australia
 Mairinque	São Paulo	Brazil
+Werribee	Victoria	Australia
 Aonla	Uttar Pradesh	India
 Tirupparangunram	Tamil Nadu	India
-Barriera di Lanzo	Piedmont	Italy
+Monsanto	Santarém	Portugal
+Rawalakot	Azad Kashmir	Pakistan
+Buni	Khyber Pakhtunkhwa	Pakistan
+Stonecrest	Georgia	United States
+Polanco	Mexico City	Mexico
 Treptow	State of Berlin	Germany
 Arashiyama	Kyoto	Japan
-Stonecrest	Georgia	United States
-Monsanto	Santarém	Portugal
-Polanco	Mexico City	Mexico
+Barriera di Lanzo	Piedmont	Italy
 Cerritos	California	United States
 Redford	Michigan	United States
 East Honolulu	Hawaii	United States
@@ -5420,9 +5715,9 @@ Troy	New York	United States
 Whitchurch-Stouffville	Ontario	Canada
 Sunnyside	New York	United States
 Lincoln	California	United States
+Downers Grove	Illinois	United States
 Whitman	Pennsylvania	United States
 Wharton	Pennsylvania	United States
-Downers Grove	Illinois	United States
 Azusa	California	United States
 Wilson	North Carolina	United States
 Monroe	Louisiana	United States
@@ -5649,8 +5944,8 @@ Manassas	Virginia	United States
 Brentwood	Tennessee	United States
 Westfield	Massachusetts	United States
 Sorel-Tracy	Quebec	Canada
-Hutchinson	Kansas	United States
 Leominster	Massachusetts	United States
+Hutchinson	Kansas	United States
 Catonsville	Maryland	United States
 Hicksville	New York	United States
 Bartlett	Illinois	United States
@@ -5687,8 +5982,8 @@ Stittsville	Ontario	Canada
 Venice	California	United States
 Sumter	South Carolina	United States
 Annapolis	Maryland	United States
-Quincy	Illinois	United States
 Wilkes-Barre	Pennsylvania	United States
+Quincy	Illinois	United States
 Lincoln Square	Illinois	United States
 La Puente	California	United States
 Holyoke	Massachusetts	United States
@@ -5706,8 +6001,8 @@ San Gabriel	California	United States
 Woodstock	Ontario	Canada
 Hickory	North Carolina	United States
 Beverly Cove	Massachusetts	United States
-Carol Stream	Illinois	United States
 Winter Garden	Florida	United States
+Carol Stream	Illinois	United States
 Warren	Ohio	United States
 Marlboro	New Jersey	United States
 Vernon	British Columbia	Canada
@@ -5745,8 +6040,8 @@ Grove City	Ohio	United States
 Bowmanville	Ontario	Canada
 Princeton	Florida	United States
 Essex	Maryland	United States
-Atlantic City	New Jersey	United States
 Pacifica	California	United States
+Atlantic City	New Jersey	United States
 Germantown	Tennessee	United States
 Northglenn	Colorado	United States
 Far Rockaway	New York	United States
@@ -5874,8 +6169,8 @@ Pennsauken	New Jersey	United States
 Rome	Georgia	United States
 Mattapan	Massachusetts	United States
 Claremont	California	United States
-Franklin	Wisconsin	United States
 West Hollywood	California	United States
+Franklin	Wisconsin	United States
 Richfield	Minnesota	United States
 Bell	California	United States
 Lewiston	Maine	United States
@@ -5961,8 +6256,8 @@ Cartierville	Quebec	Canada
 San Dimas	California	United States
 Mascouche	Quebec	Canada
 Mirabel	Quebec	Canada
-North Center	Illinois	United States
 Monroe	North Carolina	United States
+North Center	Illinois	United States
 Lawson	Saskatchewan	Canada
 Queen Creek	Arizona	United States
 Kaneohe	Hawaii	United States
@@ -6001,13 +6296,13 @@ Orangevale	California	United States
 Oswego	Illinois	United States
 El Mirage	Arizona	United States
 West Lake Sammamish	Washington	United States
-North Bel Air	Maryland	United States
 Chelmsford	Massachusetts	United States
+North Bel Air	Maryland	United States
 Bay City	Michigan	United States
 Nacogdoches	Texas	United States
 Shrewsbury	Massachusetts	United States
-Dakota Ridge	Colorado	United States
 McMinnville	Oregon	United States
+Dakota Ridge	Colorado	United States
 Moose Jaw	Saskatchewan	Canada
 Bridgeport	Illinois	United States
 Dalton	Georgia	United States
@@ -6025,8 +6320,8 @@ Northbrook	Illinois	United States
 Hilliard	Ohio	United States
 Wenatchee	Washington	United States
 Fairview	British Columbia	Canada
-West Fargo	North Dakota	United States
 Fair Lawn	New Jersey	United States
+West Fargo	North Dakota	United States
 Kennesaw	Georgia	United States
 New City	New York	United States
 Long Beach	New York	United States
@@ -6067,8 +6362,8 @@ Seaside	California	United States
 Kearney	Nebraska	United States
 Redan	Georgia	United States
 Manitowoc	Wisconsin	United States
-Williamsburg	New York	United States
 Mount Pleasant	British Columbia	Canada
+Williamsburg	New York	United States
 Goshen	Indiana	United States
 St. Charles	Illinois	United States
 Greenacres City	Florida	United States
@@ -6144,8 +6439,8 @@ Laguna Hills	California	United States
 West Bend	Wisconsin	United States
 Willingboro	New Jersey	United States
 Cicero	New York	United States
-Mundelein	Illinois	United States
 Lloydminster	Alberta	Canada
+Mundelein	Illinois	United States
 Centereach	New York	United States
 Juneau	Alaska	United States
 Mount Juliet	Tennessee	United States
@@ -6259,8 +6554,8 @@ Cleburne	Texas	United States
 Ashmont	Massachusetts	United States
 Bendale	Ontario	Canada
 Winter Park	Florida	United States
-Carney	Maryland	United States
 Southlake	Texas	United States
+Carney	Maryland	United States
 San Carlos	California	United States
 Woodstock	Georgia	United States
 East Hill-Meridian	Washington	United States
@@ -6278,8 +6573,8 @@ Elizabethtown	Kentucky	United States
 Austintown	Ohio	United States
 North Cowichan	British Columbia	Canada
 East Palo Alto	California	United States
-South Gate	Maryland	United States
 Mount Pleasant West	Ontario	Canada
+South Gate	Maryland	United States
 Pueblo West	Colorado	United States
 Port Chester	New York	United States
 Princeton	New Jersey	United States
@@ -6289,8 +6584,8 @@ Salem	New Hampshire	United States
 Opelika	Alabama	United States
 Alma	Quebec	Canada
 Rahway	New Jersey	United States
-Middle Village	New York	United States
 North Chicago	Illinois	United States
+Middle Village	New York	United States
 Morristown	Tennessee	United States
 Cheshire	Connecticut	United States
 Branford	Connecticut	United States
@@ -6366,8 +6661,8 @@ Greer	South Carolina	United States
 Lansing	Illinois	United States
 Harrison	New York	United States
 Monterey	California	United States
-Desert Hot Springs	California	United States
 West Islip	New York	United States
+Desert Hot Springs	California	United States
 American Fork	Utah	United States
 Central	Louisiana	United States
 Newburgh	New York	United States
@@ -6379,8 +6674,8 @@ SeaTac	Washington	United States
 Elmira	New York	United States
 Spring Valley	California	United States
 Stockbridge	Georgia	United States
-Whitehorse	Yukon	Canada
 Glen Ellyn	Illinois	United States
+Whitehorse	Yukon	Canada
 Monroeville	Pennsylvania	United States
 Fredericton Northside	New Brunswick	Canada
 Benicia	California	United States
@@ -6521,8 +6816,8 @@ Tujunga	California	United States
 Greenville	Texas	United States
 Magna	Utah	United States
 Batavia	Illinois	United States
-Cantonment	Florida	United States
 Danvers	Massachusetts	United States
+Cantonment	Florida	United States
 Boisbriand	Quebec	Canada
 Shoreview	Minnesota	United States
 Paradise	California	United States
@@ -6656,16 +6951,16 @@ Bridgeton	New Jersey	United States
 Maplewood	New Jersey	United States
 Soledad	California	United States
 Dorset Park	Ontario	Canada
+Farmington	Connecticut	United States
 Fallingbrook	Ontario	Canada
 Brooklin	Ontario	Canada
-Farmington	Connecticut	United States
 Fraser Heights	British Columbia	Canada
 Brownsburg	Indiana	United States
 Saginaw Township North	Michigan	United States
 Edwardsville	Illinois	United States
 Riverside	Ohio	United States
-Athens	Alabama	United States
 Woodbridge	California	United States
+Athens	Alabama	United States
 Liliha - Kapalama	Hawaii	United States
 Sanger	California	United States
 Westmont	Illinois	United States
@@ -6676,8 +6971,8 @@ Hastings	Nebraska	United States
 Cave Spring	Virginia	United States
 North Tustin	California	United States
 East Amherst	New York	United States
-Daphne	Alabama	United States
 Whitehall Township	Pennsylvania	United States
+Daphne	Alabama	United States
 Paducah	Kentucky	United States
 Cliffside Park	New Jersey	United States
 Elmwood Park	Illinois	United States
@@ -6698,17 +6993,17 @@ Ponca City	Oklahoma	United States
 Muskego	Wisconsin	United States
 Collinsville	Illinois	United States
 Reading	Massachusetts	United States
-Short Pump	Virginia	United States
 Belmont	Massachusetts	United States
 Dedham	Massachusetts	United States
+Short Pump	Virginia	United States
 Alta Vista	Ontario	Canada
 De Pere	Wisconsin	United States
 Caledonia	Wisconsin	United States
 Inkster	Michigan	United States
 Vincentown	New Jersey	United States
 Bixby	Oklahoma	United States
-Emporia	Kansas	United States
 Fort Dodge	Iowa	United States
+Emporia	Kansas	United States
 Walker	Michigan	United States
 Ottumwa	Iowa	United States
 Steeles	Ontario	Canada
@@ -6730,8 +7025,8 @@ Staunton	Virginia	United States
 Selma	California	United States
 South Windsor	Connecticut	United States
 North Potomac	Maryland	United States
-Waterdown	Ontario	Canada
 Bridlewood	Ontario	Canada
+Waterdown	Ontario	Canada
 Homer Glen	Illinois	United States
 Saint-Bruno-de-Montarville	Quebec	Canada
 Coral Terrace	Florida	United States
@@ -6801,10 +7096,10 @@ Strathroy	Ontario	Canada
 Bloomington	California	United States
 Bainbridge Island	Washington	United States
 Newtonbrook West	Ontario	Canada
-Marshall	Texas	United States
 Morrisville	North Carolina	United States
-Watertown	Wisconsin	United States
+Marshall	Texas	United States
 Squamish	British Columbia	Canada
+Watertown	Wisconsin	United States
 Kernersville	North Carolina	United States
 Dickinson	North Dakota	United States
 Agincourt South-Malvern West	Ontario	Canada
@@ -6862,16 +7157,16 @@ Dupont Circle	District of Columbia	United States
 Griffin	Georgia	United States
 Dolton	Illinois	United States
 Webster Groves	Missouri	United States
-Columbus	Mississippi	United States
 Belton	Missouri	United States
+Columbus	Mississippi	United States
 East Elmhurst	New York	United States
 Denison	Texas	United States
 Kerrville	Texas	United States
 Pooler	Georgia	United States
 Mequon	Wisconsin	United States
 Vicksburg	Mississippi	United States
-Wright	Florida	United States
 Morrisania	New York	United States
+Wright	Florida	United States
 Pacific Palisades	California	United States
 Palm City	Florida	United States
 Middleborough	Massachusetts	United States
@@ -6921,14 +7216,14 @@ Newberg	Oregon	United States
 Eglinton East	Ontario	Canada
 The Crossings	Florida	United States
 Valley Station	Kentucky	United States
-East Lake-Orient Park	Florida	United States
 Lennox	California	United States
+East Lake-Orient Park	Florida	United States
 Farmington	Minnesota	United States
 Wilsonville	Oregon	United States
 Hutto	Texas	United States
 Bloomingdale	Florida	United States
-Inglewood-Finn Hill	Washington	United States
 West Odessa	Texas	United States
+Inglewood-Finn Hill	Washington	United States
 Oak Harbor	Washington	United States
 ‘Ewa Gentry	Hawaii	United States
 Oak Ridge	Florida	United States
@@ -6953,8 +7248,8 @@ Visitacion Valley	California	United States
 North Augusta	South Carolina	United States
 Guilford	Connecticut	United States
 Cottage Lake	Washington	United States
-Mount Pearl	Newfoundland and Labrador	Canada
 Corcoran	California	United States
+Mount Pearl	Newfoundland and Labrador	Canada
 Melrose	New York	United States
 East Patchogue	New York	United States
 West Springfield	Virginia	United States
@@ -6969,14 +7264,14 @@ New Castle	Pennsylvania	United States
 Grand Boulevard	Illinois	United States
 Englemount-Lawrence	Ontario	Canada
 South Elgin	Illinois	United States
-New Brighton	Minnesota	United States
 Prichard	Alabama	United States
+New Brighton	Minnesota	United States
 Anniston	Alabama	United States
 Palm Springs	Florida	United States
 Ruston	Louisiana	United States
 Wilmington	Massachusetts	United States
-Midlothian	Texas	United States
 Edmonds	British Columbia	Canada
+Midlothian	Texas	United States
 Oxford	Mississippi	United States
 Birchcliffe-Cliffside	Ontario	Canada
 Oakdale	California	United States
@@ -7002,8 +7297,8 @@ Oxford	Ohio	United States
 Merrick	New York	United States
 Somerset	New Jersey	United States
 Moses Lake	Washington	United States
-Saginaw	Texas	United States
 Northdale	Florida	United States
+Saginaw	Texas	United States
 Greater Northdale	Florida	United States
 Summit	New Jersey	United States
 Watertown	South Dakota	United States
@@ -7101,8 +7396,8 @@ Shelbyville	Tennessee	United States
 Marquette	Michigan	United States
 Fairfield Heights	Indiana	United States
 Biddeford	Maine	United States
-Gordon Head	British Columbia	Canada
 Golden Valley	Minnesota	United States
+Gordon Head	British Columbia	Canada
 Canyon Lake	Texas	United States
 Conda	Idaho	United States
 Oxford	Alabama	United States
@@ -7119,8 +7414,8 @@ Pleasant Plains	District of Columbia	United States
 Carrboro	North Carolina	United States
 Crest Hill	Illinois	United States
 Saint Andrews	South Carolina	United States
-Ashland	Kentucky	United States
 Thorncliffe Park	Ontario	Canada
+Ashland	Kentucky	United States
 Townline	British Columbia	Canada
 Hays	Kansas	United States
 ʻEwa Beach-Iroquois Point	Hawaii	United States
@@ -7145,8 +7440,8 @@ East Ridge	Tennessee	United States
 Makakilo-Makaīwa Hills-Kunia	Hawaii	United States
 Rosedale-Moore Park	Ontario	Canada
 Plainview	Texas	United States
-Grayslake	Illinois	United States
 Agoura Hills	California	United States
+Grayslake	Illinois	United States
 Acton	Massachusetts	United States
 Sanford	Maine	United States
 Silver Firs	Washington	United States
@@ -7186,9 +7481,9 @@ Darien	Connecticut	United States
 Pleasant Prairie	Wisconsin	United States
 Port Alberni	British Columbia	Canada
 NoMa	District of Columbia	United States
-Adrian	Michigan	United States
 Mountain Brook	Alabama	United States
 Chambersburg	Pennsylvania	United States
+Adrian	Michigan	United States
 West Melbourne	Florida	United States
 Wasaga Beach	Ontario	Canada
 East Garfield Park	Illinois	United States
@@ -7254,13 +7549,13 @@ Rose Hill	Virginia	United States
 Mustang	Oklahoma	United States
 East Northport	New York	United States
 Glen Avon	California	United States
-Sulphur	Louisiana	United States
 Shelby	North Carolina	United States
+Sulphur	Louisiana	United States
 Montville Center	Connecticut	United States
 Ferndale	Michigan	United States
 South Saint Paul	Minnesota	United States
-Lents	Oregon	United States
 Lynn Haven	Florida	United States
+Lents	Oregon	United States
 Lake Ronkonkoma	New York	United States
 Millburn	New Jersey	United States
 Lexington	South Carolina	United States
@@ -7280,9 +7575,9 @@ Miamisburg	Ohio	United States
 Rolla	Missouri	United States
 Palm Valley	Florida	United States
 Tukwila	Washington	United States
-Templeton-Est	Quebec	Canada
 Woodlawn	Nova Scotia	Canada
 New Caney	Texas	United States
+Templeton-Est	Quebec	Canada
 DeBary	Florida	United States
 Lyndhurst	New Jersey	United States
 Germantown	Wisconsin	United States
@@ -7295,8 +7590,8 @@ Johnstown	Pennsylvania	United States
 Socastee	South Carolina	United States
 Ypsilanti	Michigan	United States
 North Bellmore	New York	United States
-King of Prussia	Pennsylvania	United States
 Hayesville	Oregon	United States
+King of Prussia	Pennsylvania	United States
 Cortlandt Manor	New York	United States
 Warrensburg	Missouri	United States
 Mokena	Illinois	United States
@@ -7305,8 +7600,8 @@ Norwood	Ohio	United States
 Mariners Harbor	New York	United States
 Bonney Lake	Washington	United States
 Dickinson	Texas	United States
-Saint-Lazare	Quebec	Canada
 Clifton	Colorado	United States
+Saint-Lazare	Quebec	Canada
 Lealman	Florida	United States
 Waikīkī	Hawaii	United States
 Hermosa Beach	California	United States
@@ -7318,13 +7613,13 @@ Evergreen Park	Illinois	United States
 Southbury	Connecticut	United States
 Baldwin	Pennsylvania	United States
 Huntsville	Ontario	Canada
-Norton	Massachusetts	United States
 Marblehead	Massachusetts	United States
+Norton	Massachusetts	United States
 Plattsburgh	New York	United States
 North Salt Lake	Utah	United States
 Sand Springs	Oklahoma	United States
-Westwood Plateau	British Columbia	Canada
 Painesville	Ohio	United States
+Westwood Plateau	British Columbia	Canada
 Diamond Head / Kapahulu / Saint Louis Heights	Hawaii	United States
 Greenfield	Massachusetts	United States
 Hartranft	Pennsylvania	United States
@@ -7341,8 +7636,8 @@ Tuscany	Alberta	Canada
 Salmon Creek	Washington	United States
 Kingsessing	Pennsylvania	United States
 La Crescenta-Montrose	California	United States
-Maywood	British Columbia	Canada
 Spanish Lake	Missouri	United States
+Maywood	British Columbia	Canada
 Willmar	Minnesota	United States
 Tysons	Virginia	United States
 Forest Lake	Minnesota	United States
@@ -7398,8 +7693,8 @@ Orinda	California	United States
 Pinole	California	United States
 Woodbridge	New Jersey	United States
 Sun City Center	Florida	United States
-Altamont	Oregon	United States
 Rosedale	Maryland	United States
+Altamont	Oregon	United States
 Niu Valley	Hawaii	United States
 Howard	Wisconsin	United States
 Alamo	Texas	United States
@@ -7407,8 +7702,8 @@ Upper Saint Clair	Pennsylvania	United States
 Broadview Heights	Ohio	United States
 Haslett	Michigan	United States
 West Elsdon	Illinois	United States
-Newton	Kansas	United States
 Glassboro	New Jersey	United States
+Newton	Kansas	United States
 Altus	Oklahoma	United States
 Blythe	California	United States
 Silverdale	Washington	United States
@@ -7428,14 +7723,14 @@ Secaucus	New Jersey	United States
 Jacksonville	Illinois	United States
 Fairwood	Washington	United States
 Madison	Connecticut	United States
-Camp Springs	Maryland	United States
 Cole Harbour	Nova Scotia	Canada
+Camp Springs	Maryland	United States
 Ronkonkoma	New York	United States
 Saco	Maine	United States
 Maple Shade	New Jersey	United States
 Hawthorne	New Jersey	United States
-Fresno	Texas	United States
 East Massapequa	New York	United States
+Fresno	Texas	United States
 Amherst Center	Massachusetts	United States
 Montrose	Colorado	United States
 Marion Oaks	Florida	United States
@@ -7471,8 +7766,8 @@ Beloeil	Quebec	Canada
 Stillwater	Minnesota	United States
 Cortland	New York	United States
 Augusta	Maine	United States
-Berea	Ohio	United States
 Capitol Riverfront	District of Columbia	United States
+Berea	Ohio	United States
 Twinsburg	Ohio	United States
 Wantagh	New York	United States
 West Hempstead	New York	United States
@@ -7503,8 +7798,8 @@ Frederickson	Washington	United States
 Dewdney East	Saskatchewan	Canada
 Evanston	Alberta	Canada
 Iselin	New Jersey	United States
-Whitehall	Ohio	United States
 Suwanee	Georgia	United States
+Whitehall	Ohio	United States
 Rutherford	New Jersey	United States
 Islip	New York	United States
 Forest Park	Ohio	United States
@@ -7522,15 +7817,15 @@ Eringate-Centennial-West Deane	Ontario	Canada
 Rivière-du-Loup	Quebec	Canada
 Pitt Meadows	British Columbia	Canada
 Gautier	Mississippi	United States
-Goodings Grove	Illinois	United States
 Bourbonnais	Illinois	United States
+Goodings Grove	Illinois	United States
 Macomb	Illinois	United States
 Point Pleasant	New Jersey	United States
 Bellaire	Texas	United States
-East Mount Airy	Pennsylvania	United States
 El Reno	Oklahoma	United States
-Chowchilla	California	United States
+East Mount Airy	Pennsylvania	United States
 Mead Valley	California	United States
+Chowchilla	California	United States
 Hyattsville	Maryland	United States
 Happy Valley	Oregon	United States
 Central Lonsdale	British Columbia	Canada
@@ -7539,8 +7834,8 @@ Onalaska	Wisconsin	United States
 Round Lake	Illinois	United States
 Stafford	Texas	United States
 Yorkville	Illinois	United States
-North Ogden	Utah	United States
 Winchester	Kentucky	United States
+North Ogden	Utah	United States
 Hespeler	Ontario	Canada
 Bensenville	Illinois	United States
 Forney	Texas	United States
@@ -7558,16 +7853,16 @@ Ottawa	Illinois	United States
 Shafter	California	United States
 Midlothian	Virginia	United States
 Amesbury	Massachusetts	United States
-Meadowbrook	Virginia	United States
 Franklin Park	Illinois	United States
+Meadowbrook	Virginia	United States
 McAlester	Oklahoma	United States
-Punta Gorda Isles	Florida	United States
 Port Colborne	Ontario	Canada
+Punta Gorda Isles	Florida	United States
 Palestine	Texas	United States
 Sherrelwood	Colorado	United States
 Creve Coeur	Missouri	United States
-Cinco Ranch	Texas	United States
 Ballenger Creek	Maryland	United States
+Cinco Ranch	Texas	United States
 Helena	Alabama	United States
 Palmer	Massachusetts	United States
 Belle Glade	Florida	United States
@@ -7596,8 +7891,8 @@ Mattoon	Illinois	United States
 Arroyo Grande	California	United States
 Anacortes	Washington	United States
 Cobourg	Ontario	Canada
-Monroe	Washington	United States
 Auburn Bay	Alberta	Canada
+Monroe	Washington	United States
 Rancho Mirage	California	United States
 Limerick	Pennsylvania	United States
 Mililani Mauka / Launani Valley	Hawaii	United States
@@ -7621,8 +7916,8 @@ Rockland	Massachusetts	United States
 Newburyport	Massachusetts	United States
 Westbrook	Maine	United States
 St. Marys	Georgia	United States
-Cary	Illinois	United States
 Lackawanna	New York	United States
+Cary	Illinois	United States
 Kensington-Chinatown	Ontario	Canada
 Westerly	Rhode Island	United States
 Maumelle	Arkansas	United States
@@ -7664,8 +7959,8 @@ Martinsburg	West Virginia	United States
 Marco Island	Florida	United States
 Tiffin	Ohio	United States
 Hunting Park	Pennsylvania	United States
-Albert Lea	Minnesota	United States
 Golden Triangle	District of Columbia	United States
+Albert Lea	Minnesota	United States
 Esquimalt	British Columbia	Canada
 South Hadley	Massachusetts	United States
 Juniata Park	Pennsylvania	United States
@@ -7687,8 +7982,8 @@ Fiddlesticks	Ontario	Canada
 Menasha	Wisconsin	United States
 Palos Hills	Illinois	United States
 Prunedale	California	United States
-Stevenson Ranch	California	United States
 Culpeper	Virginia	United States
+Stevenson Ranch	California	United States
 South Houston	Texas	United States
 Miramichi	New Brunswick	Canada
 Kirksville	Missouri	United States
@@ -7702,8 +7997,8 @@ Mesquite	Nevada	United States
 New Philadelphia	Ohio	United States
 Sylvan Lake	Alberta	Canada
 Saint Matthews	Kentucky	United States
-Saint-Lin-Laurentides	Quebec	Canada
 Maitland	Florida	United States
+Saint-Lin-Laurentides	Quebec	Canada
 North Aurora	Illinois	United States
 Morningside	Ontario	Canada
 Safety Harbor	Florida	United States
@@ -7719,20 +8014,20 @@ Central Saanich	British Columbia	Canada
 Nicetown-Tioga	Pennsylvania	United States
 Detroit-Shoreway	Ohio	United States
 Wilton	New York	United States
-Coventry Hills	Alberta	Canada
 Anoka	Minnesota	United States
+Coventry Hills	Alberta	Canada
 East Cleveland	Ohio	United States
 Sudbury	Massachusetts	United States
 Plainville	Connecticut	United States
-Middletown	Rhode Island	United States
 Ada	Oklahoma	United States
+Middletown	Rhode Island	United States
 Glassmanor	Maryland	United States
 South Orange	New Jersey	United States
 Idylwood	Virginia	United States
 Seabrook	Maryland	United States
 Durant	Oklahoma	United States
-Kings Park	New York	United States
 Killingly Center	Connecticut	United States
+Kings Park	New York	United States
 Saint-Augustin-de-Desmaures	Quebec	Canada
 Canby	Oregon	United States
 Poplar Bluff	Missouri	United States
@@ -7756,8 +8051,8 @@ Bayside	California	United States
 Wyckoff	New Jersey	United States
 Kennedy Park	Ontario	Canada
 Woodmere	New York	United States
-Huntington	Indiana	United States
 Imperial	California	United States
+Huntington	Indiana	United States
 Wayne	Michigan	United States
 White Settlement	Texas	United States
 Eloy	Arizona	United States
@@ -7792,8 +8087,8 @@ Colwood	British Columbia	Canada
 Sayville	New York	United States
 Clarksdale	Mississippi	United States
 Leaside-Bennington	Ontario	Canada
-Fairview Heights	Illinois	United States
 Norwalk	Ohio	United States
+Fairview Heights	Illinois	United States
 San Carlos Park	Florida	United States
 Concord	Massachusetts	United States
 Springfield	Tennessee	United States
@@ -7827,8 +8122,8 @@ North Decatur	Georgia	United States
 Morganton	North Carolina	United States
 Danville	Kentucky	United States
 Buckingham	Quebec	Canada
-Barrington	Rhode Island	United States
 Denville	New Jersey	United States
+Barrington	Rhode Island	United States
 Washington	Illinois	United States
 Phoenixville	Pennsylvania	United States
 Mercedes	Texas	United States
@@ -7857,8 +8152,8 @@ Coalinga	California	United States
 Seymour	Connecticut	United States
 Trinity-Bellwoods	Ontario	Canada
 Clayton Park West	Nova Scotia	Canada
-Cohoes	New York	United States
 Jenison	Michigan	United States
+Cohoes	New York	United States
 Swansea	Massachusetts	United States
 Donna	Texas	United States
 Vienna	Virginia	United States
@@ -7888,8 +8183,8 @@ Fairview Park	Ohio	United States
 Laguna Woods	California	United States
 Cañon City	Colorado	United States
 Mount Clemens	Michigan	United States
-Saint Michael	Minnesota	United States
 South River	New Jersey	United States
+Saint Michael	Minnesota	United States
 Fort Thomas	Kentucky	United States
 Stonebridge	Saskatchewan	Canada
 Sunset	Florida	United States
@@ -7948,14 +8243,14 @@ Maryland City	Maryland	United States
 Siloam Springs	Arkansas	United States
 Seafair	British Columbia	Canada
 Ham Lake	Minnesota	United States
-Frankfort	Indiana	United States
 West Columbia	South Carolina	United States
-Dyer	Indiana	United States
+Frankfort	Indiana	United States
 Mount Pleasant	Texas	United States
+Dyer	Indiana	United States
 Rye	New York	United States
 Fort Hunt	Virginia	United States
-Hermitage	Pennsylvania	United States
 Americus	Georgia	United States
+Hermitage	Pennsylvania	United States
 Buffalo	Minnesota	United States
 Crawfordsville	Indiana	United States
 Lake Mary	Florida	United States
@@ -7979,8 +8274,8 @@ Sunland Park	New Mexico	United States
 Cliffcrest	Ontario	Canada
 North Liberty	Iowa	United States
 Burlington	Kentucky	United States
-Parole	Maryland	United States
 Vincent	California	United States
+Parole	Maryland	United States
 Southchase	Florida	United States
 Ukiah	California	United States
 La Marque	Texas	United States
@@ -7988,8 +8283,8 @@ L'Assomption	Quebec	Canada
 North Arlington	New Jersey	United States
 La Palma	California	United States
 Seagoville	Texas	United States
-Lebanon	Indiana	United States
 Greater Napanee	Ontario	Canada
+Lebanon	Indiana	United States
 Clayton	Missouri	United States
 Pearl River	New York	United States
 Conyers	Georgia	United States
@@ -8005,8 +8300,8 @@ Maillardville	British Columbia	Canada
 Adams Morgan	District of Columbia	United States
 Steinbach	Manitoba	Canada
 Rutland	Vermont	United States
-Asbury Park	New Jersey	United States
 Pleasant View	Ontario	Canada
+Asbury Park	New Jersey	United States
 Lake Country	British Columbia	Canada
 Lutherville-Timonium	Maryland	United States
 UC Irvine	California	United States
@@ -8020,23 +8315,23 @@ Grosse Pointe Woods	Michigan	United States
 Alton	Texas	United States
 Pinehurst	North Carolina	United States
 Groves	Texas	United States
-West University Place	Texas	United States
 Orient Heights	Massachusetts	United States
+West University Place	Texas	United States
 Wilkinsburg	Pennsylvania	United States
-Manassas Park	Virginia	United States
 Willow Grove	Pennsylvania	United States
+Manassas Park	Virginia	United States
 Avon Center	Ohio	United States
 Gatesville	Texas	United States
-La Grange	Illinois	United States
 Henry Farm	Ontario	Canada
+La Grange	Illinois	United States
 Mont-Saint-Hilaire	Quebec	Canada
 Great Bend	Kansas	United States
 Shively	Kentucky	United States
 Highland Springs	Virginia	United States
 Hueytown	Alabama	United States
 Talladega	Alabama	United States
-Mill Creek East	Washington	United States
 New Haven	Indiana	United States
+Mill Creek East	Washington	United States
 Koolauloa	Hawaii	United States
 Middleburg Heights	Ohio	United States
 Taylor-Massey	Ontario	Canada
@@ -8072,8 +8367,8 @@ Hurricane	Utah	United States
 Plainfield	Connecticut	United States
 Hanover	Pennsylvania	United States
 Lithia Springs	Georgia	United States
-Mastic	New York	United States
 Farmingville	New York	United States
+Mastic	New York	United States
 Central Coquitlam	British Columbia	Canada
 Setauket-East Setauket	New York	United States
 Harrison	New Jersey	United States
@@ -8106,8 +8401,8 @@ Dickson	Tennessee	United States
 Newport	Kentucky	United States
 Cullman	Alabama	United States
 Live Oak	Texas	United States
-Roanoke Rapids	North Carolina	United States
 Payson	Arizona	United States
+Roanoke Rapids	North Carolina	United States
 Storrs	Connecticut	United States
 The Dalles	Oregon	United States
 Los Lunas	New Mexico	United States
@@ -8115,8 +8410,8 @@ Dixon	Illinois	United States
 Bellevue	Wisconsin	United States
 Sunland	California	United States
 Millbrook	Alabama	United States
-Brownsville	Florida	United States
 Wailuku	Hawaii	United States
+Brownsville	Florida	United States
 Warren Township	New Jersey	United States
 Lougheed	British Columbia	Canada
 Arbutus Ridge	British Columbia	Canada
@@ -8139,8 +8434,8 @@ Pataskala	Ohio	United States
 Edgemont	Alberta	Canada
 Traverse City	Michigan	United States
 South Yuba City	California	United States
-Ledyard	Connecticut	United States
 Merrifield	Virginia	United States
+Ledyard	Connecticut	United States
 Saint-Vincent-de-Paul	Quebec	Canada
 Fords	New Jersey	United States
 Kapolei	Hawaii	United States
@@ -8156,9 +8451,9 @@ Ripon	California	United States
 Rossville	Maryland	United States
 Depew	New York	United States
 Seven Oaks	South Carolina	United States
-Wilmington Island	Georgia	United States
-Gates-North Gates	New York	United States
 Parlier	California	United States
+Gates-North Gates	New York	United States
+Wilmington Island	Georgia	United States
 East Rancho Dominguez	California	United States
 Southwest Waterfront	District of Columbia	United States
 Natchez	Mississippi	United States
