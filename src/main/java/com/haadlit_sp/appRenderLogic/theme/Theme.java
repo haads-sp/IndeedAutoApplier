@@ -1,16 +1,22 @@
 package com.haadlit_sp.appRenderLogic.theme;
 
+import com.formdev.flatlaf.FlatLightLaf;
+
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.Scrollable;
 import javax.swing.border.Border;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.UIManager;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -18,40 +24,134 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
+import java.awt.Insets;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.font.TextAttribute;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
- * Single source of truth for colors, fonts, spacing and small styled-widget factories.
- * Light, professional palette with an Indeed-blue accent.
+ * THE design system: every colour, font, spacing step, radius and styled widget lives here.
+ *
+ * <p>Direction — "instrument panel": the app is a four-step console that signs you in, learns what
+ * you want, then dispatches applications. So the palette is graphite neutrals carrying a single
+ * petrol accent, status colours are reserved for real state (running / paused / failed), and
+ * anything that is genuinely data (counts, radii, versions) is set in the mono face.
+ * The accent is deliberately NOT Indeed's blue — this is the user's tool, not a copy of Indeed.
  */
 public final class Theme {
 
     private Theme() {}
 
-    // ---- Palette ----
-    public static final Color BG          = new Color(0xF3, 0xF4, 0xF6);
-    public static final Color SURFACE     = new Color(0xFF, 0xFF, 0xFF);
-    public static final Color TEXT        = new Color(0x1F, 0x29, 0x33);
-    public static final Color MUTED       = new Color(0x6B, 0x72, 0x80);
-    public static final Color BORDER      = new Color(0xD1, 0xD5, 0xDB);
-    public static final Color ACCENT      = new Color(0x25, 0x57, 0xA7); // Indeed blue
-    public static final Color ACCENT_TEXT = Color.WHITE;
-    public static final Color SUCCESS     = new Color(0x12, 0x80, 0x5C);
-    public static final Color WARN        = new Color(0xB4, 0x53, 0x09);
-    public static final Color ERROR       = new Color(0xB9, 0x1C, 0x1C);
+    // ---- Palette: graphite neutrals ----
+    public static final Color CANVAS       = new Color(0xF4, 0xF6, 0xF8);
+    public static final Color SURFACE      = new Color(0xFF, 0xFF, 0xFF);
+    public static final Color SURFACE_SUNK = new Color(0xEC, 0xEF, 0xF3);
+    public static final Color LINE         = new Color(0xDC, 0xE2, 0xE9);
+    public static final Color LINE_STRONG  = new Color(0xC2, 0xCB, 0xD6);
+    public static final Color TEXT         = new Color(0x11, 0x18, 0x21);
+    public static final Color TEXT_MUTED   = new Color(0x5B, 0x67, 0x76);
+    public static final Color TEXT_FAINT   = new Color(0x8A, 0x96, 0xA3);
 
-    // ---- Fonts ----
-    private static final String FAMILY = "Segoe UI";
-    public static final Font TITLE   = new Font(FAMILY, Font.BOLD, 22);
-    public static final Font HEADING = new Font(FAMILY, Font.BOLD, 15);
-    public static final Font BODY    = new Font(FAMILY, Font.PLAIN, 13);
-    public static final Font SMALL   = new Font(FAMILY, Font.PLAIN, 12);
-    public static final Font MONO    = new Font("Consolas", Font.PLAIN, 12);
+    // ---- Palette: petrol accent + status ----
+    public static final Color ACCENT       = new Color(0x0B, 0x63, 0x63);
+    public static final Color ACCENT_HOVER = new Color(0x08, 0x4C, 0x4C);
+    public static final Color ACCENT_SOFT  = new Color(0xE2, 0xF0, 0xF0);
+    public static final Color ON_ACCENT    = new Color(0xFF, 0xFF, 0xFF);
+    public static final Color SUCCESS      = new Color(0x0E, 0x7A, 0x4F);
+    public static final Color WARNING      = new Color(0xB4, 0x53, 0x09);
+    public static final Color DANGER       = new Color(0xB4, 0x23, 0x18);
 
-    // ---- Spacing ----
-    public static final int PAD = 16;
-    public static final int GAP = 8;
+    // ---- Spacing scale (4pt rhythm) ----
+    public static final int SPACE_XS  = 4;
+    public static final int SPACE_SM  = 8;
+    public static final int SPACE_MD  = 12;
+    public static final int SPACE_LG  = 16;
+    public static final int SPACE_XL  = 24;
+    public static final int SPACE_XXL = 32;
+
+    // ---- Radii ----
+    public static final int RADIUS_CARD    = 10;
+    public static final int RADIUS_CONTROL = 6;
+
+    // ---- Typography ----
+    private static final String UI_FAMILY = pickFamily(
+            "Segoe UI Variable Text", "Segoe UI", "Inter", "Roboto", Font.SANS_SERIF);
+    private static final String DISPLAY_FAMILY = pickFamily(
+            "Segoe UI Variable Display", "Segoe UI Semibold", "Segoe UI", "Inter", Font.SANS_SERIF);
+    private static final String MONO_FAMILY = pickFamily(
+            "Cascadia Mono", "Cascadia Code", "Consolas", "JetBrains Mono", Font.MONOSPACED);
+
+    /** Page titles. Tightened tracking keeps big text from looking loose. */
+    public static final Font TITLE   = tracked(new Font(DISPLAY_FAMILY, Font.BOLD, 22), -0.015f);
+    /** Card / section headings. */
+    public static final Font HEADING = new Font(UI_FAMILY, Font.BOLD, 15);
+    /** Small all-caps section markers; the caller supplies uppercase text. */
+    public static final Font EYEBROW = tracked(new Font(UI_FAMILY, Font.BOLD, 10), 0.14f);
+    public static final Font BODY    = new Font(UI_FAMILY, Font.PLAIN, 13);
+    public static final Font BODY_STRONG = new Font(UI_FAMILY, Font.BOLD, 13);
+    public static final Font SMALL   = new Font(UI_FAMILY, Font.PLAIN, 12);
+    /** For things that genuinely are data: counts, radii, versions, timestamps. */
+    public static final Font MONO    = new Font(MONO_FAMILY, Font.PLAIN, 12);
+
+    /** Installs the look and feel. Must run before any component is created. */
+    public static void install() {
+        FlatLightLaf.setup();
+
+        UIManager.put("defaultFont", new FontUIResource(BODY));
+        UIManager.put("Component.arc", RADIUS_CONTROL);
+        UIManager.put("Button.arc", RADIUS_CONTROL);
+        UIManager.put("TextComponent.arc", RADIUS_CONTROL);
+        UIManager.put("Component.focusWidth", 1);
+        UIManager.put("Component.innerFocusWidth", 1);
+        UIManager.put("Component.focusColor", ACCENT);
+        UIManager.put("Component.focusedBorderColor", ACCENT);
+        UIManager.put("Component.borderColor", LINE_STRONG);
+
+        UIManager.put("Panel.background", CANVAS);
+        UIManager.put("Viewport.background", CANVAS);
+        UIManager.put("ScrollPane.background", CANVAS);
+        UIManager.put("Label.foreground", TEXT);
+        UIManager.put("TextField.background", SURFACE);
+        UIManager.put("ComboBox.background", SURFACE);
+        UIManager.put("ComboBox.padding", new Insets(SPACE_XS + 1, SPACE_SM, SPACE_XS + 1, SPACE_SM));
+
+        UIManager.put("List.selectionBackground", ACCENT_SOFT);
+        UIManager.put("List.selectionForeground", TEXT);
+        UIManager.put("List.selectionInactiveBackground", ACCENT_SOFT);
+        UIManager.put("List.selectionInactiveForeground", TEXT);
+        UIManager.put("ComboBox.selectionBackground", ACCENT_SOFT);
+        UIManager.put("ComboBox.selectionForeground", TEXT);
+
+        UIManager.put("ScrollBar.width", 10);
+        UIManager.put("ScrollBar.thumbArc", 999);
+        UIManager.put("ScrollBar.thumbInsets", new Insets(2, 2, 2, 2));
+        UIManager.put("ScrollBar.track", CANVAS);
+    }
+
+    private static String pickFamily(String... candidates) {
+        Set<String> available = new HashSet<>(Arrays.asList(
+                GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
+        for (String candidate : candidates) {
+            if (available.contains(candidate)) {
+                return candidate;
+            }
+        }
+        return Font.SANS_SERIF;
+    }
+
+    private static Font tracked(Font base, float tracking) {
+        return base.deriveFont(Map.of(TextAttribute.TRACKING, tracking));
+    }
 
     // ---- Borders ----
     public static Border pad(int all) {
@@ -66,7 +166,13 @@ public final class Theme {
     public static JLabel title(String text)   { return label(text, TITLE, TEXT); }
     public static JLabel heading(String text) { return label(text, HEADING, TEXT); }
     public static JLabel body(String text)    { return label(text, BODY, TEXT); }
-    public static JLabel muted(String text)   { return label(text, SMALL, MUTED); }
+    public static JLabel muted(String text)   { return label(text, SMALL, TEXT_MUTED); }
+    public static JLabel mono(String text)    { return label(text, MONO, TEXT_MUTED); }
+
+    /** A small all-caps marker above a field or section. */
+    public static JLabel eyebrow(String text) {
+        return label(text.toUpperCase(java.util.Locale.ROOT), EYEBROW, TEXT_FAINT);
+    }
 
     private static JLabel label(String text, Font font, Color color) {
         JLabel l = new JLabel(text);
@@ -77,16 +183,26 @@ public final class Theme {
 
     // ---- Buttons ----
     public static JButton primaryButton(String text) {
-        JButton b = baseButton(text, HEADING, ACCENT, ACCENT_TEXT);
-        b.setBorder(pad(8, 18, 8, 18));
+        JButton b = baseButton(text, BODY_STRONG, ACCENT, ON_ACCENT);
+        b.setBorder(pad(SPACE_SM + 1, SPACE_LG, SPACE_SM + 1, SPACE_LG));
+        hoverFill(b, ACCENT, ACCENT_HOVER);
         return b;
     }
 
     public static JButton secondaryButton(String text) {
         JButton b = baseButton(text, BODY, SURFACE, TEXT);
         b.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(BORDER),
-                pad(7, 16, 7, 16)));
+                BorderFactory.createLineBorder(LINE_STRONG),
+                pad(SPACE_SM, SPACE_MD + 2, SPACE_SM, SPACE_MD + 2)));
+        hoverFill(b, SURFACE, SURFACE_SUNK);
+        return b;
+    }
+
+    /** Lowest-emphasis action: no fill, no border. */
+    public static JButton ghostButton(String text) {
+        JButton b = baseButton(text, BODY, CANVAS, ACCENT);
+        b.setBorder(pad(SPACE_SM, SPACE_MD, SPACE_SM, SPACE_MD));
+        b.setContentAreaFilled(false);
         return b;
     }
 
@@ -96,12 +212,47 @@ public final class Theme {
         b.setBackground(bg);
         b.setForeground(fg);
         b.setFocusPainted(false);
-        b.setOpaque(true);
         b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        b.putClientProperty("JButton.buttonType", "roundRect");
         return b;
     }
 
-    // ---- Layout helpers ----
+    /** FlatLaf derives no hover colour from a custom background, so drive it explicitly. */
+    private static void hoverFill(JButton button, Color normal, Color hover) {
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if (button.isEnabled()) {
+                    button.setBackground(hover);
+                }
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(normal);
+            }
+        });
+    }
+
+    // ---- Inputs ----
+    public static JTextField textField(String placeholder, int columns) {
+        JTextField field = new JTextField(columns);
+        field.setFont(BODY);
+        field.putClientProperty("JTextField.placeholderText", placeholder);
+        field.setBorder(BorderFactory.createCompoundBorder(
+                field.getBorder(), pad(SPACE_XS, SPACE_SM, SPACE_XS, SPACE_SM)));
+        return field;
+    }
+
+    public static <T> JComboBox<T> comboBox(T[] items) {
+        JComboBox<T> combo = new JComboBox<>(items);
+        combo.setFont(BODY);
+        combo.setBackground(SURFACE);
+        combo.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        return combo;
+    }
+
+    // ---- Layout ----
 
     /** Vertical box; children are left-aligned as added. */
     public static JPanel stack(Component... items) {
@@ -112,26 +263,39 @@ public final class Theme {
         return p;
     }
 
-    /** A white, bordered "card" laying its children out vertically. */
+    /** A rounded surface panel laying its children out vertically. */
     public static JPanel card(Component... items) {
-        JPanel p = new JPanel();
+        JPanel p = new CardPanel();
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-        p.setBackground(SURFACE);
         p.setAlignmentX(Component.LEFT_ALIGNMENT);
-        p.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(BORDER), pad(PAD)));
+        p.setBorder(pad(SPACE_LG + 2));
         addLeft(p, items);
         return p;
     }
 
     /** A left-aligned horizontal row that keeps its preferred height inside a vertical box. */
     public static JPanel row(Component... items) {
-        JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT, GAP, 0));
+        return row(SPACE_SM, items);
+    }
+
+    public static JPanel row(int gap, Component... items) {
+        JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT, gap, 0));
         p.setOpaque(false);
         p.setAlignmentX(Component.LEFT_ALIGNMENT);
         for (Component c : items) {
             p.add(c);
         }
+        p.setMaximumSize(new Dimension(Integer.MAX_VALUE, p.getPreferredSize().height));
+        return p;
+    }
+
+    /** A labelled field: small caps marker above its control. */
+    public static JPanel field(String label, Component control) {
+        JPanel p = new JPanel(new BorderLayout(0, SPACE_XS + 2));
+        p.setOpaque(false);
+        p.setAlignmentX(Component.LEFT_ALIGNMENT);
+        p.add(eyebrow(label), BorderLayout.NORTH);
+        p.add(control, BorderLayout.CENTER);
         p.setMaximumSize(new Dimension(Integer.MAX_VALUE, p.getPreferredSize().height));
         return p;
     }
@@ -155,8 +319,38 @@ public final class Theme {
         pane.setOpaque(false);
         pane.getViewport().setOpaque(false);
         pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        pane.getVerticalScrollBar().setUnitIncrement(GAP * 2);
+        pane.getVerticalScrollBar().setUnitIncrement(SPACE_LG);
         return pane;
+    }
+
+    public static Component vGap(int height) {
+        return Box.createVerticalStrut(height);
+    }
+
+    public static Component vGlue() {
+        return Box.createVerticalGlue();
+    }
+
+    /** Rounded, hairline-bordered surface. Swing has no border-radius, so it is painted. */
+    private static final class CardPanel extends JPanel {
+
+        CardPanel() {
+            setOpaque(false);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            int w = getWidth() - 1;
+            int h = getHeight() - 1;
+            g2.setColor(SURFACE);
+            g2.fillRoundRect(0, 0, w, h, RADIUS_CARD, RADIUS_CARD);
+            g2.setColor(LINE);
+            g2.drawRoundRect(0, 0, w, h, RADIUS_CARD, RADIUS_CARD);
+            g2.dispose();
+            super.paintComponent(g);
+        }
     }
 
     /** Viewport view that keeps content full-width and top-aligned, scrolling only vertically. */
@@ -175,7 +369,7 @@ public final class Theme {
 
         @Override
         public int getScrollableUnitIncrement(Rectangle visible, int orientation, int direction) {
-            return GAP * 2;
+            return SPACE_LG;
         }
 
         @Override
@@ -193,13 +387,5 @@ public final class Theme {
         public boolean getScrollableTracksViewportHeight() {
             return false;
         }
-    }
-
-    public static Component vGap(int height) {
-        return Box.createVerticalStrut(height);
-    }
-
-    public static Component vGlue() {
-        return Box.createVerticalGlue();
     }
 }

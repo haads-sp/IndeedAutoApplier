@@ -21,16 +21,16 @@ public class Page4 extends JPanel implements LivePage {
 
     private final StatusPanel statusPanel = new StatusPanel();
     private final HistoryPanel historyPanel = new HistoryPanel();
-    private final JButton startBtn = Theme.primaryButton("Start");
+    private final JButton startBtn = Theme.primaryButton("Start applying");
     private final JButton pauseBtn = Theme.secondaryButton("Pause");
     private final JButton stopBtn = Theme.secondaryButton("Stop");
 
     public Page4(App app) {
         this.app = app;
 
-        setBackground(Theme.BG);
+        setBackground(Theme.CANVAS);
         setLayout(new BorderLayout());
-        setBorder(Theme.pad(Theme.PAD * 2));
+        setBorder(Theme.pad(Theme.SPACE_XXL));
 
         add(new Header("Run", "Start applying. You can pause or stop at any time."),
                 BorderLayout.NORTH);
@@ -42,14 +42,14 @@ public class Page4 extends JPanel implements LivePage {
     }
 
     private JComponent buildBody() {
-        JComponent top = Theme.stack(
+        JComponent console = Theme.card(
                 Theme.row(startBtn, pauseBtn, stopBtn),
-                Theme.vGap(Theme.PAD),
+                Theme.vGap(Theme.SPACE_XL),
                 statusPanel);
 
-        JPanel body = new JPanel(new BorderLayout(0, Theme.PAD));
+        JPanel body = new JPanel(new BorderLayout(0, Theme.SPACE_LG));
         body.setOpaque(false);
-        body.add(top, BorderLayout.NORTH);
+        body.add(console, BorderLayout.NORTH);
         body.add(historyPanel, BorderLayout.CENTER);
         return body;
     }

@@ -4,6 +4,9 @@ import com.haadlit_sp.appCoreLogic.browser.BrowserDriver;
 import com.haadlit_sp.appCoreLogic.browser.BrowserDriverFactory;
 import com.haadlit_sp.appCoreLogic.browser.ChromeProfile;
 import com.haadlit_sp.appCoreLogic.browser.IndeedSelectors;
+import com.haadlit_sp.appCoreLogic.location.LocationSuggester;
+import com.haadlit_sp.appCoreLogic.location.LocationSuggesterFactory;
+import com.haadlit_sp.appCoreLogic.model.CityLocation;
 import com.haadlit_sp.appCoreLogic.model.HistoryEntry;
 import com.haadlit_sp.appCoreLogic.model.ProfileFacts;
 import com.haadlit_sp.appCoreLogic.model.RunStatus;
@@ -53,6 +56,7 @@ public class AppCore {
     });
     private final PdfTextExtractor pdfText = new PdfTextExtractor();
     private final ProfileFactsExtractor factsExtractor = new ProfileFactsExtractor();
+    private final LocationSuggester locationSuggester = LocationSuggesterFactory.create();
 
     private volatile boolean loggedIn = false;
     private volatile String loginMessage = "Not signed in.";
@@ -208,6 +212,11 @@ public class AppCore {
 
     public SearchCriteria searchCriteria() {
         return criteria;
+    }
+
+    /** Places matching what the user has typed so far. Cheap enough to call on every keystroke. */
+    public List<CityLocation> suggestLocations(String typed, int limit) {
+        return locationSuggester.suggest(typed, limit);
     }
 
     // ---- Run control ----

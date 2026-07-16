@@ -6,13 +6,13 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 
 
-/** A step title with a muted subtitle, used at the top of every page. */
+/** A page title with a muted subtitle. The rail already says which step this is. */
 public class Header extends JPanel {
 
     public Header(String title, String subtitle) {
         setOpaque(false);
-        setLayout(new BorderLayout(0, Theme.GAP / 2));
-        setBorder(Theme.pad(0, 0, Theme.PAD, 0));
+        setLayout(new BorderLayout(0, Theme.SPACE_XS));
+        setBorder(Theme.pad(0, 0, Theme.SPACE_XL, 0));
         add(Theme.title(title), BorderLayout.NORTH);
         add(Theme.muted(subtitle), BorderLayout.SOUTH);
     }

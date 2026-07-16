@@ -21,7 +21,7 @@ public class PageUtil {
     public JPanel stepNav(App app, String backPage, String nextLabel, Runnable nextAction) {
         JPanel footer = new JPanel(new BorderLayout());
         footer.setOpaque(false);
-        footer.setBorder(Theme.pad(Theme.PAD, 0, 0, 0));
+        footer.setBorder(Theme.pad(Theme.SPACE_XL, 0, 0, 0));
 
         if (backPage != null) {
             JButton back = Theme.secondaryButton("← Back");

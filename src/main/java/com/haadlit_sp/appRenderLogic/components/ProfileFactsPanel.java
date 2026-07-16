@@ -14,13 +14,14 @@ import java.util.List;
 public class ProfileFactsPanel extends JPanel {
 
     private static final int SKILLS_SHOWN = 12;
+    private static final String MUTED_HEX = "#5B6776";
 
     private final JLabel status = Theme.body("No resume selected.");
     private final JLabel details = Theme.muted(" ");
 
     public ProfileFactsPanel() {
         setOpaque(false);
-        setLayout(new BorderLayout(0, Theme.GAP / 2));
+        setLayout(new BorderLayout(0, Theme.SPACE_SM));
         add(status, BorderLayout.NORTH);
         add(details, BorderLayout.CENTER);
     }
@@ -50,7 +51,7 @@ public class ProfileFactsPanel extends JPanel {
 
     private static void addRow(List<String> rows, String label, String value) {
         if (value != null && !value.isBlank()) {
-            rows.add("<b>" + label + ":</b> " + escape(value));
+            rows.add("<font color='" + MUTED_HEX + "'>" + label + "</font>&nbsp;&nbsp;" + escape(value));
         }
     }
 
