@@ -5,9 +5,12 @@ import com.haadlit_sp.appCoreLogic.browser.BrowserDriverFactory;
 import com.haadlit_sp.appCoreLogic.browser.ChromeProfile;
 import com.haadlit_sp.appCoreLogic.browser.IndeedSelectors;
 import com.haadlit_sp.appCoreLogic.model.HistoryEntry;
+import com.haadlit_sp.appCoreLogic.model.ProfileFacts;
 import com.haadlit_sp.appCoreLogic.model.RunStatus;
 import com.haadlit_sp.appCoreLogic.model.SearchCriteria;
 import com.haadlit_sp.appCoreLogic.model.SessionDocuments;
+import com.haadlit_sp.appCoreLogic.pdf.PdfTextExtractor;
+import com.haadlit_sp.appCoreLogic.pdf.ProfileFactsExtractor;
 import com.haadlit_sp.appCoreLogic.session.LoginStrategy;
 import com.haadlit_sp.appCoreLogic.session.LoginStrategyFactory;
 
@@ -15,6 +18,7 @@ import java.io.IOException;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -41,8 +45,19 @@ public class AppCore {
     });
     private BrowserDriver driver;
 
+    /** Separate from the browser worker, which can sit in a multi-minute sign-in poll. */
+    private final ExecutorService docWorker = Executors.newSingleThreadExecutor(r -> {
+        Thread t = new Thread(r, "doc-worker");
+        t.setDaemon(true);
+        return t;
+    });
+    private final PdfTextExtractor pdfText = new PdfTextExtractor();
+    private final ProfileFactsExtractor factsExtractor = new ProfileFactsExtractor();
+
     private volatile boolean loggedIn = false;
     private volatile String loginMessage = "Not signed in.";
+    private volatile ProfileFacts profileFacts = ProfileFacts.empty();
+    private volatile String documentsMessage = "No resume selected.";
     private SessionDocuments documents = SessionDocuments.empty();
     private SearchCriteria criteria = SearchCriteria.blank();
     private volatile RunStatus status = RunStatus.idle();
@@ -112,7 +127,7 @@ public class AppCore {
         return loginMessage;
     }
 
-    /** Close the browser and stop the worker. Called when the app window closes. */
+    /** Close the browser and stop the workers. Called when the app window closes. */
     public void shutdown() {
         browserWorker.submit(() -> {
             if (driver != null) {
@@ -120,17 +135,69 @@ public class AppCore {
             }
         });
         browserWorker.shutdown();
+        docWorker.shutdown();
     }
 
     // ---- Documents ----
 
+    /** Accepts the chosen PDFs and extracts the profile fact base off the EDT. */
     public void loadDocuments(SessionDocuments docs) {
         this.documents = docs == null ? SessionDocuments.empty() : docs;
-        LOG.log(Level.INFO, "loadDocuments (stub): resume={0}", this.documents.resume());
+        if (!this.documents.hasResume()) {
+            profileFacts = ProfileFacts.empty();
+            documentsMessage = "No resume selected.";
+            return;
+        }
+        documentsMessage = "Reading documents…";
+        SessionDocuments snapshot = this.documents;
+        docWorker.submit(() -> extractFacts(snapshot));
+    }
+
+    private void extractFacts(SessionDocuments docs) {
+        try {
+            List<Path> files = new ArrayList<>();
+            files.add(docs.resume());
+            if (docs.coverLetter() != null) {
+                files.add(docs.coverLetter());
+            }
+            files.addAll(docs.supporting());
+
+            StringBuilder combined = new StringBuilder();
+            List<String> unreadable = new ArrayList<>();
+            for (Path file : files) {
+                String text = pdfText.extract(file);
+                if (text.isBlank()) {
+                    unreadable.add(file.getFileName().toString());
+                } else {
+                    combined.append(text).append('\n');
+                }
+            }
+            if (combined.isEmpty()) {
+                profileFacts = ProfileFacts.empty();
+                documentsMessage = "No readable text found — is it a scanned/image-only PDF?";
+                return;
+            }
+            profileFacts = factsExtractor.extract(combined.toString());
+            documentsMessage = unreadable.isEmpty()
+                    ? "Documents read."
+                    : "Read, but skipped: " + String.join(", ", unreadable);
+        } catch (Exception e) {
+            LOG.log(Level.ERROR, "Document extraction failed", e);
+            profileFacts = ProfileFacts.empty();
+            documentsMessage = "Could not read documents: " + e.getMessage();
+        }
     }
 
     public SessionDocuments documents() {
         return documents;
+    }
+
+    public ProfileFacts profileFacts() {
+        return profileFacts;
+    }
+
+    public String documentsMessage() {
+        return documentsMessage;
     }
 
     // ---- Search criteria ----

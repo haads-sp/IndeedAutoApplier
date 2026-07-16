@@ -3,7 +3,6 @@ package com.haadlit_sp.appRenderLogic.pages;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
 import com.haadlit_sp.appRenderLogic.App;
 import com.haadlit_sp.appRenderLogic.components.Header;
@@ -15,7 +14,7 @@ import java.awt.BorderLayout;
 
 
 /** Run page — start/pause/stop, live status, and the session history. */
-public class Page4 extends JPanel {
+public class Page4 extends JPanel implements LivePage {
 
     private final App app;
     private final PageUtil pageUtil = new PageUtil();
@@ -39,7 +38,7 @@ public class Page4 extends JPanel {
         add(pageUtil.stepNav(app, "Page3", null, null), BorderLayout.SOUTH);
 
         wireControls();
-        startTimer();
+        refresh();
     }
 
     private JComponent buildBody() {
@@ -61,14 +60,8 @@ public class Page4 extends JPanel {
         stopBtn.addActionListener(e -> app.core().stopRun());
     }
 
-    /** One Swing timer drives all live UI updates on this page (on the EDT). */
-    private void startTimer() {
-        Timer timer = new Timer(500, e -> refresh());
-        timer.start();
-        refresh();
-    }
-
-    private void refresh() {
+    @Override
+    public void refresh() {
         statusPanel.setStatus(app.core().status());
         historyPanel.setHistory(app.core().history());
     }

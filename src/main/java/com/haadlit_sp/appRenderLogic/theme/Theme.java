@@ -7,13 +7,18 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.Scrollable;
 import javax.swing.border.Border;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Rectangle;
 
 
 /**
@@ -137,6 +142,56 @@ public final class Theme {
                 jc.setAlignmentX(Component.LEFT_ALIGNMENT);
             }
             p.add(c);
+        }
+    }
+
+    /**
+     * Wraps page content so it stays reachable when it outgrows the window — Swing labels cannot
+     * shrink below their preferred size, so without this they silently overflow the bottom edge.
+     */
+    public static JScrollPane scroll(Component content) {
+        JScrollPane pane = new JScrollPane(new ScrollableView(content));
+        pane.setBorder(BorderFactory.createEmptyBorder());
+        pane.setOpaque(false);
+        pane.getViewport().setOpaque(false);
+        pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        pane.getVerticalScrollBar().setUnitIncrement(GAP * 2);
+        return pane;
+    }
+
+    /** Viewport view that keeps content full-width and top-aligned, scrolling only vertically. */
+    private static final class ScrollableView extends JPanel implements Scrollable {
+
+        ScrollableView(Component content) {
+            setLayout(new BorderLayout());
+            setOpaque(false);
+            add(content, BorderLayout.NORTH); // NORTH => natural height, pinned to the top
+        }
+
+        @Override
+        public Dimension getPreferredScrollableViewportSize() {
+            return getPreferredSize();
+        }
+
+        @Override
+        public int getScrollableUnitIncrement(Rectangle visible, int orientation, int direction) {
+            return GAP * 2;
+        }
+
+        @Override
+        public int getScrollableBlockIncrement(Rectangle visible, int orientation, int direction) {
+            return visible.height;
+        }
+
+        /** True so cards stretch to the window width instead of collapsing to preferred width. */
+        @Override
+        public boolean getScrollableTracksViewportWidth() {
+            return true;
+        }
+
+        @Override
+        public boolean getScrollableTracksViewportHeight() {
+            return false;
         }
     }
 

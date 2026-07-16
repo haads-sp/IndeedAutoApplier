@@ -4,7 +4,6 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
 import com.haadlit_sp.appRenderLogic.App;
 import com.haadlit_sp.appRenderLogic.components.Header;
@@ -14,7 +13,7 @@ import java.awt.BorderLayout;
 
 
 /** Step 1 — sign in once in a plain Chrome window; the app reuses that saved session. */
-public class Page1 extends JPanel {
+public class Page1 extends JPanel implements LivePage {
 
     private final App app;
     private final PageUtil pageUtil = new PageUtil();
@@ -31,8 +30,6 @@ public class Page1 extends JPanel {
                 "Sign in once by hand; the app reuses that session from then on."), BorderLayout.NORTH);
         add(buildBody(), BorderLayout.CENTER);
         add(pageUtil.stepNav(app, null, "Continue →", () -> app.showPage("Page2")), BorderLayout.SOUTH);
-
-        startStatusTimer();
     }
 
     private JComponent buildBody() {
@@ -73,11 +70,9 @@ public class Page1 extends JPanel {
     }
 
     /** Reflect the facade's live login state (updated from the browser worker thread). */
-    private void startStatusTimer() {
-        Timer timer = new Timer(750, e -> {
-            statusLabel.setText(app.core().loginMessage());
-            statusLabel.setForeground(app.core().isLoggedIn() ? Theme.SUCCESS : Theme.MUTED);
-        });
-        timer.start();
+    @Override
+    public void refresh() {
+        statusLabel.setText(app.core().loginMessage());
+        statusLabel.setForeground(app.core().isLoggedIn() ? Theme.SUCCESS : Theme.MUTED);
     }
 }

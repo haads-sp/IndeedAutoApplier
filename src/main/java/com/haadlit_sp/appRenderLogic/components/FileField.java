@@ -21,6 +21,7 @@ public class FileField extends JPanel {
     private final boolean multi;
     private final JLabel valueLabel = Theme.body("None selected");
     private final List<Path> files = new ArrayList<>();
+    private Runnable onChange = () -> {};
 
     public FileField(String label, boolean multi) {
         this.multi = multi;
@@ -57,6 +58,12 @@ public class FileField extends JPanel {
             files.add(chooser.getSelectedFile().toPath());
         }
         updateLabel();
+        onChange.run();
+    }
+
+    /** Called on the EDT whenever the selection changes. */
+    public void onChange(Runnable action) {
+        this.onChange = action;
     }
 
     private void updateLabel() {

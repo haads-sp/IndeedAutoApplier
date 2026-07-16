@@ -24,6 +24,7 @@ application {
 
 dependencies {
     implementation("com.microsoft.playwright:playwright:1.52.0")
+    implementation("org.apache.pdfbox:pdfbox:3.0.7")
 
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
