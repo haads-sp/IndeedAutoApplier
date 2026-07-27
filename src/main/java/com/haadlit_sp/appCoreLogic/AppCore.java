@@ -8,14 +8,18 @@ import com.haadlit_sp.appCoreLogic.location.LocationSuggester;
 import com.haadlit_sp.appCoreLogic.location.LocationSuggesterFactory;
 import com.haadlit_sp.appCoreLogic.model.CityLocation;
 import com.haadlit_sp.appCoreLogic.model.HistoryEntry;
+import com.haadlit_sp.appCoreLogic.model.JobPosting;
 import com.haadlit_sp.appCoreLogic.model.ProfileFacts;
 import com.haadlit_sp.appCoreLogic.model.RunStatus;
 import com.haadlit_sp.appCoreLogic.model.SearchCriteria;
 import com.haadlit_sp.appCoreLogic.model.SessionDocuments;
 import com.haadlit_sp.appCoreLogic.pdf.PdfTextExtractor;
 import com.haadlit_sp.appCoreLogic.pdf.ProfileFactsExtractor;
+import com.haadlit_sp.appCoreLogic.search.EnumerationResult;
+import com.haadlit_sp.appCoreLogic.search.PostingEnumerator;
 import com.haadlit_sp.appCoreLogic.session.LoginStrategy;
 import com.haadlit_sp.appCoreLogic.session.LoginStrategyFactory;
+import com.haadlit_sp.appCoreLogic.store.ApplicationHistoryStore;
 
 import java.io.IOException;
 import java.lang.System.Logger;
@@ -24,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -57,11 +62,15 @@ public class AppCore {
     private final PdfTextExtractor pdfText = new PdfTextExtractor();
     private final ProfileFactsExtractor factsExtractor = new ProfileFactsExtractor();
     private final LocationSuggester locationSuggester = LocationSuggesterFactory.create();
+    private final ApplicationHistoryStore applicationStore = new ApplicationHistoryStore();
 
     private volatile boolean loggedIn = false;
     private volatile String loginMessage = "Not signed in.";
     private volatile ProfileFacts profileFacts = ProfileFacts.empty();
     private volatile String documentsMessage = "No resume selected.";
+    private volatile List<JobPosting> foundPostings = List.of();
+    private volatile String searchMessage = "Not searched yet.";
+    private volatile boolean searching = false;
     private SessionDocuments documents = SessionDocuments.empty();
     private SearchCriteria criteria = SearchCriteria.blank();
     private volatile RunStatus status = RunStatus.idle();
@@ -70,9 +79,11 @@ public class AppCore {
     // ---- Session / login ----
 
     /**
-     * Open a PLAIN Chrome window (no Playwright, no automation flags) on the dedicated profile so
-     * the user can sign in like a normal person. This is what keeps Google and Cloudflare from
-     * rejecting the sign-in. They must close that window before {@link #verifySignIn()} can drive it.
+     * Open the user's REAL Chrome (no automation flags, {@code webdriver === false}) on the
+     * dedicated profile, exposing a debugging port. The user signs in and clears any Cloudflare
+     * check as a human — which works precisely because this is a real browser — and LEAVES IT OPEN.
+     * The app then attaches to that same window over CDP; it never launches its own, because a
+     * Playwright-launched browser is walled and cannot be cleared even by a human click.
      */
     public void openSignInBrowser() {
         String chrome = ChromeProfile.executable();
@@ -83,16 +94,17 @@ public class AppCore {
         try {
             Files.createDirectories(ChromeProfile.dir());
             new ProcessBuilder(chrome,
+                    "--remote-debugging-port=" + ChromeProfile.DEBUG_PORT,
                     "--user-data-dir=" + ChromeProfile.dir(),
                     IndeedSelectors.LOGIN_URL).start();
-            loginMessage = "Sign in, then CLOSE that Chrome window and click Verify.";
+            loginMessage = "Sign in and clear any check, then LEAVE this window open and click Verify.";
         } catch (IOException e) {
             LOG.log(Level.ERROR, "Could not launch Chrome", e);
             loginMessage = "Could not launch Chrome: " + e.getMessage();
         }
     }
 
-    /** Reopen the saved profile under automation and confirm it is still signed in. */
+    /** Attach to the open Chrome and confirm it is signed in. */
     public void verifySignIn() {
         runLogin(LoginStrategyFactory.manual());
     }
@@ -100,27 +112,47 @@ public class AppCore {
     /** Runs a login strategy on the browser worker; UI polls {@link #isLoggedIn()} / {@link #loginMessage()}. */
     private void runLogin(LoginStrategy strategy) {
         loggedIn = false;
-        loginMessage = "Opening the saved Chrome profile…";
+        loginMessage = "Attaching to your Chrome…";
         browserWorker.submit(() -> {
             try {
-                if (driver == null) {
-                    driver = BrowserDriverFactory.create();
-                }
-                loggedIn = strategy.login(driver, msg -> loginMessage = msg);
+                loggedIn = strategy.login(connectedDriver(), msg -> loginMessage = msg);
             } catch (Exception e) {
                 LOG.log(Level.ERROR, "Sign-in check failed", e);
-                loginMessage = describeLoginFailure(e);
+                closeDriverQuietly();
+                loginMessage = describeBrowserFailure(e);
             }
         });
     }
 
-    /** Chrome locks its profile directory, which is the failure users will hit most often. */
-    private static String describeLoginFailure(Exception e) {
-        String message = e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage();
-        if (message.contains("user data directory") || message.contains("ProcessSingleton")) {
-            return "Close the Chrome window you signed in with, then click Verify again.";
+    /** The (lazily created) driver, attached over CDP. Must be called on the browser worker. */
+    private BrowserDriver connectedDriver() {
+        if (driver == null) {
+            driver = BrowserDriverFactory.create();
         }
-        return "Sign-in check failed: " + message;
+        driver.launch(); // connectOverCDP; idempotent once attached
+        return driver;
+    }
+
+    /** Drop the driver so the next attempt reconnects to a fresh session. */
+    private void closeDriverQuietly() {
+        if (driver != null) {
+            try {
+                driver.close();
+            } catch (RuntimeException ignored) {
+                // best-effort
+            }
+            driver = null;
+        }
+    }
+
+    /** The most common failure is that no Chrome is up to attach to yet. */
+    private static String describeBrowserFailure(Exception e) {
+        String message = e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage();
+        String lower = message.toLowerCase(java.util.Locale.ROOT);
+        if (lower.contains("connect") || lower.contains("refused") || lower.contains("econnrefused")) {
+            return "No Chrome to attach to — click \"Open Chrome to sign in\" first and leave it open.";
+        }
+        return "Browser error: " + message;
     }
 
     public boolean isLoggedIn() {
@@ -217,6 +249,67 @@ public class AppCore {
     /** Places matching what the user has typed so far. Cheap enough to call on every keystroke. */
     public List<CityLocation> suggestLocations(String typed, int limit) {
         return locationSuggester.suggest(typed, limit);
+    }
+
+    // ---- Search (read-only: find & list postings; applying comes in a later slice) ----
+
+    /** Run one search on the browser worker; the UI polls {@link #searchMessage()} / {@link #foundPostings()}. */
+    public void startSearch() {
+        if (searching) {
+            return;
+        }
+        if (!criteria.isReady()) {
+            searchMessage = "Add a job and a location first (steps 2 and 3).";
+            return;
+        }
+        searching = true;
+        searchMessage = "Searching…";
+        SearchCriteria snapshot = criteria;
+        browserWorker.submit(() -> {
+            try {
+                EnumerationResult result = new PostingEnumerator(connectedDriver()).enumerate(snapshot);
+                applySearchResult(result);
+            } catch (Exception e) {
+                LOG.log(Level.ERROR, "Search failed", e);
+                closeDriverQuietly();
+                searchMessage = describeBrowserFailure(e);
+            } finally {
+                searching = false;
+            }
+        });
+    }
+
+    private void applySearchResult(EnumerationResult result) {
+        switch (result.outcome()) {
+            case OK -> {
+                foundPostings = result.postings();
+                long fresh = result.postings().stream().filter(p -> !applicationStore.contains(p.id())).count();
+                searchMessage = "Found " + result.postings().size() + " postings (" + fresh + " new).";
+            }
+            case CHALLENGED -> searchMessage =
+                    "Cloudflare check — solve it in the Chrome window, then search again.";
+            case NO_RESULTS -> {
+                foundPostings = List.of();
+                searchMessage = "No matching postings found — try a broader search.";
+            }
+        }
+    }
+
+    public List<JobPosting> foundPostings() {
+        return foundPostings;
+    }
+
+    public String searchMessage() {
+        return searchMessage;
+    }
+
+    public boolean isSearching() {
+        return searching;
+    }
+
+    /** Whether a posting has already been applied to in a past run (for the New/Applied tag). */
+    public Set<String> appliedPostingIds() {
+        return applicationStore.appliedIds();
     }
 
     // ---- Run control ----

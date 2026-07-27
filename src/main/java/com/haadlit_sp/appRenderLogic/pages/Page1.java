@@ -52,8 +52,10 @@ public class Page1 extends JPanel implements LivePage {
                 Theme.vGap(Theme.SPACE_SM),
                 Theme.muted("1.  Click below — a normal Chrome window opens. It is not automated, so "
                         + "Google and Cloudflare treat it as the real browser it is."),
-                Theme.muted("2.  Sign in however you like (Google, emailed code…), then CLOSE that window."),
-                Theme.muted("3.  Click verify. The app reuses that saved session for every run."),
+                Theme.muted("2.  Sign in however you like (Google, emailed code…) and clear any "
+                        + "“verify you’re human” check."),
+                Theme.muted("3.  LEAVE that window open, click Verify, and keep going — the app drives "
+                        + "that same window."),
                 Theme.vGap(Theme.SPACE_LG),
                 Theme.row(open, verify),
                 Theme.vGap(Theme.SPACE_MD),

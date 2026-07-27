@@ -1,26 +1,24 @@
 package com.haadlit_sp.appCoreLogic.browser;
 
+import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserContext;
-import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Map;
 
 
 /**
- * Playwright-backed {@link BrowserDriver}. Drives the user's real installed Chrome
- * (channel "chrome") on the persistent {@link ChromeProfile}, so the session the user
- * signed into by hand is reused instead of a pristine throwaway profile.
+ * Playwright-backed {@link BrowserDriver} that ATTACHES over CDP to the real Chrome the user
+ * launched (with a debugging port) and signed into by hand. It never launches an automation-flagged
+ * browser — that is what keeps Cloudflare treating the session as the real browser it is
+ * ({@code navigator.webdriver === false}); a Playwright-launched Chrome is walled and cannot be
+ * cleared even by a human click.
  *
- * <p>Playwright objects are thread-affine, so every method here must be called from the
- * single browser worker thread that owns this instance.
+ * <p>Playwright objects are thread-affine, so every method here must be called from the single
+ * browser worker thread that owns this instance.
  */
 public class PlaywrightBrowserDriver implements BrowserDriver {
 
@@ -28,6 +26,7 @@ public class PlaywrightBrowserDriver implements BrowserDriver {
     private static final double TIMEOUT_MS = 15_000;
 
     private Playwright playwright;
+    private Browser browser;
     private BrowserContext context;
     private Page page;
 
@@ -36,23 +35,15 @@ public class PlaywrightBrowserDriver implements BrowserDriver {
         if (page != null) {
             return;
         }
-        Path profile = ChromeProfile.dir();
-        try {
-            Files.createDirectories(profile);
-        } catch (IOException e) {
-            throw new UncheckedIOException("Cannot create Chrome profile directory: " + profile, e);
-        }
-        // We only ever drive the user's installed Chrome, so skip Playwright's ~500 MB of
-        // bundled browser downloads on first run.
+        // We only ever attach to the user's installed Chrome, so skip Playwright's ~500 MB of
+        // bundled browser downloads.
         playwright = Playwright.create(new Playwright.CreateOptions()
                 .setEnv(Map.of("PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD", "1")));
-        context = playwright.chromium().launchPersistentContext(profile,
-                new BrowserType.LaunchPersistentContextOptions()
-                        .setHeadless(false)
-                        .setChannel("chrome"));
+        browser = playwright.chromium().connectOverCDP(ChromeProfile.cdpEndpoint());
+        context = browser.contexts().isEmpty() ? browser.newContext() : browser.contexts().get(0);
         page = context.pages().isEmpty() ? context.newPage() : context.pages().get(0);
         page.setDefaultTimeout(TIMEOUT_MS);
-        LOG.log(Level.INFO, "Chrome launched on persistent profile {0}", profile);
+        LOG.log(Level.INFO, "Attached to Chrome over CDP at {0}", ChromeProfile.cdpEndpoint());
     }
 
     @Override
@@ -80,17 +71,15 @@ public class PlaywrightBrowserDriver implements BrowserDriver {
     @Override
     public void close() {
         try {
-            if (context != null) {
-                context.close();
-            }
             if (playwright != null) {
-                playwright.close();
+                playwright.close(); // disconnects; does NOT kill the user's Chrome, which we did not launch
             }
         } catch (RuntimeException e) {
-            LOG.log(Level.WARNING, "Error closing browser", e);
+            LOG.log(Level.WARNING, "Error disconnecting from browser", e);
         } finally {
             page = null;
             context = null;
+            browser = null;
             playwright = null;
         }
     }

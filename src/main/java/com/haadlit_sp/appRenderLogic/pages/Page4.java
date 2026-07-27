@@ -2,28 +2,29 @@ package com.haadlit_sp.appRenderLogic.pages;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.haadlit_sp.appCoreLogic.model.JobPosting;
 import com.haadlit_sp.appRenderLogic.App;
 import com.haadlit_sp.appRenderLogic.components.Header;
-import com.haadlit_sp.appRenderLogic.components.HistoryPanel;
-import com.haadlit_sp.appRenderLogic.components.StatusPanel;
+import com.haadlit_sp.appRenderLogic.components.ResultsPanel;
 import com.haadlit_sp.appRenderLogic.theme.Theme;
 
 import java.awt.BorderLayout;
+import java.util.List;
 
 
-/** Run page — start/pause/stop, live status, and the session history. */
+/** Run page — for now, find and list matching postings (read-only). Applying comes in a later slice. */
 public class Page4 extends JPanel implements LivePage {
 
     private final App app;
     private final PageUtil pageUtil = new PageUtil();
 
-    private final StatusPanel statusPanel = new StatusPanel();
-    private final HistoryPanel historyPanel = new HistoryPanel();
-    private final JButton startBtn = Theme.primaryButton("Start applying");
-    private final JButton pauseBtn = Theme.secondaryButton("Pause");
-    private final JButton stopBtn = Theme.secondaryButton("Stop");
+    private final ResultsPanel resultsPanel = new ResultsPanel();
+    private final JButton searchBtn = Theme.primaryButton("Find matching jobs");
+    private final JLabel searchStatus = Theme.muted("Not searched yet.");
+    private List<JobPosting> shown = List.of();
 
     public Page4(App app) {
         this.app = app;
@@ -32,37 +33,40 @@ public class Page4 extends JPanel implements LivePage {
         setLayout(new BorderLayout());
         setBorder(Theme.pad(Theme.SPACE_XXL));
 
-        add(new Header("Run", "Start applying. You can pause or stop at any time."),
-                BorderLayout.NORTH);
+        add(new Header("Run", "Find postings that match your search. For now the app lists what it "
+                + "finds; submitting applications comes next."), BorderLayout.NORTH);
         add(buildBody(), BorderLayout.CENTER);
         add(pageUtil.stepNav(app, "Page3", null, null), BorderLayout.SOUTH);
 
-        wireControls();
+        searchBtn.addActionListener(e -> app.core().startSearch());
         refresh();
     }
 
     private JComponent buildBody() {
-        JComponent console = Theme.card(
-                Theme.row(startBtn, pauseBtn, stopBtn),
-                Theme.vGap(Theme.SPACE_XL),
-                statusPanel);
+        JComponent controls = Theme.card(
+                Theme.row(searchBtn),
+                Theme.vGap(Theme.SPACE_MD),
+                Theme.row(searchStatus));
 
         JPanel body = new JPanel(new BorderLayout(0, Theme.SPACE_LG));
         body.setOpaque(false);
-        body.add(console, BorderLayout.NORTH);
-        body.add(historyPanel, BorderLayout.CENTER);
+        body.add(controls, BorderLayout.NORTH);
+        body.add(resultsPanel, BorderLayout.CENTER);
         return body;
-    }
-
-    private void wireControls() {
-        startBtn.addActionListener(e -> app.core().startRun());
-        pauseBtn.addActionListener(e -> app.core().pauseRun());
-        stopBtn.addActionListener(e -> app.core().stopRun());
     }
 
     @Override
     public void refresh() {
-        statusPanel.setStatus(app.core().status());
-        historyPanel.setHistory(app.core().history());
+        boolean searching = app.core().isSearching();
+        searchStatus.setText(app.core().searchMessage());
+        searchBtn.setEnabled(!searching);
+        searchBtn.setText(searching ? "Searching…" : "Find matching jobs");
+
+        // The found list only changes when a search completes, so rebuild the model only then.
+        List<JobPosting> latest = app.core().foundPostings();
+        if (latest != shown) {
+            resultsPanel.setResults(latest, app.core().appliedPostingIds());
+            shown = latest;
+        }
     }
 }
