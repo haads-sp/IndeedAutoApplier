@@ -73,6 +73,11 @@ public class PlaywrightBrowserDriver implements BrowserDriver {
     }
 
     @Override
+    public Object evaluate(String script) {
+        return page.evaluate(script);
+    }
+
+    @Override
     public void close() {
         try {
             if (context != null) {

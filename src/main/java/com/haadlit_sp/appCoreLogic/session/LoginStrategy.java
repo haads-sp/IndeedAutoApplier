@@ -30,6 +30,6 @@ public interface LoginStrategy {
 
     /** A Cloudflare bot check is on screen; the human must clear it, we never bypass it. */
     default boolean isChallenged(BrowserDriver driver) {
-        return driver.exists(IndeedSelectors.CLOUDFLARE_CHALLENGE);
+        return Boolean.TRUE.equals(driver.evaluate(IndeedSelectors.IS_CHALLENGE_JS));
     }
 }
