@@ -13,6 +13,7 @@ import com.haadlit_sp.appCoreLogic.model.ProfileFacts;
 import com.haadlit_sp.appCoreLogic.model.RunStatus;
 import com.haadlit_sp.appCoreLogic.model.SearchCriteria;
 import com.haadlit_sp.appCoreLogic.model.SessionDocuments;
+import com.haadlit_sp.appCoreLogic.model.SubmitMode;
 import com.haadlit_sp.appCoreLogic.pdf.PdfTextExtractor;
 import com.haadlit_sp.appCoreLogic.pdf.ProfileFactsExtractor;
 import com.haadlit_sp.appCoreLogic.search.EnumerationResult;
@@ -71,6 +72,7 @@ public class AppCore {
     private volatile List<JobPosting> foundPostings = List.of();
     private volatile String searchMessage = "Not searched yet.";
     private volatile boolean searching = false;
+    private volatile SubmitMode submitMode = SubmitMode.REVIEW; // safe default: never auto-submit
     private SessionDocuments documents = SessionDocuments.empty();
     private SearchCriteria criteria = SearchCriteria.blank();
     private volatile RunStatus status = RunStatus.idle();
@@ -305,6 +307,15 @@ public class AppCore {
 
     public boolean isSearching() {
         return searching;
+    }
+
+    /** How far the app should go on each application. Consumed by the apply walkthrough. */
+    public void setSubmitMode(SubmitMode mode) {
+        this.submitMode = mode == null ? SubmitMode.REVIEW : mode;
+    }
+
+    public SubmitMode submitMode() {
+        return submitMode;
     }
 
     /** Whether a posting has already been applied to in a past run (for the New/Applied tag). */

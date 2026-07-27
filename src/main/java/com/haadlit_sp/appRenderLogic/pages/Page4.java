@@ -9,6 +9,7 @@ import com.haadlit_sp.appCoreLogic.model.JobPosting;
 import com.haadlit_sp.appRenderLogic.App;
 import com.haadlit_sp.appRenderLogic.components.Header;
 import com.haadlit_sp.appRenderLogic.components.ResultsPanel;
+import com.haadlit_sp.appRenderLogic.components.SubmitModeSelector;
 import com.haadlit_sp.appRenderLogic.theme.Theme;
 
 import java.awt.BorderLayout;
@@ -22,12 +23,14 @@ public class Page4 extends JPanel implements LivePage {
     private final PageUtil pageUtil = new PageUtil();
 
     private final ResultsPanel resultsPanel = new ResultsPanel();
+    private final SubmitModeSelector modeSelector;
     private final JButton searchBtn = Theme.primaryButton("Find matching jobs");
     private final JLabel searchStatus = Theme.muted("Not searched yet.");
     private List<JobPosting> shown = List.of();
 
     public Page4(App app) {
         this.app = app;
+        this.modeSelector = new SubmitModeSelector(app.core().submitMode());
 
         setBackground(Theme.CANVAS);
         setLayout(new BorderLayout());
@@ -39,18 +42,30 @@ public class Page4 extends JPanel implements LivePage {
         add(pageUtil.stepNav(app, "Page3", null, null), BorderLayout.SOUTH);
 
         searchBtn.addActionListener(e -> app.core().startSearch());
+        modeSelector.onChange(app.core()::setSubmitMode);
         refresh();
     }
 
     private JComponent buildBody() {
-        JComponent controls = Theme.card(
+        JComponent search = Theme.card(
+                Theme.heading("Find jobs"),
+                Theme.vGap(Theme.SPACE_MD),
                 Theme.row(searchBtn),
                 Theme.vGap(Theme.SPACE_MD),
                 Theme.row(searchStatus));
 
+        JComponent applyMode = Theme.card(
+                Theme.heading("Apply mode"),
+                Theme.vGap(Theme.SPACE_XS),
+                Theme.muted("How each application should be submitted when applying is run."),
+                Theme.vGap(Theme.SPACE_MD),
+                modeSelector);
+
+        JComponent top = Theme.stack(search, Theme.vGap(Theme.SPACE_LG), applyMode);
+
         JPanel body = new JPanel(new BorderLayout(0, Theme.SPACE_LG));
         body.setOpaque(false);
-        body.add(controls, BorderLayout.NORTH);
+        body.add(top, BorderLayout.NORTH);
         body.add(resultsPanel, BorderLayout.CENTER);
         return body;
     }
