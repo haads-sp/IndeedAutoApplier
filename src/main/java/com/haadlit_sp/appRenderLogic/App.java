@@ -11,6 +11,7 @@ import com.haadlit_sp.appRenderLogic.pages.Page1;
 import com.haadlit_sp.appRenderLogic.pages.Page2;
 import com.haadlit_sp.appRenderLogic.pages.Page3;
 import com.haadlit_sp.appRenderLogic.pages.Page4;
+import com.haadlit_sp.appRenderLogic.pages.PersonalDetailsPage;
 import com.haadlit_sp.appRenderLogic.theme.AppInfo;
 import com.haadlit_sp.appRenderLogic.theme.Theme;
 
@@ -63,10 +64,11 @@ public class App {
         cardPanel.setBackground(Theme.CANVAS);
 
         // Instantiate each page (separate classes)
-        addPage("Page1", new Page1(this));   // Sign in
-        addPage("Page2", new Page2(this));   // Documents & job target
-        addPage("Page3", new Page3(this));   // Location
-        addPage("Page4", new Page4(this));   // Run
+        addPage("Page1", new Page1(this));                  // Sign in
+        addPage("Page2", new Page2(this));                  // Documents & job target
+        addPage("Details", new PersonalDetailsPage(this));  // Name / contact / address
+        addPage("Page3", new Page3(this));                  // Location
+        addPage("Page4", new Page4(this));                  // Run
 
         rail = new StepRail(stepLabels(), this::showPage);
 
@@ -88,6 +90,7 @@ public class App {
         LinkedHashMap<String, String> steps = new LinkedHashMap<>();
         steps.put("Page1", "Sign in");
         steps.put("Page2", "Documents");
+        steps.put("Details", "Your details");
         steps.put("Page3", "Location");
         steps.put("Page4", "Run");
         return steps;
@@ -116,6 +119,9 @@ public class App {
         }
         if (core.documents().hasResume() && !core.searchCriteria().jobQuery().isBlank()) {
             done.add("Page2");
+        }
+        if (core.contactDetails().hasBasics()) {
+            done.add("Details");
         }
         if (core.searchCriteria().isReady()) {
             done.add("Page3");

@@ -97,6 +97,6 @@ public class Page2 extends JPanel implements LivePage {
         }
         app.core().setSearchCriteria(
                 app.core().searchCriteria().withJobQuery(jobTarget.getText().trim()));
-        app.showPage("Page3");
+        app.showPage("Details");
     }
 }

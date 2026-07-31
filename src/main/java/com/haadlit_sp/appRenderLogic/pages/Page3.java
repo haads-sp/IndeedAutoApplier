@@ -43,7 +43,7 @@ public class Page3 extends JPanel {
 
         add(new Header("Location", "Where should we search, and how far out?"), BorderLayout.NORTH);
         add(Theme.scroll(buildBody()), BorderLayout.CENTER);
-        add(pageUtil.stepNav(app, "Page2", "Continue →", this::saveAndContinue), BorderLayout.SOUTH);
+        add(pageUtil.stepNav(app, "Details", "Continue →", this::saveAndContinue), BorderLayout.SOUTH);
     }
 
     private JComponent buildBody() {

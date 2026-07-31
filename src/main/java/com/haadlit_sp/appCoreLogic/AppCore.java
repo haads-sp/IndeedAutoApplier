@@ -7,6 +7,7 @@ import com.haadlit_sp.appCoreLogic.browser.IndeedSelectors;
 import com.haadlit_sp.appCoreLogic.location.LocationSuggester;
 import com.haadlit_sp.appCoreLogic.location.LocationSuggesterFactory;
 import com.haadlit_sp.appCoreLogic.model.CityLocation;
+import com.haadlit_sp.appCoreLogic.model.ContactDetails;
 import com.haadlit_sp.appCoreLogic.model.HistoryEntry;
 import com.haadlit_sp.appCoreLogic.model.JobPosting;
 import com.haadlit_sp.appCoreLogic.model.ProfileFacts;
@@ -21,6 +22,7 @@ import com.haadlit_sp.appCoreLogic.search.PostingEnumerator;
 import com.haadlit_sp.appCoreLogic.session.LoginStrategy;
 import com.haadlit_sp.appCoreLogic.session.LoginStrategyFactory;
 import com.haadlit_sp.appCoreLogic.store.ApplicationHistoryStore;
+import com.haadlit_sp.appCoreLogic.store.ContactDetailsStore;
 
 import java.io.IOException;
 import java.lang.System.Logger;
@@ -64,10 +66,12 @@ public class AppCore {
     private final ProfileFactsExtractor factsExtractor = new ProfileFactsExtractor();
     private final LocationSuggester locationSuggester = LocationSuggesterFactory.create();
     private final ApplicationHistoryStore applicationStore = new ApplicationHistoryStore();
+    private final ContactDetailsStore contactStore = new ContactDetailsStore();
 
     private volatile boolean loggedIn = false;
     private volatile String loginMessage = "Not signed in.";
     private volatile ProfileFacts profileFacts = ProfileFacts.empty();
+    private volatile ContactDetails contactDetails = contactStore.load();
     private volatile String documentsMessage = "No resume selected.";
     private volatile List<JobPosting> foundPostings = List.of();
     private volatile String searchMessage = "Not searched yet.";
@@ -216,6 +220,10 @@ public class AppCore {
                 return;
             }
             profileFacts = factsExtractor.extract(combined.toString());
+            // Seed contact details from the resume the first time, so the details page starts filled.
+            if (contactDetails.isEmpty()) {
+                contactDetails = ContactDetails.fromFacts(profileFacts);
+            }
             documentsMessage = unreadable.isEmpty()
                     ? "Documents read."
                     : "Read, but skipped: " + String.join(", ", unreadable);
@@ -236,6 +244,19 @@ public class AppCore {
 
     public String documentsMessage() {
         return documentsMessage;
+    }
+
+    // ---- Contact details (entered once; fills the contact/location apply steps) ----
+
+    /** Current details — the saved ones, or the resume-seeded guess for the user to confirm. */
+    public ContactDetails contactDetails() {
+        return contactDetails;
+    }
+
+    /** Save the user's confirmed details so they persist and fill future applications. */
+    public void setContactDetails(ContactDetails details) {
+        this.contactDetails = details == null ? ContactDetails.empty() : details;
+        contactStore.save(this.contactDetails);
     }
 
     // ---- Search criteria ----

@@ -18,4 +18,9 @@ public final class AppPaths {
     public static Path historyFile() {
         return root().resolve("history.tsv");
     }
+
+    /** The user's personal details, entered once and reused to fill applications. */
+    public static Path contactFile() {
+        return root().resolve("contact.tsv");
+    }
 }
