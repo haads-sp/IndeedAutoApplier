@@ -127,6 +127,26 @@ public final class IndeedSelectors {
      */
     public static final String CONTINUE_BUTTON = "button:has-text('Continue')";
 
+    /** The final Submit button. Only clicked in the auto modes; exact text to be confirmed live. */
+    public static final String SUBMIT_BUTTON = "button:has-text('Submit application')";
+
+    /** Whether the current module is the final one (a visible Submit button is present). */
+    public static final String HAS_SUBMIT_JS = """
+        () => [...document.querySelectorAll('button')].some(b => b.offsetParent !== null
+          && /submit (your )?application|^submit$/i.test((b.textContent || '').trim()))
+        """;
+
+    /** Whether the current apply module has finished rendering (fields, or a Continue/Submit button). */
+    public static final String MODULE_READY_JS = """
+        () => {
+          const button = [...document.querySelectorAll('button')].some(b => b.offsetParent !== null
+            && /continue|submit/i.test(b.textContent || ''));
+          const fields = document.querySelectorAll(
+            'input:not([type=hidden]):not([name="g-recaptcha-response"]), select, textarea').length > 0;
+          return button || fields;
+        }
+        """;
+
     /**
      * The apply flow is a same-tab navigation (NOT an iframe/popup) to this host; each step is its
      * own "module" URL, e.g. .../form/contact-info-module. The final module's Submit button and each
