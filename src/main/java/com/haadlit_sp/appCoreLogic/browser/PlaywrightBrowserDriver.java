@@ -64,6 +64,11 @@ public class PlaywrightBrowserDriver implements BrowserDriver {
     }
 
     @Override
+    public String currentUrl() {
+        return page == null ? "" : page.url();
+    }
+
+    @Override
     public Object evaluate(String script) {
         return page.evaluate(script);
     }

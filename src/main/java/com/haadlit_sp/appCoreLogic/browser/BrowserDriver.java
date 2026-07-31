@@ -23,6 +23,9 @@ public interface BrowserDriver extends AutoCloseable {
     /** Whether at least one element matching {@code selector} is present right now. Never throws. */
     boolean exists(String selector);
 
+    /** The current page URL, or "" if the browser is not open. Used to tell which apply step we are on. */
+    String currentUrl();
+
     /**
      * Run {@code script} in the current page and return its result. Values map to plain Java:
      * a JS array becomes a {@code List}, an object a {@code Map}, plus String/Boolean/Number.
