@@ -74,6 +74,32 @@ public class PlaywrightBrowserDriver implements BrowserDriver {
     }
 
     @Override
+    public void fill(String selector, String text) {
+        page.fill(selector, text);
+    }
+
+    @Override
+    public void click(String selector) {
+        page.click(selector);
+    }
+
+    @Override
+    public void clickFirstVisible(String selector) {
+        for (com.microsoft.playwright.Locator candidate : page.locator(selector).all()) {
+            if (candidate.isVisible()) {
+                candidate.click(); // native = trusted pointer event; a synthetic click won't advance the form
+                return;
+            }
+        }
+        throw new IllegalStateException("No visible element for selector: " + selector);
+    }
+
+    @Override
+    public void selectOption(String selector, String value) {
+        page.selectOption(selector, value);
+    }
+
+    @Override
     public void close() {
         try {
             if (playwright != null) {

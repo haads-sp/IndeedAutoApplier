@@ -33,6 +33,22 @@ public interface BrowserDriver extends AutoCloseable {
      */
     Object evaluate(String script);
 
+    /** Type {@code text} into the first element matching {@code selector} (waits for it; fires real input events). */
+    void fill(String selector, String text);
+
+    /** Click the first element matching {@code selector} (waits for it to be actionable). */
+    void click(String selector);
+
+    /**
+     * Click the first VISIBLE element matching {@code selector}. Indeed's apply form renders several
+     * hidden duplicates of buttons like "Continue"; a plain click would hit a hidden one or fail
+     * strict-match. Throws if nothing visible matches.
+     */
+    void clickFirstVisible(String selector);
+
+    /** Choose {@code value} (by value or visible label) in the {@code <select>} matching {@code selector}. */
+    void selectOption(String selector, String value);
+
     /** Close the browser and release all resources. Never throws. */
     @Override
     void close();

@@ -121,6 +121,13 @@ public final class IndeedSelectors {
     public static final String APPLY_BUTTON = "#indeedApplyButton";
 
     /**
+     * Advances to the next apply module. The form renders hidden duplicates, so click it with
+     * {@code driver.clickFirstVisible} — and it must be a NATIVE click; a synthetic element.click()
+     * does not advance this React form (verified against the live flow).
+     */
+    public static final String CONTINUE_BUTTON = "button:has-text('Continue')";
+
+    /**
      * The apply flow is a same-tab navigation (NOT an iframe/popup) to this host; each step is its
      * own "module" URL, e.g. .../form/contact-info-module. The final module's Submit button and each
      * module's field selectors are mapped as the walkthrough is built module by module.
