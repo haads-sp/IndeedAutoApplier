@@ -130,6 +130,23 @@ public final class IndeedSelectors {
     /** The final Submit button. Only clicked in the auto modes; exact text to be confirmed live. */
     public static final String SUBMIT_BUTTON = "button:has-text('Submit application')";
 
+    /** Whether the current module is the resume step. */
+    public static boolean isResumeModule(String module) {
+        return module != null && module.contains("resume");
+    }
+
+    /** The "Upload a resume" radio card; click it to select uploading (reveals the Select-file button). */
+    public static final String RESUME_UPLOAD_CARD =
+            "[data-testid=\"resume-selection-file-resume-upload-radio-card-label\"]";
+
+    /** The "Select file" button shown after choosing to upload; clicking it opens the file chooser. */
+    public static final String RESUME_SELECT_FILE_BUTTON =
+            "[data-testid=\"resume-selection-file-resume-upload-radio-card-button\"]";
+
+    /** The hidden file input backing the resume upload (fallback if the chooser flow fails). */
+    public static final String RESUME_FILE_INPUT =
+            "[data-testid=\"resume-selection-file-resume-upload-radio-card-file-input\"]";
+
     /** Whether the current module is the final one (a visible Submit button is present). */
     public static final String HAS_SUBMIT_JS = """
         () => [...document.querySelectorAll('button')].some(b => b.offsetParent !== null

@@ -13,6 +13,7 @@ import com.haadlit_sp.appCoreLogic.store.QaBankStore;
 
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -51,7 +52,7 @@ public class ApplyWalkthrough {
     }
 
     public ApplyResult apply(JobPosting posting, ContactDetails contact, ProfileFacts facts,
-                             SubmitMode mode) throws InterruptedException {
+                             Path resume, SubmitMode mode) throws InterruptedException {
         driver.navigate(posting.url());
         Thread.sleep(SETTLE_MS);
         if (isChallenged()) {
@@ -84,23 +85,31 @@ public class ApplyWalkthrough {
             List<ScreenerQuestion> questions = reader.read(driver);
             LOG.log(Level.INFO, "Module ''{0}'': {1} question(s)", module, questions.size());
 
-            List<ScreenerQuestion> requiredUnfilled = fillModule(questions, contact, facts);
-            Thread.sleep(POST_FILL_MS); // let React register the fills before validating / advancing
-            everythingKnown &= requiredUnfilled.isEmpty() && allFilled(questions, contact, facts);
-
-            if (hasSubmit()) {
-                if (mode.autoSubmits(posting.easyApply(), everythingKnown) && requiredUnfilled.isEmpty()) {
-                    driver.clickFirstVisible(IndeedSelectors.SUBMIT_BUTTON);
-                    waitToLeaveFlow();
-                    return ApplyResult.of(ApplyResult.Status.SUBMITTED, "Submitted.");
+            if (IndeedSelectors.isResumeModule(module)) {
+                if (!attachResume(resume)) {
+                    return ApplyResult.of(ApplyResult.Status.NEEDS_INPUT,
+                            "Choose a resume in the browser to continue.");
                 }
-                return ApplyResult.of(ApplyResult.Status.REVIEW_READY,
-                        "Filled and ready — review and click Submit in the browser.");
-            }
+                Thread.sleep(POST_FILL_MS);
+            } else {
+                List<ScreenerQuestion> requiredUnfilled = fillModule(questions, contact, facts);
+                Thread.sleep(POST_FILL_MS); // let React register the fills before validating / advancing
+                everythingKnown &= requiredUnfilled.isEmpty() && allFilled(questions, contact, facts);
 
-            if (!requiredUnfilled.isEmpty()) {
-                return ApplyResult.of(ApplyResult.Status.NEEDS_INPUT,
-                        "Needs your answer: \"" + requiredUnfilled.get(0).text() + "\"");
+                if (hasSubmit()) {
+                    if (mode.autoSubmits(posting.easyApply(), everythingKnown) && requiredUnfilled.isEmpty()) {
+                        driver.clickFirstVisible(IndeedSelectors.SUBMIT_BUTTON);
+                        waitToLeaveFlow();
+                        return ApplyResult.of(ApplyResult.Status.SUBMITTED, "Submitted.");
+                    }
+                    return ApplyResult.of(ApplyResult.Status.REVIEW_READY,
+                            "Filled and ready — review and click Submit in the browser.");
+                }
+
+                if (!requiredUnfilled.isEmpty()) {
+                    return ApplyResult.of(ApplyResult.Status.NEEDS_INPUT,
+                            "Needs your answer: \"" + requiredUnfilled.get(0).text() + "\"");
+                }
             }
 
             try {
@@ -114,6 +123,41 @@ public class ApplyWalkthrough {
             }
         }
         return ApplyResult.of(ApplyResult.Status.FAILED, "Too many steps — stopping to be safe.");
+    }
+
+    /**
+     * Attach the user's resume on the resume step. Clicks the "Upload a resume" card (which opens a
+     * file chooser) and supplies the PDF; falls back to a plain file input. Returns false if there is
+     * no resume or nothing accepts it — in which case the user finishes this step in the browser.
+     */
+    private boolean attachResume(Path resume) throws InterruptedException {
+        if (resume == null) {
+            return false;
+        }
+        // Select "Upload a resume" so the Select-file button appears.
+        if (driver.exists(IndeedSelectors.RESUME_UPLOAD_CARD)) {
+            driver.click(IndeedSelectors.RESUME_UPLOAD_CARD);
+            Thread.sleep(POST_FILL_MS);
+        }
+        // Click "Select file" and hand the PDF to the chooser it opens.
+        if (driver.exists(IndeedSelectors.RESUME_SELECT_FILE_BUTTON)) {
+            try {
+                driver.uploadViaChooser(IndeedSelectors.RESUME_SELECT_FILE_BUTTON, resume);
+                return true;
+            } catch (RuntimeException e) {
+                LOG.log(Level.WARNING, "Select-file chooser failed; trying the hidden input", e);
+            }
+        }
+        // Fallback: set the hidden file input directly.
+        try {
+            if (driver.exists(IndeedSelectors.RESUME_FILE_INPUT)) {
+                driver.uploadFile(IndeedSelectors.RESUME_FILE_INPUT, resume);
+                return true;
+            }
+        } catch (RuntimeException e) {
+            LOG.log(Level.WARNING, "Resume file-input upload failed", e);
+        }
+        return false;
     }
 
     /** Fill what we can; return the required questions we could not answer. */

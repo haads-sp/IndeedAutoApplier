@@ -100,6 +100,19 @@ public class PlaywrightBrowserDriver implements BrowserDriver {
     }
 
     @Override
+    public void uploadFile(String selector, java.nio.file.Path file) {
+        page.setInputFiles(selector, file);
+    }
+
+    @Override
+    public void uploadViaChooser(String trigger, java.nio.file.Path file) {
+        com.microsoft.playwright.FileChooser chooser = page.waitForFileChooser(
+                new Page.WaitForFileChooserOptions().setTimeout(TIMEOUT_MS),
+                () -> page.click(trigger));
+        chooser.setFiles(file);
+    }
+
+    @Override
     public void close() {
         try {
             if (playwright != null) {

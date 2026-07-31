@@ -49,6 +49,15 @@ public interface BrowserDriver extends AutoCloseable {
     /** Choose {@code value} (by value or visible label) in the {@code <select>} matching {@code selector}. */
     void selectOption(String selector, String value);
 
+    /** Attach {@code file} to the {@code <input type=file>} matching {@code selector} (works even if hidden). */
+    void uploadFile(String selector, java.nio.file.Path file);
+
+    /**
+     * Click {@code trigger} and supply {@code file} to the file chooser it opens. For upload buttons
+     * that open a picker rather than exposing an {@code <input type=file>}. Throws if no chooser opens.
+     */
+    void uploadViaChooser(String trigger, java.nio.file.Path file);
+
     /** Close the browser and release all resources. Never throws. */
     @Override
     void close();
