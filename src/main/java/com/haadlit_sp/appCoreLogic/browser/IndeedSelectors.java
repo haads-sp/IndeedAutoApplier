@@ -135,6 +135,10 @@ public final class IndeedSelectors {
         return module != null && module.contains("resume");
     }
 
+    /** A resume already saved on the account (the common case); click it to select and continue. */
+    public static final String RESUME_SAVED_CARD =
+            "[data-testid=\"resume-selection-file-resume-radio-card-label\"]";
+
     /** The "Upload a resume" radio card; click it to select uploading (reveals the Select-file button). */
     public static final String RESUME_UPLOAD_CARD =
             "[data-testid=\"resume-selection-file-resume-upload-radio-card-label\"]";
@@ -146,6 +150,12 @@ public final class IndeedSelectors {
     /** The hidden file input backing the resume upload (fallback if the chooser flow fails). */
     public static final String RESUME_FILE_INPUT =
             "[data-testid=\"resume-selection-file-resume-upload-radio-card-file-input\"]";
+
+    /** Whether the uploaded resume has registered — its .pdf filename shows on the page (async, ~2s). */
+    public static final String RESUME_UPLOADED_JS = """
+        () => [...document.querySelectorAll('*')].some(e => e.childElementCount === 0
+          && /\\.pdf\\b/i.test(e.textContent || ''))
+        """;
 
     /** Whether the current module is the final one (a visible Submit button is present). */
     public static final String HAS_SUBMIT_JS = """

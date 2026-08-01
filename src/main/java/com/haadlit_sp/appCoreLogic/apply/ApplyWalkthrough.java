@@ -131,33 +131,56 @@ public class ApplyWalkthrough {
      * no resume or nothing accepts it — in which case the user finishes this step in the browser.
      */
     private boolean attachResume(Path resume) throws InterruptedException {
+        // The resume cards render a beat after the module's Continue button, so wait for them.
+        for (int i = 0; i < WAIT_ATTEMPTS; i++) {
+            if (driver.exists(IndeedSelectors.RESUME_SAVED_CARD)
+                    || driver.exists(IndeedSelectors.RESUME_UPLOAD_CARD)) {
+                break;
+            }
+            Thread.sleep(WAIT_MS);
+        }
+        // Common case: a resume is already saved on the account — just select it.
+        if (driver.exists(IndeedSelectors.RESUME_SAVED_CARD)) {
+            driver.click(IndeedSelectors.RESUME_SAVED_CARD);
+            Thread.sleep(POST_FILL_MS);
+            return true;
+        }
         if (resume == null) {
             return false;
         }
-        // Select "Upload a resume" so the Select-file button appears.
+        // No saved resume — select "Upload a resume" so the Select-file button appears.
         if (driver.exists(IndeedSelectors.RESUME_UPLOAD_CARD)) {
             driver.click(IndeedSelectors.RESUME_UPLOAD_CARD);
             Thread.sleep(POST_FILL_MS);
         }
-        // Click "Select file" and hand the PDF to the chooser it opens.
-        if (driver.exists(IndeedSelectors.RESUME_SELECT_FILE_BUTTON)) {
-            try {
-                driver.uploadViaChooser(IndeedSelectors.RESUME_SELECT_FILE_BUTTON, resume);
-                return true;
-            } catch (RuntimeException e) {
-                LOG.log(Level.WARNING, "Select-file chooser failed; trying the hidden input", e);
-            }
+        // Click "Select file" and hand the PDF to the chooser it opens. The click waits for the
+        // button to render, so no premature exists() guard — it appears a beat after selecting.
+        try {
+            driver.uploadViaChooser(IndeedSelectors.RESUME_SELECT_FILE_BUTTON, resume);
+            waitForResumeUploaded(); // the upload registers asynchronously (~2s)
+            return true;
+        } catch (RuntimeException e) {
+            LOG.log(Level.WARNING, "Select-file chooser failed; trying the hidden file input", e);
         }
         // Fallback: set the hidden file input directly.
         try {
-            if (driver.exists(IndeedSelectors.RESUME_FILE_INPUT)) {
-                driver.uploadFile(IndeedSelectors.RESUME_FILE_INPUT, resume);
-                return true;
-            }
+            driver.uploadFile(IndeedSelectors.RESUME_FILE_INPUT, resume);
+            waitForResumeUploaded();
+            return true;
         } catch (RuntimeException e) {
             LOG.log(Level.WARNING, "Resume file-input upload failed", e);
         }
         return false;
+    }
+
+    /** Wait until the uploaded resume's filename appears, so Continue isn't clicked mid-upload. */
+    private void waitForResumeUploaded() throws InterruptedException {
+        for (int i = 0; i < WAIT_ATTEMPTS; i++) {
+            if (Boolean.TRUE.equals(driver.evaluate(IndeedSelectors.RESUME_UPLOADED_JS))) {
+                return;
+            }
+            Thread.sleep(WAIT_MS);
+        }
     }
 
     /** Fill what we can; return the required questions we could not answer. */
