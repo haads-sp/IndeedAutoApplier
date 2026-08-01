@@ -10,6 +10,7 @@ import com.haadlit_sp.appCoreLogic.browser.ChromeProfile;
 import com.haadlit_sp.appCoreLogic.browser.IndeedSelectors;
 import com.haadlit_sp.appCoreLogic.location.LocationSuggester;
 import com.haadlit_sp.appCoreLogic.location.LocationSuggesterFactory;
+import com.haadlit_sp.appCoreLogic.model.AnswerMode;
 import com.haadlit_sp.appCoreLogic.model.AppliedPosting;
 import com.haadlit_sp.appCoreLogic.model.CityLocation;
 import com.haadlit_sp.appCoreLogic.model.ContactDetails;
@@ -73,9 +74,30 @@ public class AppCore {
     private final LocationSuggester locationSuggester = LocationSuggesterFactory.create();
     private final ApplicationHistoryStore applicationStore = new ApplicationHistoryStore();
     private final ContactDetailsStore contactStore = new ContactDetailsStore();
-    private final QuestionAnswerer answerer = QuestionAnswererFactory.create();
+    private final QuestionAnswerer answerer;
+    private final AnswerMode answerMode;
     private final QaBankStore qaBank = new QaBankStore();
 
+    public AppCore() {
+        this(AnswerMode.STANDARD);
+    }
+
+    public AppCore(AnswerMode mode) {
+        this.answerMode = mode;
+        this.answerer = QuestionAnswererFactory.create();
+    }
+
+    /** The answering mode chosen at launch. */
+    public AnswerMode answerMode() {
+        return answerMode;
+    }
+
+    /** Setup/health of the local AI, for the UI to show; blank when there is nothing to report. */
+    public String aiStatus() {
+        return aiStatus;
+    }
+
+    private volatile String aiStatus = "";
     private volatile boolean loggedIn = false;
     private volatile String loginMessage = "Not signed in.";
     private volatile ProfileFacts profileFacts = ProfileFacts.empty();

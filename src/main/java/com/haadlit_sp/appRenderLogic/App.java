@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import com.haadlit_sp.appCoreLogic.AppCore;
+import com.haadlit_sp.appCoreLogic.model.AnswerMode;
 import com.haadlit_sp.appRenderLogic.components.StepRail;
 import com.haadlit_sp.appRenderLogic.pages.LivePage;
 import com.haadlit_sp.appRenderLogic.pages.Page1;
@@ -32,13 +33,14 @@ public class App {
     private final JFrame frame;
     private final JPanel cardPanel;   // Holds all "pages"
     private final CardLayout cardLayout;
-    private final AppCore core = new AppCore();   // The one facade the UI talks to
+    private final AppCore core;   // The one facade the UI talks to
     private final Map<String, JPanel> pages = new LinkedHashMap<>();
     private final StepRail rail;
     private String currentPage = "";
 
-    public App() {
+    public App(AnswerMode answerMode) {
 
+        core = new AppCore(answerMode);
         frame = new JFrame(AppInfo.NAME);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1120, 780);

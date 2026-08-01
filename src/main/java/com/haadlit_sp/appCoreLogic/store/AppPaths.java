@@ -23,4 +23,19 @@ public final class AppPaths {
     public static Path contactFile() {
         return root().resolve("contact.tsv");
     }
+
+    /** Learned screener answers, keyed by normalised question text. */
+    public static Path qaBankFile() {
+        return root().resolve("qa-bank.tsv");
+    }
+
+    /** App settings (answer mode etc.) — small key/value pairs, never credentials. */
+    public static Path settingsFile() {
+        return root().resolve("settings.tsv");
+    }
+
+    /** Local AI assets: the inference engine under bin/ and model weights under models/. */
+    public static Path llmDir() {
+        return root().resolve("llm");
+    }
 }

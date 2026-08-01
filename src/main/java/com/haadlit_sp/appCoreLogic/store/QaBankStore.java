@@ -35,7 +35,7 @@ public class QaBankStore {
     private final Map<String, List<String>> byKey = new LinkedHashMap<>();
 
     public QaBankStore() {
-        this(AppPaths.root().resolve("qa-bank.tsv"));
+        this(AppPaths.qaBankFile());
     }
 
     QaBankStore(Path file) {

@@ -1,7 +1,10 @@
 package com.haadlit_sp;
 
 
+import com.haadlit_sp.appCoreLogic.model.AnswerMode;
+import com.haadlit_sp.appCoreLogic.store.SettingsStore;
 import com.haadlit_sp.appRenderLogic.App;
+import com.haadlit_sp.appRenderLogic.StartupModeDialog;
 import com.haadlit_sp.appRenderLogic.theme.Theme;
 
 import javax.swing.*;
@@ -28,7 +31,14 @@ public class Main {
 
         SwingUtilities.invokeLater(() -> {
             Theme.install();   // must run before any component is created
-            new App();
+            SettingsStore settings = new SettingsStore();
+            AnswerMode mode = settings.answerMode();
+            if (!settings.rememberAnswerMode()) {
+                StartupModeDialog.Choice choice = StartupModeDialog.show(mode);
+                mode = choice.mode();
+                settings.saveAnswerMode(choice.mode(), choice.remember());
+            }
+            new App(mode);
         });
 
     }
