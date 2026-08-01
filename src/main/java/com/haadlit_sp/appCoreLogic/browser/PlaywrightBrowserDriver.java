@@ -96,7 +96,13 @@ public class PlaywrightBrowserDriver implements BrowserDriver {
 
     @Override
     public void selectOption(String selector, String value) {
-        page.selectOption(selector, value);
+        // Answer values are the option's visible label (that's what the scraper reads); fall back
+        // to matching the value attribute for selects whose labels and values differ.
+        try {
+            page.selectOption(selector, new com.microsoft.playwright.options.SelectOption().setLabel(value));
+        } catch (RuntimeException e) {
+            page.selectOption(selector, value);
+        }
     }
 
     /** Finds the radio in a group whose label best matches the wanted text and returns a CSS selector

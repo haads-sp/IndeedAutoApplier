@@ -67,6 +67,7 @@ public class ApplyWalkthrough {
         }
 
         boolean everythingKnown = true;
+        List<ScreenerQuestion> requiredUnfilled = List.of();
         for (int step = 0; step < MAX_MODULES; step++) {
             if (!waitForModuleReady()) {
                 if (!IndeedSelectors.inApplyFlow(driver.currentUrl())) {
@@ -85,6 +86,7 @@ public class ApplyWalkthrough {
             List<ScreenerQuestion> questions = reader.read(driver);
             LOG.log(Level.INFO, "Module ''{0}'': {1} question(s)", module, questions.size());
 
+            requiredUnfilled = List.of();
             if (IndeedSelectors.isResumeModule(module)) {
                 if (!attachResume(resume)) {
                     return ApplyResult.of(ApplyResult.Status.NEEDS_INPUT,
@@ -92,7 +94,7 @@ public class ApplyWalkthrough {
                 }
                 Thread.sleep(POST_FILL_MS);
             } else {
-                List<ScreenerQuestion> requiredUnfilled = fillModule(questions, contact, facts);
+                requiredUnfilled = fillModule(questions, contact, facts);
                 Thread.sleep(POST_FILL_MS); // let React register the fills before validating / advancing
                 everythingKnown &= requiredUnfilled.isEmpty() && allFilled(questions, contact, facts);
 
@@ -116,19 +118,21 @@ public class ApplyWalkthrough {
                     return ApplyResult.of(ApplyResult.Status.REVIEW_READY,
                             "Filled and ready — review and click Submit in the browser.");
                 }
-
-                if (!requiredUnfilled.isEmpty()) {
-                    return ApplyResult.of(ApplyResult.Status.NEEDS_INPUT,
-                            "Needs your answer: \"" + requiredUnfilled.get(0).text() + "\"");
-                }
             }
 
+            // Try Continue even with unanswered questions: many fields that scrape as required
+            // (work-experience title/company, optional extras) are skippable, and the form's own
+            // validation is the real authority — it simply refuses to advance when one matters.
             try {
                 driver.clickFirstVisible(IndeedSelectors.CONTINUE_BUTTON);
             } catch (RuntimeException e) {
                 return ApplyResult.of(ApplyResult.Status.FAILED, "No Continue button on step: " + module);
             }
             if (!waitForAdvance(module, questions)) {
+                if (!requiredUnfilled.isEmpty()) {
+                    return ApplyResult.of(ApplyResult.Status.NEEDS_INPUT,
+                            "Needs your answer: \"" + requiredUnfilled.get(0).text() + "\"");
+                }
                 return ApplyResult.of(ApplyResult.Status.NEEDS_INPUT,
                         "The application did not advance past \"" + module + "\" — it may need you in the browser.");
             }

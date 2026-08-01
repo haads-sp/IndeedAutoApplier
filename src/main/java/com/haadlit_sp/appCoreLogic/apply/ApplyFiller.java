@@ -37,8 +37,14 @@ public class ApplyFiller {
                     yield true;
                 }
                 case YES_NO, SINGLE_CHOICE, MULTI_CHOICE -> {
-                    // The value is the option's label; the driver clicks the matching radio.
-                    driver.chooseOption(question.id(), value);
+                    // The value is the option's label. A dropdown is selected directly; anything
+                    // else is a radio group and the driver clicks the matching radio.
+                    String select = "select" + fieldSelector(question.id());
+                    if (driver.exists(select)) {
+                        driver.selectOption(select, value);
+                    } else {
+                        driver.chooseOption(question.id(), value);
+                    }
                     yield true;
                 }
                 default -> false;

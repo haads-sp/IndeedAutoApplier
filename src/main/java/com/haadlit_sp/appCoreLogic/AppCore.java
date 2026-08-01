@@ -362,8 +362,13 @@ public class AppCore {
                 long fresh = result.postings().stream().filter(p -> !applicationStore.contains(p.id())).count();
                 searchMessage = "Found " + result.postings().size() + " postings (" + fresh + " new).";
             }
-            case CHALLENGED -> searchMessage =
-                    "Cloudflare check — solve it in the Chrome window, then search again.";
+            case CHALLENGED -> {
+                // Detach so the human clears the check in a genuinely plain browser — clearance
+                // can be refused while a debugger is attached. Next search re-attaches itself.
+                closeDriverQuietly();
+                searchMessage = "Cloudflare check — the app has disconnected from Chrome. "
+                        + "Clear the check in the Chrome window, then search again.";
+            }
             case NO_RESULTS -> {
                 foundPostings = List.of();
                 searchMessage = "No matching postings found — try a broader search.";
@@ -454,12 +459,17 @@ public class AppCore {
         if (result.status() == ApplyResult.Status.SUBMITTED) {
             submittedCount++;
         }
+        if (result.status() == ApplyResult.Status.CHALLENGED) {
+            // Same as search: detach so the human clears the check unobserved; next Apply re-attaches.
+            closeDriverQuietly();
+        }
         applyMessage = switch (result.status()) {
             case SUBMITTED -> "Submitted: " + posting.title() + ". Click Apply next for the next one.";
             case REVIEW_READY -> "Filled and ready — review and Submit \"" + posting.title()
                     + "\" in the browser, then Apply next.";
             case NEEDS_INPUT -> "Needs you: " + result.detail() + " Finish it in the browser, then Apply next.";
-            case CHALLENGED -> "Cloudflare check — clear it in the browser, then Apply next.";
+            case CHALLENGED -> "Cloudflare check — the app has disconnected from Chrome. "
+                    + "Clear it in the Chrome window, then Apply next.";
             case SKIPPED -> "Skipped (not Easy Apply): " + posting.title() + ". Apply next.";
             case FAILED -> "Couldn't apply to \"" + posting.title() + "\": " + result.detail();
         };

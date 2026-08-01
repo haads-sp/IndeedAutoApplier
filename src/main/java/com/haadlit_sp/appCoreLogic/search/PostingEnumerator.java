@@ -28,7 +28,8 @@ public class PostingEnumerator {
     /** Indeed pages results in steps of 10; cap the walk so a huge query can't run away. */
     private static final int PAGE_STEP = 10;
     private static final int MAX_PAGES = 10;
-    private static final long BETWEEN_PAGES_MS = 1500;   // human-ish pacing between page loads
+    private static final long BETWEEN_PAGES_MIN_MS = 1200;   // human-ish pacing between page loads,
+    private static final long BETWEEN_PAGES_JITTER_MS = 1800; // randomized so it isn't metronomic
 
     private final BrowserDriver driver;
 
@@ -79,7 +80,8 @@ public class PostingEnumerator {
             if (newOnPage == 0) {
                 break;   // Indeed repeats results past the end instead of going empty
             }
-            Thread.sleep(BETWEEN_PAGES_MS);
+            Thread.sleep(BETWEEN_PAGES_MIN_MS
+                    + java.util.concurrent.ThreadLocalRandom.current().nextLong(BETWEEN_PAGES_JITTER_MS));
         }
         if (all.isEmpty()) {
             return isChallenged() ? EnumerationResult.challenged() : EnumerationResult.noResults();
