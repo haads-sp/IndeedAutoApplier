@@ -65,8 +65,39 @@ public class RuleBasedAnswerer implements QuestionAnswerer {
         return Optional.empty();
     }
 
+    /** Words between "years of" and "experience" that still mean the overall total. */
+    private static final java.util.Set<String> GENERIC_EXPERIENCE = java.util.Set.of(
+            "work", "working", "relevant", "related", "total", "overall", "professional", "paid");
+    private static final java.util.regex.Pattern YEARS_OF_WHAT =
+            java.util.regex.Pattern.compile("years?(?:\\s+of)?(?:\\s+(.+?))?\\s+experience");
+
+    /**
+     * Only the GENERIC total-experience question ("years of experience", "years of work
+     * experience"). A question naming a specific skill or domain ("years of AZ driving
+     * experience") is NOT answerable with the resume's overall total — claiming it would
+     * fabricate experience — so it falls through to the AI or the user.
+     */
     private static boolean asksYearsOfExperience(String text) {
-        return (text.contains("years") || text.contains("year")) && text.contains("experience");
+        if (!text.contains("experience")) {
+            return false;
+        }
+        java.util.regex.Matcher m = YEARS_OF_WHAT.matcher(text);
+        if (!m.find()) {
+            return false;
+        }
+        if (text.matches(".*experience\\s+(in|with|as)\\b.*")) {
+            return false;   // "years of experience in <specific thing>"
+        }
+        String what = m.group(1);
+        if (what == null || what.isBlank()) {
+            return true;
+        }
+        for (String word : what.strip().split("\\s+")) {
+            if (!GENERIC_EXPERIENCE.contains(word)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static boolean asksWorkAuthorization(String text) {

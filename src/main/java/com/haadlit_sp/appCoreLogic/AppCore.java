@@ -94,8 +94,8 @@ public class AppCore {
 
     public AppCore(AnswerMode mode) {
         this.answerMode = mode;
-        this.answerer = QuestionAnswererFactory.create();
         this.llmRuntime = mode == AnswerMode.AI_ENHANCED ? LlmRuntimeFactory.create() : null;
+        this.answerer = QuestionAnswererFactory.create(mode, llmRuntime, this::contactDetails);
         if (llmRuntime != null) {
             // Eager: the one-time download and model load overlap sign-in and document picking,
             // instead of stalling the first application. The answerer never blocks on this.

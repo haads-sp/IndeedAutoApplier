@@ -10,10 +10,10 @@ import java.lang.System.Logger.Level;
 /**
  * Fills one screener question with a value.
  *
- * <p>Text and number fields are handled (verified on the live form). Choice-type questions
- * (radio / select / checkbox) are not filled yet — filling one wrong on a real application is worse
- * than pausing — so {@link #fill} returns false for them and the walkthrough asks the user instead.
- * Choice filling is added once a real screener module's markup has been verified.
+ * <p>Text and number fields fill by name; choice types (radio groups, verified on the live form)
+ * fill via {@code driver.chooseOption}, which clicks the option whose label matches the value —
+ * so choice values must be an option's exact visible label. Anything unfillable returns false and
+ * the walkthrough asks the user instead.
  */
 public class ApplyFiller {
 

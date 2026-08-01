@@ -11,7 +11,7 @@ import java.util.List;
 public record Answer(List<String> values, Source source) {
 
     /** Where the answer came from — for logs and for showing the user why it was chosen. */
-    public enum Source { RULE, BANK, USER }
+    public enum Source { RULE, BANK, USER, AI }
 
     public Answer {
         values = values == null ? List.of() : List.copyOf(values);

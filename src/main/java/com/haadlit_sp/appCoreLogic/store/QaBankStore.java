@@ -23,7 +23,8 @@ import java.util.Optional;
  * postings and across runs.
  *
  * <p>Append-only, fail-soft. Line format: {@code normalisedKey \t value1|value2|…}. Answers are
- * plain text the user typed for a form, never anything sensitive.
+ * plain text for a form — typed by the user or produced (and validated) by the local AI — never
+ * anything sensitive.
  */
 public class QaBankStore {
 
@@ -38,7 +39,8 @@ public class QaBankStore {
         this(AppPaths.qaBankFile());
     }
 
-    QaBankStore(Path file) {
+    /** For tests and probes — production code uses the no-arg constructor's canonical path. */
+    public QaBankStore(Path file) {
         this.file = file;
         load();
     }
@@ -84,7 +86,7 @@ public class QaBankStore {
     }
 
     /** Same question, differently worded/spaced, should map to the same key. */
-    private static String key(ScreenerQuestion question) {
+    public static String key(ScreenerQuestion question) {
         return question.text().toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]+", " ").strip();
     }
 
