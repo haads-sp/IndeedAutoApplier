@@ -8,6 +8,8 @@ import com.haadlit_sp.appCoreLogic.browser.BrowserDriver;
 import com.haadlit_sp.appCoreLogic.browser.BrowserDriverFactory;
 import com.haadlit_sp.appCoreLogic.browser.ChromeProfile;
 import com.haadlit_sp.appCoreLogic.browser.IndeedSelectors;
+import com.haadlit_sp.appCoreLogic.llm.LlmRuntime;
+import com.haadlit_sp.appCoreLogic.llm.LlmRuntimeFactory;
 import com.haadlit_sp.appCoreLogic.location.LocationSuggester;
 import com.haadlit_sp.appCoreLogic.location.LocationSuggesterFactory;
 import com.haadlit_sp.appCoreLogic.model.AnswerMode;
@@ -69,6 +71,14 @@ public class AppCore {
         t.setDaemon(true);
         return t;
     });
+    /** Owns the local AI download + server startup, which can take minutes on first run. */
+    private final ExecutorService llmWorker = Executors.newSingleThreadExecutor(r -> {
+        Thread t = new Thread(r, "llm-worker");
+        t.setDaemon(true);
+        return t;
+    });
+    private final LlmRuntime llmRuntime;   // null in STANDARD mode
+
     private final PdfTextExtractor pdfText = new PdfTextExtractor();
     private final ProfileFactsExtractor factsExtractor = new ProfileFactsExtractor();
     private final LocationSuggester locationSuggester = LocationSuggesterFactory.create();
@@ -85,6 +95,12 @@ public class AppCore {
     public AppCore(AnswerMode mode) {
         this.answerMode = mode;
         this.answerer = QuestionAnswererFactory.create();
+        this.llmRuntime = mode == AnswerMode.AI_ENHANCED ? LlmRuntimeFactory.create() : null;
+        if (llmRuntime != null) {
+            // Eager: the one-time download and model load overlap sign-in and document picking,
+            // instead of stalling the first application. The answerer never blocks on this.
+            llmWorker.submit(() -> llmRuntime.ensureReady(msg -> aiStatus = msg));
+        }
     }
 
     /** The answering mode chosen at launch. */
@@ -211,6 +227,10 @@ public class AppCore {
         });
         browserWorker.shutdown();
         docWorker.shutdown();
+        if (llmRuntime != null) {
+            llmRuntime.shutdown();
+        }
+        llmWorker.shutdownNow();   // a first-run download in flight is safely resumable
     }
 
     // ---- Documents ----
