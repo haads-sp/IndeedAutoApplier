@@ -16,7 +16,7 @@ import java.awt.BorderLayout;
 import java.util.List;
 
 
-/** Run page — for now, find and list matching postings (read-only). Applying comes in a later slice. */
+/** Run page — search for matching postings, then apply to them one at a time in the chosen mode. */
 public class Page4 extends JPanel implements LivePage {
 
     private final App app;
@@ -26,6 +26,8 @@ public class Page4 extends JPanel implements LivePage {
     private final SubmitModeSelector modeSelector;
     private final JButton searchBtn = Theme.primaryButton("Find matching jobs");
     private final JLabel searchStatus = Theme.muted("Not searched yet.");
+    private final JButton applyBtn = Theme.primaryButton("Apply to next posting");
+    private final JLabel applyStatus = Theme.muted("Search first, then apply one posting at a time.");
     private List<JobPosting> shown = List.of();
 
     public Page4(App app) {
@@ -36,12 +38,13 @@ public class Page4 extends JPanel implements LivePage {
         setLayout(new BorderLayout());
         setBorder(Theme.pad(Theme.SPACE_XXL));
 
-        add(new Header("Run", "Find postings that match your search. For now the app lists what it "
-                + "finds; submitting applications comes next."), BorderLayout.NORTH);
+        add(new Header("Run", "Search for matching postings, then apply to them one at a time — "
+                + "the app fills what it can and pauses in the browser when it needs you."), BorderLayout.NORTH);
         add(buildBody(), BorderLayout.CENTER);
         add(pageUtil.stepNav(app, "Page3", null, null), BorderLayout.SOUTH);
 
         searchBtn.addActionListener(e -> app.core().startSearch());
+        applyBtn.addActionListener(e -> app.core().applyToNextPosting());
         modeSelector.onChange(app.core()::setSubmitMode);
         refresh();
     }
@@ -61,7 +64,18 @@ public class Page4 extends JPanel implements LivePage {
                 Theme.vGap(Theme.SPACE_MD),
                 modeSelector);
 
-        JComponent top = Theme.stack(search, Theme.vGap(Theme.SPACE_LG), applyMode);
+        JComponent apply = Theme.card(
+                Theme.heading("Apply"),
+                Theme.vGap(Theme.SPACE_XS),
+                Theme.muted("Opens each posting, fills what it can, and pauses in the browser when it "
+                        + "needs you (a question, a review, or a check to clear)."),
+                Theme.vGap(Theme.SPACE_MD),
+                Theme.row(applyBtn),
+                Theme.vGap(Theme.SPACE_MD),
+                Theme.row(applyStatus));
+
+        JComponent top = Theme.stack(search, Theme.vGap(Theme.SPACE_LG), applyMode,
+                Theme.vGap(Theme.SPACE_LG), apply);
 
         JPanel body = new JPanel(new BorderLayout(0, Theme.SPACE_LG));
         body.setOpaque(false);
@@ -76,6 +90,11 @@ public class Page4 extends JPanel implements LivePage {
         searchStatus.setText(app.core().searchMessage());
         searchBtn.setEnabled(!searching);
         searchBtn.setText(searching ? "Searching…" : "Find matching jobs");
+
+        boolean applying = app.core().isApplying();
+        applyStatus.setText(app.core().applyMessage());
+        applyBtn.setEnabled(!applying);
+        applyBtn.setText(applying ? "Applying…" : "Apply to next posting");
 
         // The found list only changes when a search completes, so rebuild the model only then.
         List<JobPosting> latest = app.core().foundPostings();

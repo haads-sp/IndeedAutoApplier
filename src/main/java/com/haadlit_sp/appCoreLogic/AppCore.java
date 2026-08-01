@@ -1,11 +1,16 @@
 package com.haadlit_sp.appCoreLogic;
 
+import com.haadlit_sp.appCoreLogic.answer.QuestionAnswerer;
+import com.haadlit_sp.appCoreLogic.answer.QuestionAnswererFactory;
+import com.haadlit_sp.appCoreLogic.apply.ApplyResult;
+import com.haadlit_sp.appCoreLogic.apply.ApplyWalkthrough;
 import com.haadlit_sp.appCoreLogic.browser.BrowserDriver;
 import com.haadlit_sp.appCoreLogic.browser.BrowserDriverFactory;
 import com.haadlit_sp.appCoreLogic.browser.ChromeProfile;
 import com.haadlit_sp.appCoreLogic.browser.IndeedSelectors;
 import com.haadlit_sp.appCoreLogic.location.LocationSuggester;
 import com.haadlit_sp.appCoreLogic.location.LocationSuggesterFactory;
+import com.haadlit_sp.appCoreLogic.model.AppliedPosting;
 import com.haadlit_sp.appCoreLogic.model.CityLocation;
 import com.haadlit_sp.appCoreLogic.model.ContactDetails;
 import com.haadlit_sp.appCoreLogic.model.HistoryEntry;
@@ -14,6 +19,7 @@ import com.haadlit_sp.appCoreLogic.model.ProfileFacts;
 import com.haadlit_sp.appCoreLogic.model.RunStatus;
 import com.haadlit_sp.appCoreLogic.model.SearchCriteria;
 import com.haadlit_sp.appCoreLogic.model.SessionDocuments;
+import com.haadlit_sp.appCoreLogic.store.QaBankStore;
 import com.haadlit_sp.appCoreLogic.model.SubmitMode;
 import com.haadlit_sp.appCoreLogic.pdf.PdfTextExtractor;
 import com.haadlit_sp.appCoreLogic.pdf.ProfileFactsExtractor;
@@ -67,6 +73,8 @@ public class AppCore {
     private final LocationSuggester locationSuggester = LocationSuggesterFactory.create();
     private final ApplicationHistoryStore applicationStore = new ApplicationHistoryStore();
     private final ContactDetailsStore contactStore = new ContactDetailsStore();
+    private final QuestionAnswerer answerer = QuestionAnswererFactory.create();
+    private final QaBankStore qaBank = new QaBankStore();
 
     private volatile boolean loggedIn = false;
     private volatile String loginMessage = "Not signed in.";
@@ -76,6 +84,9 @@ public class AppCore {
     private volatile List<JobPosting> foundPostings = List.of();
     private volatile String searchMessage = "Not searched yet.";
     private volatile boolean searching = false;
+    private volatile boolean applying = false;
+    private volatile String applyMessage = "Search first, then apply one posting at a time.";
+    private volatile int submittedCount = 0;
     private volatile SubmitMode submitMode = SubmitMode.REVIEW; // safe default: never auto-submit
     private SessionDocuments documents = SessionDocuments.empty();
     private SearchCriteria criteria = SearchCriteria.blank();
@@ -342,6 +353,86 @@ public class AppCore {
     /** Whether a posting has already been applied to in a past run (for the New/Applied tag). */
     public Set<String> appliedPostingIds() {
         return applicationStore.appliedIds();
+    }
+
+    // ---- Apply (walk the next found posting through the application) ----
+
+    /** Apply to the next not-yet-handled found posting, on the browser worker. One at a time. */
+    public void applyToNextPosting() {
+        if (applying) {
+            return;
+        }
+        JobPosting next = nextUnhandledPosting();
+        if (next == null) {
+            applyMessage = foundPostings.isEmpty()
+                    ? "Search for jobs first, then apply." : "All found postings have been handled.";
+            return;
+        }
+        applying = true;
+        applyMessage = "Opening: " + next.title() + " @ " + next.company() + "…";
+        browserWorker.submit(() -> {
+            try {
+                ApplyResult result = new ApplyWalkthrough(connectedDriver(), answerer, qaBank)
+                        .apply(next, contactDetails, profileFacts, documents.resume(), submitMode);
+                recordAndReport(next, result);
+            } catch (Exception e) {
+                LOG.log(Level.ERROR, "Apply failed", e);
+                closeDriverQuietly();
+                applyMessage = describeBrowserFailure(e);
+            } finally {
+                applying = false;
+            }
+        });
+    }
+
+    private JobPosting nextUnhandledPosting() {
+        Set<String> handled = applicationStore.appliedIds();
+        for (JobPosting posting : foundPostings) {
+            if (!handled.contains(posting.id())) {
+                return posting;
+            }
+        }
+        return null;
+    }
+
+    /** Record the posting (so it isn't re-tried) and set a plain-language status. Transient
+     * failures (a challenge, an error) are left unrecorded so the user can retry them. */
+    private void recordAndReport(JobPosting posting, ApplyResult result) {
+        AppliedPosting.Outcome outcome = switch (result.status()) {
+            case SUBMITTED -> AppliedPosting.Outcome.SUBMITTED;
+            case REVIEW_READY -> AppliedPosting.Outcome.REVIEW_READY;
+            case NEEDS_INPUT -> AppliedPosting.Outcome.NEEDS_INPUT;
+            case SKIPPED -> AppliedPosting.Outcome.SKIPPED;
+            case CHALLENGED, FAILED -> null;
+        };
+        if (outcome != null) {
+            applicationStore.record(new AppliedPosting(posting.id(), java.time.Instant.now(),
+                    outcome, posting.title(), posting.company()));
+        }
+        if (result.status() == ApplyResult.Status.SUBMITTED) {
+            submittedCount++;
+        }
+        applyMessage = switch (result.status()) {
+            case SUBMITTED -> "Submitted: " + posting.title() + ". Click Apply next for the next one.";
+            case REVIEW_READY -> "Filled and ready — review and Submit \"" + posting.title()
+                    + "\" in the browser, then Apply next.";
+            case NEEDS_INPUT -> "Needs you: " + result.detail() + " Finish it in the browser, then Apply next.";
+            case CHALLENGED -> "Cloudflare check — clear it in the browser, then Apply next.";
+            case SKIPPED -> "Skipped (not Easy Apply): " + posting.title() + ". Apply next.";
+            case FAILED -> "Couldn't apply to \"" + posting.title() + "\": " + result.detail();
+        };
+    }
+
+    public boolean isApplying() {
+        return applying;
+    }
+
+    public String applyMessage() {
+        return applyMessage;
+    }
+
+    public int submittedCount() {
+        return submittedCount;
     }
 
     // ---- Run control ----
