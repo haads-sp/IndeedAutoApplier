@@ -36,7 +36,12 @@ public class ApplyFiller {
                     driver.fill(fieldSelector(question.id()), value);
                     yield true;
                 }
-                default -> false; // choice types: pause and ask until verified live
+                case YES_NO, SINGLE_CHOICE, MULTI_CHOICE -> {
+                    // The value is the option's label; the driver clicks the matching radio.
+                    driver.chooseOption(question.id(), value);
+                    yield true;
+                }
+                default -> false;
             };
         } catch (RuntimeException e) {
             LOG.log(Level.WARNING, "Could not fill field " + question.id(), e);

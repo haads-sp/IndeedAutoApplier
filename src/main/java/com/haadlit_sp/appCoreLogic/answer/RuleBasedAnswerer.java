@@ -39,10 +39,17 @@ public class RuleBasedAnswerer implements QuestionAnswerer {
         String text = question.text().toLowerCase(Locale.ROOT);
 
         if (asksYearsOfExperience(text) && facts.yearsOfExperience() != null) {
-            return Optional.of(Answer.of(String.valueOf(facts.yearsOfExperience()), Answer.Source.RULE));
+            Optional<Answer> years = answerYears(question, facts.yearsOfExperience());
+            if (years.isPresent()) {
+                return years;
+            }
         }
         if (asksWorkAuthorization(text) && isAuthorized(facts)) {
             return yes(question);
+        }
+        if (asksSponsorship(text) && isAuthorized(facts)) {
+            // Authorized to work here → I do not require sponsorship.
+            return no(question);
         }
         if (asksEducation(text)) {
             Optional<String> option = matchEducationOption(question, facts);
@@ -73,6 +80,61 @@ public class RuleBasedAnswerer implements QuestionAnswerer {
 
     private static boolean asksCommute(String text) {
         return text.contains("commute") || text.contains("reliably commute");
+    }
+
+    private static boolean asksSponsorship(String text) {
+        return text.contains("sponsorship") || (text.contains("sponsor") && text.contains("work"));
+    }
+
+    /** Map the resume's years of experience onto the question's range option (or the raw number). */
+    private static Optional<Answer> answerYears(ScreenerQuestion question, int years) {
+        if (question.options().isEmpty()) {
+            return Optional.of(Answer.of(String.valueOf(years), Answer.Source.RULE));
+        }
+        for (String option : question.options()) {
+            if (yearsFitsOption(option, years)) {
+                return Optional.of(Answer.of(option, Answer.Source.RULE));
+            }
+        }
+        return Optional.empty();
+    }
+
+    /** Whether {@code years} falls in an option like "None", "Under 1 year", "1-2 years", "5+ years". */
+    private static boolean yearsFitsOption(String option, int years) {
+        String o = option.toLowerCase(Locale.ROOT);
+        if (o.contains("none") || o.equals("0")) {
+            return years == 0;
+        }
+        List<Integer> nums = new java.util.ArrayList<>();
+        java.util.regex.Matcher m = java.util.regex.Pattern.compile("\\d+").matcher(o);
+        while (m.find()) {
+            nums.add(Integer.parseInt(m.group()));
+        }
+        if (nums.isEmpty()) {
+            return false;
+        }
+        boolean atLeast = o.contains("+") || o.contains("more") || o.contains("over") || o.contains("at least");
+        boolean under = o.contains("under") || o.contains("less than") || o.contains("fewer") || o.contains("up to");
+        if (atLeast) {
+            return years >= nums.get(0);
+        }
+        if (under) {
+            return years < nums.get(0);
+        }
+        if (nums.size() >= 2) {
+            return years >= nums.get(0) && years <= nums.get(1);
+        }
+        return years == nums.get(0);
+    }
+
+    /** "No" as the question expects it: a matching option if listed, else the literal word. */
+    private static Optional<Answer> no(ScreenerQuestion question) {
+        for (String option : question.options()) {
+            if (option.trim().equalsIgnoreCase("no")) {
+                return Optional.of(Answer.of(option, Answer.Source.RULE));
+            }
+        }
+        return Optional.of(Answer.of("No", Answer.Source.RULE));
     }
 
     private static boolean isAuthorized(ProfileFacts facts) {

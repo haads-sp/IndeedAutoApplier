@@ -197,14 +197,12 @@ public class ApplyWalkthrough {
         return requiredUnfilled;
     }
 
-    /** True only if every question on the module had a value we could supply (for the auto gate). */
+    /** True only if every question on the module had an answer we could supply (for the auto gate). */
     private boolean allFilled(List<ScreenerQuestion> questions, ContactDetails contact, ProfileFacts facts) {
         for (ScreenerQuestion q : questions) {
             String value = resolve(q, contact, facts);
-            if (value == null || value.isBlank() || q.type() == ScreenerQuestion.QuestionType.SINGLE_CHOICE
-                    || q.type() == ScreenerQuestion.QuestionType.MULTI_CHOICE
-                    || q.type() == ScreenerQuestion.QuestionType.YES_NO) {
-                return false; // choice types aren't auto-filled yet, so they count as "had to ask"
+            if (value == null || value.isBlank()) {
+                return false;
             }
         }
         return true;

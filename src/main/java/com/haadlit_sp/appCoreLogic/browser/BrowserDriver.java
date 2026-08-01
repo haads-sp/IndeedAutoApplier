@@ -49,6 +49,9 @@ public interface BrowserDriver extends AutoCloseable {
     /** Choose {@code value} (by value or visible label) in the {@code <select>} matching {@code selector}. */
     void selectOption(String selector, String value);
 
+    /** Select the radio option whose visible label matches {@code optionText}, within group {@code groupName}. */
+    void chooseOption(String groupName, String optionText);
+
     /** Attach {@code file} to the {@code <input type=file>} matching {@code selector} (works even if hidden). */
     void uploadFile(String selector, java.nio.file.Path file);
 

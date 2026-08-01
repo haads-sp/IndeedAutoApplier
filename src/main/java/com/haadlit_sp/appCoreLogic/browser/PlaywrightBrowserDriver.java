@@ -99,6 +99,41 @@ public class PlaywrightBrowserDriver implements BrowserDriver {
         page.selectOption(selector, value);
     }
 
+    /** Finds the radio in a group whose label best matches the wanted text and returns a CSS selector
+     *  for it (exact match, then prefix, then substring). Generic HTML — no site specifics. */
+    private static final String FIND_OPTION_SELECTOR_JS = """
+        (arg) => {
+          const name = arg[0];
+          const want = (arg[1] || '').toLowerCase().replace(/\\s+/g, ' ').trim();
+          const norm = s => (s || '').toLowerCase().replace(/\\s+/g, ' ').trim();
+          const radios = [...document.querySelectorAll('input[type=radio][name="' + name + '"]')];
+          const sel = r => {
+            const t = r.getAttribute('data-testid'); if (t) return '[data-testid="' + t + '"]';
+            if (r.id) return '[id="' + r.id + '"]';
+            return null;
+          };
+          for (const mode of [0, 1, 2]) {
+            for (const r of radios) {
+              const label = document.querySelector('label[for="' + CSS.escape(r.id) + '"]') || r.closest('label');
+              const text = norm(label ? label.textContent : r.value);
+              if ((mode === 0 && text === want) || (mode === 1 && text.startsWith(want))
+                  || (mode === 2 && (text.includes(want) || want.includes(text)))) {
+                return sel(r);
+              }
+            }
+          }
+          return null;
+        }""";
+
+    @Override
+    public void chooseOption(String groupName, String optionText) {
+        Object selector = page.evaluate(FIND_OPTION_SELECTOR_JS, java.util.List.of(groupName, optionText));
+        if (selector == null) {
+            throw new IllegalStateException("No option matching '" + optionText + "' in group " + groupName);
+        }
+        page.locator((String) selector).click();
+    }
+
     @Override
     public void uploadFile(String selector, java.nio.file.Path file) {
         page.setInputFiles(selector, file);

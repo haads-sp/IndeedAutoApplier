@@ -130,9 +130,9 @@ public final class IndeedSelectors {
     /** The final Submit button. Only clicked in the auto modes; exact text to be confirmed live. */
     public static final String SUBMIT_BUTTON = "button:has-text('Submit application')";
 
-    /** Whether the current module is the resume step. */
+    /** Whether the current module is the resume PICKER (select/upload) — not a later resume preview. */
     public static boolean isResumeModule(String module) {
-        return module != null && module.contains("resume");
+        return module != null && module.startsWith("resume-selection");
     }
 
     /** A resume already saved on the account (the common case); click it to select and continue. */
