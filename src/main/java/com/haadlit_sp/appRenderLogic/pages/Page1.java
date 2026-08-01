@@ -5,6 +5,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.haadlit_sp.appCoreLogic.model.AnswerMode;
 import com.haadlit_sp.appRenderLogic.App;
 import com.haadlit_sp.appRenderLogic.components.Header;
 import com.haadlit_sp.appRenderLogic.theme.Theme;
@@ -18,6 +19,9 @@ public class Page1 extends JPanel implements LivePage {
     private final App app;
     private final PageUtil pageUtil = new PageUtil();
     private final JLabel statusLabel = Theme.muted("Not signed in.");
+    // Single space, not "": Theme.row freezes its height at build time, and an empty label
+    // measures 0 tall — the row would clip the text forever once it appears.
+    private final JLabel aiLabel = Theme.muted(" ");
 
     public Page1(App app) {
         this.app = app;
@@ -59,7 +63,8 @@ public class Page1 extends JPanel implements LivePage {
                 Theme.vGap(Theme.SPACE_LG),
                 Theme.row(open, verify),
                 Theme.vGap(Theme.SPACE_MD),
-                Theme.row(statusLabel));
+                Theme.row(statusLabel),
+                Theme.row(aiLabel));
     }
 
     private JComponent buildPrivacyNotice() {
@@ -78,5 +83,12 @@ public class Page1 extends JPanel implements LivePage {
     public void refresh() {
         statusLabel.setText(app.core().loginMessage());
         statusLabel.setForeground(app.core().isLoggedIn() ? Theme.SUCCESS : Theme.TEXT_MUTED);
+        // AI setup progress lives here because it runs at launch, while the user signs in.
+        String ai = app.core().aiStatus();
+        boolean show = app.core().answerMode() == AnswerMode.AI_ENHANCED && !ai.isBlank();
+        aiLabel.setVisible(show);
+        if (show) {
+            aiLabel.setText(ai);
+        }
     }
 }

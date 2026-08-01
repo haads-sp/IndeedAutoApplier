@@ -5,6 +5,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.haadlit_sp.appCoreLogic.model.AnswerMode;
 import com.haadlit_sp.appCoreLogic.model.JobPosting;
 import com.haadlit_sp.appRenderLogic.App;
 import com.haadlit_sp.appRenderLogic.components.Header;
@@ -28,6 +29,9 @@ public class Page4 extends JPanel implements LivePage {
     private final JLabel searchStatus = Theme.muted("Not searched yet.");
     private final JButton applyBtn = Theme.primaryButton("Apply to next posting");
     private final JLabel applyStatus = Theme.muted("Search first, then apply one posting at a time.");
+    // Single space, not "": Theme.row freezes its height at build time, and an empty label
+    // measures 0 tall — the row would clip the text forever once it appears.
+    private final JLabel aiStatus = Theme.muted(" ");
     private List<JobPosting> shown = List.of();
 
     public Page4(App app) {
@@ -72,7 +76,8 @@ public class Page4 extends JPanel implements LivePage {
                 Theme.vGap(Theme.SPACE_MD),
                 Theme.row(applyBtn),
                 Theme.vGap(Theme.SPACE_MD),
-                Theme.row(applyStatus));
+                Theme.row(applyStatus),
+                Theme.row(aiStatus));
 
         JComponent top = Theme.stack(search, Theme.vGap(Theme.SPACE_LG), applyMode,
                 Theme.vGap(Theme.SPACE_LG), apply);
@@ -95,6 +100,13 @@ public class Page4 extends JPanel implements LivePage {
         applyStatus.setText(app.core().applyMessage());
         applyBtn.setEnabled(!applying);
         applyBtn.setText(applying ? "Applying…" : "Apply to next posting");
+
+        String ai = app.core().aiStatus();
+        boolean showAi = app.core().answerMode() == AnswerMode.AI_ENHANCED && !ai.isBlank();
+        aiStatus.setVisible(showAi);
+        if (showAi) {
+            aiStatus.setText(ai);
+        }
 
         // The found list only changes when a search completes, so rebuild the model only then.
         List<JobPosting> latest = app.core().foundPostings();
