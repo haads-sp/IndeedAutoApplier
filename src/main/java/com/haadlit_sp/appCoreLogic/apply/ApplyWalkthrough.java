@@ -98,9 +98,20 @@ public class ApplyWalkthrough {
 
                 if (hasSubmit()) {
                     if (mode.autoSubmits(posting.easyApply(), everythingKnown) && requiredUnfilled.isEmpty()) {
+                        if (hasVisibleCaptcha()) {
+                            // A captcha is a "prove you're human" gate — that click is the user's.
+                            return ApplyResult.of(ApplyResult.Status.NEEDS_INPUT,
+                                    "A verification check is on the final step — complete it and "
+                                            + "click Submit in the browser.");
+                        }
                         driver.clickFirstVisible(IndeedSelectors.SUBMIT_BUTTON);
                         waitToLeaveFlow();
-                        return ApplyResult.of(ApplyResult.Status.SUBMITTED, "Submitted.");
+                        if (!IndeedSelectors.inApplyFlow(driver.currentUrl())) {
+                            return ApplyResult.of(ApplyResult.Status.SUBMITTED, "Submitted.");
+                        }
+                        return ApplyResult.of(ApplyResult.Status.NEEDS_INPUT, hasVisibleCaptcha()
+                                ? "A verification appeared after Submit — complete it in the browser."
+                                : "Submit did not go through — finish this one in the browser.");
                     }
                     return ApplyResult.of(ApplyResult.Status.REVIEW_READY,
                             "Filled and ready — review and click Submit in the browser.");
@@ -240,6 +251,10 @@ public class ApplyWalkthrough {
 
     private boolean hasSubmit() {
         return Boolean.TRUE.equals(driver.evaluate(IndeedSelectors.HAS_SUBMIT_JS));
+    }
+
+    private boolean hasVisibleCaptcha() {
+        return Boolean.TRUE.equals(driver.evaluate(IndeedSelectors.VISIBLE_CAPTCHA_JS));
     }
 
     private boolean waitForApplyFlow() throws InterruptedException {

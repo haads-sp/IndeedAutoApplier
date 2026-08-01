@@ -8,8 +8,10 @@ import com.haadlit_sp.appCoreLogic.model.SearchCriteria;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -23,6 +25,10 @@ public class PostingEnumerator {
     private static final Logger LOG = System.getLogger(PostingEnumerator.class.getName());
     private static final int WAIT_ATTEMPTS = 16;
     private static final long WAIT_MS = 500;
+    /** Indeed pages results in steps of 10; cap the walk so a huge query can't run away. */
+    private static final int PAGE_STEP = 10;
+    private static final int MAX_PAGES = 10;
+    private static final long BETWEEN_PAGES_MS = 1500;   // human-ish pacing between page loads
 
     private final BrowserDriver driver;
 
@@ -31,27 +37,54 @@ public class PostingEnumerator {
     }
 
     /**
-     * The first page of postings for these criteria. Reports CHALLENGED when Cloudflare is asking
-     * the human to verify, so the caller can pause rather than mistake it for empty results.
+     * All postings for these criteria, walking every result page (deduped by job key) until a page
+     * adds nothing new or the page cap is hit. Reports CHALLENGED when Cloudflare is asking the
+     * human to verify, so the caller can pause rather than mistake it for empty results.
      */
     public EnumerationResult enumerate(SearchCriteria criteria) throws InterruptedException {
-        String url = IndeedSelectors.searchUrl(
-                criteria.jobQuery(), criteria.city(),
-                criteria.radius().km(), criteria.datePosted().days());
-        LOG.log(Level.INFO, "Searching: {0}", url);
-        driver.navigate(url);
+        List<JobPosting> all = new ArrayList<>();
+        Set<String> seen = new HashSet<>();
+        for (int page = 0; page < MAX_PAGES; page++) {
+            String url = IndeedSelectors.searchUrl(
+                    criteria.jobQuery(), criteria.city(),
+                    criteria.radius().km(), criteria.datePosted().days(), page * PAGE_STEP);
+            LOG.log(Level.INFO, "Searching page {0}: {1}", page + 1, url);
+            driver.navigate(url);
 
-        for (int i = 0; i < WAIT_ATTEMPTS; i++) {
-            if (isChallenged()) {
-                LOG.log(Level.INFO, "Cloudflare check is up; waiting for the human to clear it");
-                return EnumerationResult.challenged();
+            List<JobPosting> pagePostings = null;
+            for (int i = 0; i < WAIT_ATTEMPTS && pagePostings == null; i++) {
+                if (isChallenged()) {
+                    LOG.log(Level.INFO, "Cloudflare check is up; waiting for the human to clear it");
+                    // Keep anything already collected rather than throwing the search away.
+                    return all.isEmpty() ? EnumerationResult.challenged() : EnumerationResult.ok(all);
+                }
+                if (resultsReady()) {
+                    pagePostings = toPostings(driver.evaluate(IndeedSelectors.SCRAPE_POSTINGS_JS));
+                    break;
+                }
+                Thread.sleep(WAIT_MS);
             }
-            if (resultsReady()) {
-                return EnumerationResult.ok(toPostings(driver.evaluate(IndeedSelectors.SCRAPE_POSTINGS_JS)));
+            if (pagePostings == null) {
+                // No cards rendered: past the last page (or truly no results on page one).
+                break;
             }
-            Thread.sleep(WAIT_MS);
+            int newOnPage = 0;
+            for (JobPosting posting : pagePostings) {
+                if (seen.add(posting.id())) {
+                    all.add(posting);
+                    newOnPage++;
+                }
+            }
+            LOG.log(Level.INFO, "Page {0}: {1} card(s), {2} new", page + 1, pagePostings.size(), newOnPage);
+            if (newOnPage == 0) {
+                break;   // Indeed repeats results past the end instead of going empty
+            }
+            Thread.sleep(BETWEEN_PAGES_MS);
         }
-        return isChallenged() ? EnumerationResult.challenged() : EnumerationResult.noResults();
+        if (all.isEmpty()) {
+            return isChallenged() ? EnumerationResult.challenged() : EnumerationResult.noResults();
+        }
+        return EnumerationResult.ok(all);
     }
 
     private boolean isChallenged() {

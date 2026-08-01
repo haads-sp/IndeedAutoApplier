@@ -29,6 +29,12 @@ public final class IndeedSelectors {
      * @param fromageDays days-back filter, or null for no date filter
      */
     public static String searchUrl(String query, String city, int radiusKm, Integer fromageDays) {
+        return searchUrl(query, city, radiusKm, fromageDays, 0);
+    }
+
+    /** @param start result offset for pagination — Indeed pages in steps of 10 ({@code &start=10}) */
+    public static String searchUrl(String query, String city, int radiusKm, Integer fromageDays,
+                                   int start) {
         StringBuilder url = new StringBuilder(SEARCH_HOST).append("/jobs?q=").append(encode(query));
         if (city != null && !city.isBlank()) {
             url.append("&l=").append(encode(city));
@@ -38,6 +44,9 @@ public final class IndeedSelectors {
         }
         if (fromageDays != null) {
             url.append("&fromage=").append(fromageDays);
+        }
+        if (start > 0) {
+            url.append("&start=").append(start);
         }
         return url.toString();
     }
@@ -161,6 +170,25 @@ public final class IndeedSelectors {
     public static final String HAS_SUBMIT_JS = """
         () => [...document.querySelectorAll('button')].some(b => b.offsetParent !== null
           && /submit (your )?application|^submit$/i.test((b.textContent || '').trim()))
+        """;
+
+    /**
+     * Whether a VISIBLE human-verification widget is on screen: a reCAPTCHA checkbox or image
+     * challenge, hCaptcha, or Turnstile. The invisible-reCAPTCHA badge (bottom corner) and hidden
+     * g-recaptcha-response input do NOT count — those pass silently on a real browser. We only
+     * detect, so the app can hand the check to the human; we never solve or bypass.
+     */
+    public static final String VISIBLE_CAPTCHA_JS = """
+        () => {
+          const visible = e => e && e.offsetParent !== null;
+          const iframes = [...document.querySelectorAll('iframe')];
+          const challenge = iframes.some(f => visible(f)
+            && /bframe|hcaptcha|turnstile|challenges\\.cloudflare/i.test(f.src || ''));
+          const checkbox = iframes.some(f => visible(f)
+            && /recaptcha.*(anchor|api2)/i.test(f.src || '')
+            && !f.closest('.grecaptcha-badge'));
+          return challenge || checkbox;
+        }
         """;
 
     /** Whether the current apply module has finished rendering (fields, or a Continue/Submit button). */
