@@ -16,6 +16,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -29,6 +30,7 @@ public class ResultsPanel extends JPanel {
     private final CardLayout swap = new CardLayout();
     private final JPanel body = new JPanel(swap);
     private Set<String> appliedIds = Set.of();
+    private Map<String, Integer> fitScores = Map.of();
 
     public ResultsPanel() {
         setOpaque(false);
@@ -60,8 +62,10 @@ public class ResultsPanel extends JPanel {
         return panel;
     }
 
-    public void setResults(List<JobPosting> postings, Set<String> appliedIds) {
+    public void setResults(List<JobPosting> postings, Set<String> appliedIds,
+                           Map<String, Integer> fitScores) {
         this.appliedIds = appliedIds == null ? Set.of() : appliedIds;
+        this.fitScores = fitScores == null ? Map.of() : Map.copyOf(fitScores);
         model.clear();
         postings.forEach(model::addElement);
         swap.show(body, postings.isEmpty() ? EMPTY : LIST);
@@ -83,8 +87,11 @@ public class ResultsPanel extends JPanel {
             String easy = p.easyApply()
                     ? " &nbsp;<span style='color:#0E7A4F'>Easy apply</span>" : "";
             String location = p.location().isBlank() ? "" : " · " + escape(p.location());
+            Integer score = fitScores.get(p.id());
+            String fit = score == null ? ""
+                    : " &nbsp;<span style='color:" + fitColor(score) + "'><b>" + score + "% fit</b></span>";
 
-            setText("<html><b>" + escape(p.title()) + "</b>" + easy
+            setText("<html><b>" + escape(p.title()) + "</b>" + easy + fit
                     + "<br><span style='color:#5B6776'>" + tag + " &nbsp; "
                     + escape(p.company()) + location + "</span></html>");
             setBorder(Theme.pad(Theme.SPACE_SM, Theme.SPACE_MD, Theme.SPACE_SM, Theme.SPACE_MD));
@@ -95,6 +102,14 @@ public class ResultsPanel extends JPanel {
 
         private String escape(String text) {
             return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+        }
+
+        /** Green for strong, amber for partial, red for poor — matches how the user scans a list. */
+        private String fitColor(int score) {
+            if (score >= 70) {
+                return "#0E7A4F";
+            }
+            return score >= 40 ? "#B87A00" : "#B3382E";
         }
     }
 }

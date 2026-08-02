@@ -118,7 +118,8 @@ public class PostingEnumerator {
                     str(map.get("company")),
                     str(map.get("location")),
                     IndeedSelectors.jobUrl(jk),
-                    Boolean.TRUE.equals(map.get("easilyApply"))));
+                    Boolean.TRUE.equals(map.get("easilyApply")),
+                    str(map.get("snippet"))));
         }
         return postings;
     }

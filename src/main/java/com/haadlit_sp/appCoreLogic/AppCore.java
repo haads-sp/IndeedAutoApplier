@@ -8,6 +8,7 @@ import com.haadlit_sp.appCoreLogic.browser.BrowserDriver;
 import com.haadlit_sp.appCoreLogic.browser.BrowserDriverFactory;
 import com.haadlit_sp.appCoreLogic.browser.ChromeProfile;
 import com.haadlit_sp.appCoreLogic.browser.IndeedSelectors;
+import com.haadlit_sp.appCoreLogic.llm.JobFitScorer;
 import com.haadlit_sp.appCoreLogic.llm.LlmRuntime;
 import com.haadlit_sp.appCoreLogic.llm.LlmRuntimeFactory;
 import com.haadlit_sp.appCoreLogic.location.LocationSuggester;
@@ -42,7 +43,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -80,6 +83,10 @@ public class AppCore {
         return t;
     });
     private final LlmRuntime llmRuntime;   // null in STANDARD mode
+    private final JobFitScorer fitScorer;  // null in STANDARD mode
+    private final Map<String, Integer> fitScores = new ConcurrentHashMap<>();
+    private volatile int fitScoresVersion = 0;
+    private volatile int scoreGeneration = 0;
 
     private final PdfTextExtractor pdfText = new PdfTextExtractor();
     private final ProfileFactsExtractor factsExtractor = new ProfileFactsExtractor();
@@ -98,6 +105,7 @@ public class AppCore {
     public AppCore(AnswerMode mode) {
         this.answerMode = mode;
         this.llmRuntime = mode == AnswerMode.AI_ENHANCED ? LlmRuntimeFactory.create() : null;
+        this.fitScorer = llmRuntime == null ? null : new JobFitScorer(llmRuntime);
         this.answerer = QuestionAnswererFactory.create(mode, llmRuntime, this::contactDetails);
         if (llmRuntime != null) {
             // Eager: the one-time download and model load overlap sign-in and document picking,
@@ -365,6 +373,7 @@ public class AppCore {
                 foundPostings = result.postings();
                 long fresh = result.postings().stream().filter(p -> !applicationStore.contains(p.id())).count();
                 searchMessage = "Found " + result.postings().size() + " postings (" + fresh + " new).";
+                scheduleFitScoring(result.postings());
             }
             case CHALLENGED -> {
                 // Detach so the human clears the check in a genuinely plain browser — clearance
@@ -378,6 +387,51 @@ public class AppCore {
                 searchMessage = "No matching postings found — try a broader search.";
             }
         }
+    }
+
+    /**
+     * Queue an AI fit score for each found posting (AI mode only). Runs on the llm worker so
+     * scores appear one by one while the user reviews the list; a new search abandons the old
+     * queue via the generation counter, and scoring yields while an application is running.
+     */
+    private void scheduleFitScoring(List<JobPosting> postings) {
+        if (fitScorer == null) {
+            return;
+        }
+        int generation = ++scoreGeneration;
+        fitScores.clear();
+        fitScoresVersion++;
+        for (JobPosting posting : postings) {
+            llmWorker.submit(() -> {
+                try {
+                    if (generation != scoreGeneration) {
+                        return;   // a newer search replaced this list
+                    }
+                    while (applying) {
+                        Thread.sleep(2_000);   // screener answers get the model to themselves
+                    }
+                    if (llmRuntime == null || !llmRuntime.isReady()) {
+                        return;
+                    }
+                    fitScorer.score(posting, profileFacts, contactDetails).ifPresent(score -> {
+                        fitScores.put(posting.id(), score);
+                        fitScoresVersion++;
+                    });
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            });
+        }
+    }
+
+    /** Fit scores computed so far, by posting id. Grows while scoring runs in the background. */
+    public Map<String, Integer> fitScores() {
+        return fitScores;
+    }
+
+    /** Bumps whenever a score lands — lets the UI rebuild the list only when something changed. */
+    public int fitScoresVersion() {
+        return fitScoresVersion;
     }
 
     public List<JobPosting> foundPostings() {

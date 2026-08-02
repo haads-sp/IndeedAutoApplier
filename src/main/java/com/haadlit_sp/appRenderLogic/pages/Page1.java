@@ -81,14 +81,14 @@ public class Page1 extends JPanel implements LivePage {
     /** Reflect the facade's live login state (updated from the browser worker thread). */
     @Override
     public void refresh() {
-        statusLabel.setText(app.core().loginMessage());
+        statusLabel.setText(Theme.animate(app.core().loginMessage()));
         statusLabel.setForeground(app.core().isLoggedIn() ? Theme.SUCCESS : Theme.TEXT_MUTED);
         // AI setup progress lives here because it runs at launch, while the user signs in.
         String ai = app.core().aiStatus();
         boolean show = app.core().answerMode() == AnswerMode.AI_ENHANCED && !ai.isBlank();
         aiLabel.setVisible(show);
         if (show) {
-            aiLabel.setText(ai);
+            aiLabel.setText(Theme.animate(ai));
         }
     }
 }

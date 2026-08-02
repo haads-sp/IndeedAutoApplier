@@ -34,6 +34,7 @@ public class Page4 extends JPanel implements LivePage {
     // measures 0 tall — the row would clip the text forever once it appears.
     private final JLabel aiStatus = Theme.muted(" ");
     private List<JobPosting> shown = List.of();
+    private int shownScoresVersion = -1;
 
     public Page4(App app) {
         this.app = app;
@@ -99,13 +100,13 @@ public class Page4 extends JPanel implements LivePage {
     @Override
     public void refresh() {
         boolean searching = app.core().isSearching();
-        searchStatus.setText(app.core().searchMessage());
+        searchStatus.setText(Theme.animate(app.core().searchMessage()));
         searchBtn.setEnabled(!searching);
         searchBtn.setText(searching ? "Searching…" : "Find matching jobs");
 
         boolean applying = app.core().isApplying();
         boolean auto = app.core().submitMode() != SubmitMode.REVIEW;
-        applyStatus.setText(app.core().applyMessage());
+        applyStatus.setText(Theme.animate(app.core().applyMessage()));
         // In the auto modes the run is hands-off, so the button becomes its own Stop.
         applyBtn.setEnabled(!applying || auto);
         applyBtn.setText(applying ? (auto ? "Stop" : "Applying…")
@@ -118,11 +119,13 @@ public class Page4 extends JPanel implements LivePage {
             aiStatus.setText(ai);
         }
 
-        // The found list only changes when a search completes, so rebuild the model only then.
+        // Rebuild the list when a search lands OR a background fit score arrives.
         List<JobPosting> latest = app.core().foundPostings();
-        if (latest != shown) {
-            resultsPanel.setResults(latest, app.core().appliedPostingIds());
+        int scoresVersion = app.core().fitScoresVersion();
+        if (latest != shown || scoresVersion != shownScoresVersion) {
+            resultsPanel.setResults(latest, app.core().appliedPostingIds(), app.core().fitScores());
             shown = latest;
+            shownScoresVersion = scoresVersion;
         }
     }
 }

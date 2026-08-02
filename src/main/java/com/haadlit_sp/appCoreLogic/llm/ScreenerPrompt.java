@@ -57,7 +57,11 @@ final class ScreenerPrompt {
                 Reply ONLY with JSON matching the schema.""";
     }
 
-    static String user(ScreenerQuestion question, ProfileFacts facts, ContactDetails contact) {
+    /**
+     * The candidate block shared by every prompt (screener answers AND fit scoring). Kept
+     * byte-identical across calls so llama-server's prefix cache does the heavy lifting once.
+     */
+    static String profileBlock(ProfileFacts facts, ContactDetails contact) {
         ProfileFacts f = facts == null ? ProfileFacts.empty() : facts;
         ContactDetails c = contact == null ? ContactDetails.empty() : contact;
         StringBuilder out = new StringBuilder();
@@ -76,7 +80,11 @@ final class ScreenerPrompt {
             resume = resume.substring(0, RESUME_CHAR_LIMIT);
         }
         out.append("\nRESUME TEXT (may be truncated):\n").append(resume).append('\n');
+        return out.toString();
+    }
 
+    static String user(ScreenerQuestion question, ProfileFacts facts, ContactDetails contact) {
+        StringBuilder out = new StringBuilder(profileBlock(facts, contact));
         out.append("\nQUESTION (type=").append(question.type())
                 .append(", required=").append(question.required()).append("):\n")
                 .append(question.text()).append('\n');

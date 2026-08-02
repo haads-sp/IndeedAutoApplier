@@ -115,12 +115,14 @@ public final class IndeedSelectors {
           let title = a ? a.textContent.trim() : '';
           if (!title) { const h2 = card.querySelector('h2'); title = h2 ? h2.textContent.trim() : ''; }
           title = title.replace(/^full details of\\s+/i, '');
+          const snippet = card.querySelector('[class*="snippet"], [data-testid*="snippet"]');
           return {
             jk: a ? a.getAttribute('data-jk') : '',
             title,
             company: company ? company.textContent.trim() : '',
             location: location ? location.textContent.trim() : '',
-            easilyApply: /easily apply/i.test(card.textContent || '')
+            easilyApply: /easily apply/i.test(card.textContent || ''),
+            snippet: snippet ? snippet.textContent.replace(/\\s+/g, ' ').trim().slice(0, 400) : ''
           };
         }).filter(p => p.jk)
         """;

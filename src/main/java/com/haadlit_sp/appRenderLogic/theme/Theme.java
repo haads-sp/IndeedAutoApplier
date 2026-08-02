@@ -167,6 +167,19 @@ public final class Theme {
     public static JLabel heading(String text) { return label(text, HEADING, TEXT); }
     public static JLabel body(String text)    { return label(text, BODY, TEXT); }
     public static JLabel muted(String text)   { return label(text, SMALL, TEXT_MUTED); }
+
+    /**
+     * Animates a busy message's trailing ellipsis ("Searching…" → "Searching." / ".." / "...")
+     * so it visibly moves. Call from a LivePage refresh — the UI timer provides the ticks.
+     * Messages not ending in "…" pass through unchanged.
+     */
+    public static String animate(String message) {
+        if (message == null || !message.endsWith("…")) {
+            return message;
+        }
+        int dots = 1 + (int) ((System.currentTimeMillis() / 400) % 3);
+        return message.substring(0, message.length() - 1) + ".".repeat(dots);
+    }
     public static JLabel mono(String text)    { return label(text, MONO, TEXT_MUTED); }
 
     /** A small all-caps marker above a field or section. */
