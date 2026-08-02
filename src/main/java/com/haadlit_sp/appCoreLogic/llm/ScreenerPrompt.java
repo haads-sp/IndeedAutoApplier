@@ -44,6 +44,10 @@ final class ScreenerPrompt {
                 Examples:
                 - "How many years of forklift experience do you have?" — resume never mentions \
                 forklifts -> {"answer": 0, "unsure": false}
+                - "How many years of experience with SAP do you have?" — resume never mentions \
+                SAP -> {"answer": 0, "unsure": false}
+                - "How much experience do you have with ticketing systems?" with options and the \
+                resume silent -> the option meaning none/no experience, "unsure": false
                 - "Do you have a Class B licence?" — resume never mentions one -> \
                 {"answer": "No", "unsure": false}
                 - "What are your salary expectations?" -> {"answer": "", "unsure": true}

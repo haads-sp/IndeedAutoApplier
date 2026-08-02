@@ -57,6 +57,22 @@ class RuleBasedAnswererTest {
     }
 
     @Test
+    void freeTextPayQuestionsGetNegotiable() {
+        var q = new ScreenerQuestion("q1", "What are your minimum rate/salary expectations?",
+                QuestionType.TEXT, List.of(), true);
+        Optional<Answer> answer = answerer.answer(q, facts, bank());
+        assertTrue(answer.isPresent());
+        assertEquals("Negotiable", answer.get().primary());
+    }
+
+    @Test
+    void numericPayQuestionsStillPause() {
+        var q = new ScreenerQuestion("q1", "What is your expected hourly pay?",
+                QuestionType.NUMBER, List.of(), true);
+        assertTrue(answerer.answer(q, facts, bank()).isEmpty());
+    }
+
+    @Test
     void skillSpecificYearsWithRangeOptionsAlsoDeclines() {
         var q = new ScreenerQuestion("q1", "How many years of AZ driving experience do you have?",
                 QuestionType.SINGLE_CHOICE,

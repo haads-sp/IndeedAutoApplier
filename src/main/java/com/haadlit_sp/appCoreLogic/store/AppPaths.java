@@ -38,4 +38,9 @@ public final class AppPaths {
     public static Path llmDir() {
         return root().resolve("llm");
     }
+
+    /** Developer diagnostics: issues.tsv plus a screenshot per stuck/failed application step. */
+    public static Path diagnosticsDir() {
+        return root().resolve("diagnostics");
+    }
 }

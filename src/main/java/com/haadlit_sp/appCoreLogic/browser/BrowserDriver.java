@@ -61,6 +61,9 @@ public interface BrowserDriver extends AutoCloseable {
      */
     void uploadViaChooser(String trigger, java.nio.file.Path file);
 
+    /** Save a PNG screenshot of the current page to {@code file} (parent dirs must exist). */
+    void screenshot(java.nio.file.Path file);
+
     /** Close the browser and release all resources. Never throws. */
     @Override
     void close();

@@ -154,6 +154,11 @@ public class PlaywrightBrowserDriver implements BrowserDriver {
     }
 
     @Override
+    public void screenshot(java.nio.file.Path file) {
+        page.screenshot(new Page.ScreenshotOptions().setPath(file));
+    }
+
+    @Override
     public void close() {
         try {
             if (playwright != null) {

@@ -59,17 +59,21 @@ public class LlmQuestionAnswerer implements QuestionAnswerer {
         if (declined.contains(key)) {
             return Optional.empty();
         }
-        if (asksAboutMoney(question.text())) {
+        if (RuleBasedAnswerer.asksAboutMoney(question.text().toLowerCase(Locale.ROOT))) {
             declined.add(key);   // pay is the candidate's call, never the model's
             return Optional.empty();
         }
-        Optional<List<String>> values = client
-                .complete(ScreenerPrompt.system(),
-                        ScreenerPrompt.user(question, facts, contact.get()),
-                        ScreenerPrompt.schemaFor(question), TIMEOUT)
-                .flatMap(reply -> LlmResponseValidator.validate(question, reply));
+        Optional<String> reply = client.complete(ScreenerPrompt.system(),
+                ScreenerPrompt.user(question, facts, contact.get()),
+                ScreenerPrompt.schemaFor(question), TIMEOUT);
+        if (reply.isEmpty()) {
+            // Transport failure (server down, timeout, still loading) — transient, so do NOT
+            // cache the decline; the question deserves a retry once the model is back.
+            return Optional.empty();
+        }
+        Optional<List<String>> values = LlmResponseValidator.validate(question, reply.get());
         if (values.isEmpty()) {
-            declined.add(key);
+            declined.add(key);   // the model looked and said unsure — that answer won't change
             return Optional.empty();
         }
         Answer answer = Answer.of(values.get(), Answer.Source.AI);
@@ -77,9 +81,4 @@ public class LlmQuestionAnswerer implements QuestionAnswerer {
         return Optional.of(answer);
     }
 
-    private static boolean asksAboutMoney(String text) {
-        String t = text.toLowerCase(Locale.ROOT);
-        return t.contains("salary") || t.contains("wage") || t.contains("compensation")
-                || t.matches(".*\\bpay\\b.*");
-    }
 }

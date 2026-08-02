@@ -61,6 +61,11 @@ public class RuleBasedAnswerer implements QuestionAnswerer {
             // They gave us a city and radius, so willingness to commute within it is implied.
             return yes(question);
         }
+        if (asksAboutMoney(text) && question.type() == QuestionType.TEXT) {
+            // The standard human non-answer for free-text pay questions. A NUMBER pay field still
+            // pauses — inventing a figure is worse than asking.
+            return Optional.of(Answer.of("Negotiable", Answer.Source.RULE));
+        }
         // Not confident — let the caller ask the user and teach the bank.
         return Optional.empty();
     }
@@ -115,6 +120,12 @@ public class RuleBasedAnswerer implements QuestionAnswerer {
 
     private static boolean asksSponsorship(String text) {
         return text.contains("sponsorship") || (text.contains("sponsor") && text.contains("work"));
+    }
+
+    /** Pay/salary/compensation questions (shared wording with the AI answerer's guard). */
+    public static boolean asksAboutMoney(String text) {
+        return text.contains("salary") || text.contains("wage") || text.contains("compensation")
+                || text.matches(".*\\bpay\\b.*") || text.matches(".*\\brate\\b.*");
     }
 
     /** Map the resume's years of experience onto the question's range option (or the raw number). */

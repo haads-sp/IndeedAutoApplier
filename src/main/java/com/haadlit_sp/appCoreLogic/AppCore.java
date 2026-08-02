@@ -32,6 +32,7 @@ import com.haadlit_sp.appCoreLogic.session.LoginStrategy;
 import com.haadlit_sp.appCoreLogic.session.LoginStrategyFactory;
 import com.haadlit_sp.appCoreLogic.store.ApplicationHistoryStore;
 import com.haadlit_sp.appCoreLogic.store.ContactDetailsStore;
+import com.haadlit_sp.appCoreLogic.store.DiagnosticsLog;
 
 import java.io.IOException;
 import java.lang.System.Logger;
@@ -84,6 +85,7 @@ public class AppCore {
     private final ProfileFactsExtractor factsExtractor = new ProfileFactsExtractor();
     private final LocationSuggester locationSuggester = LocationSuggesterFactory.create();
     private final ApplicationHistoryStore applicationStore = new ApplicationHistoryStore();
+    private final DiagnosticsLog diagnosticsLog = new DiagnosticsLog();
     private final ContactDetailsStore contactStore = new ContactDetailsStore();
     private final QuestionAnswerer answerer;
     private final AnswerMode answerMode;
@@ -513,6 +515,12 @@ public class AppCore {
     /** Record the posting (so it isn't re-tried) and set a plain-language status. Transient
      * failures (a challenge, an error) are left unrecorded so the user can retry them. */
     private void recordAndReport(JobPosting posting, ApplyResult result) {
+        switch (result.status()) {
+            // Anything that stopped short of success gets a screenshot + log line, so recurring
+            // stuck-points can be diagnosed and later verified fixed (diagnostics/issues.tsv).
+            case NEEDS_INPUT, FAILED, CHALLENGED -> captureDiagnostics(posting, result);
+            default -> { }
+        }
         AppliedPosting.Outcome outcome = switch (result.status()) {
             case SUBMITTED -> AppliedPosting.Outcome.SUBMITTED;
             case REVIEW_READY -> AppliedPosting.Outcome.REVIEW_READY;
@@ -541,6 +549,27 @@ public class AppCore {
             case SKIPPED -> "Skipped (not Easy Apply): " + posting.title() + ". Apply next.";
             case FAILED -> "Couldn't apply to \"" + posting.title() + "\": " + result.detail();
         };
+    }
+
+    /** Screenshot + issues.tsv line for a not-successful posting. Must never break the run. */
+    private void captureDiagnostics(JobPosting posting, ApplyResult result) {
+        if (driver == null) {
+            return;
+        }
+        Path shot = null;
+        try {
+            shot = diagnosticsLog.screenshotFile(posting.id());
+            driver.screenshot(shot);
+        } catch (RuntimeException e) {
+            LOG.log(Level.WARNING, "Could not capture a diagnostics screenshot", e);
+            shot = null;
+        }
+        try {
+            diagnosticsLog.record(posting.id(), posting.title(), result.status().name(),
+                    result.detail(), driver.currentUrl(), shot);
+        } catch (RuntimeException e) {
+            LOG.log(Level.WARNING, "Could not write the diagnostics log", e);
+        }
     }
 
     public boolean isApplying() {
