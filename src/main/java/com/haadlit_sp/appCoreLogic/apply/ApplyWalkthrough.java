@@ -73,6 +73,9 @@ public class ApplyWalkthrough {
                 if (!IndeedSelectors.inApplyFlow(driver.currentUrl())) {
                     return ApplyResult.of(ApplyResult.Status.SUBMITTED, "Application completed.");
                 }
+                if (clickTryAgainOnErrorScreen()) {
+                    continue;   // Indeed hiccup — the module reloads; redo it (answers are banked)
+                }
                 return ApplyResult.of(ApplyResult.Status.FAILED, "A step did not finish loading.");
             }
             if (isChallenged()) {
@@ -80,6 +83,16 @@ public class ApplyWalkthrough {
             }
             if (!IndeedSelectors.inApplyFlow(driver.currentUrl())) {
                 return ApplyResult.of(ApplyResult.Status.SUBMITTED, "Application completed.");
+            }
+            if (clickTryAgainOnErrorScreen()) {
+                continue;
+            }
+            // "You don't meet these employer requirements" is advisory — apply anyway, as the
+            // human would; the employer still sees the real answers.
+            if (driver.exists(IndeedSelectors.APPLY_ANYWAY_BUTTON)) {
+                driver.clickFirstVisible(IndeedSelectors.APPLY_ANYWAY_BUTTON);
+                Thread.sleep(SETTLE_MS);
+                continue;
             }
 
             String module = IndeedSelectors.applyModule(driver.currentUrl());
@@ -129,6 +142,9 @@ public class ApplyWalkthrough {
                 return ApplyResult.of(ApplyResult.Status.FAILED, "No Continue button on step: " + module);
             }
             if (!waitForAdvance(module, questions)) {
+                if (clickTryAgainOnErrorScreen()) {
+                    continue;   // the error screen ate the Continue click — redo this module
+                }
                 if (!requiredUnfilled.isEmpty()) {
                     return ApplyResult.of(ApplyResult.Status.NEEDS_INPUT,
                             "Needs your answer: \"" + requiredUnfilled.get(0).text() + "\"");
@@ -259,6 +275,24 @@ public class ApplyWalkthrough {
 
     private boolean hasVisibleCaptcha() {
         return Boolean.TRUE.equals(driver.evaluate(IndeedSelectors.VISIBLE_CAPTCHA_JS));
+    }
+
+    /**
+     * Indeed's sporadic "Our systems are having some trouble" screen just wants Try again clicked.
+     * Returns true when it was there and was clicked (the caller redoes the current module).
+     */
+    private boolean clickTryAgainOnErrorScreen() throws InterruptedException {
+        if (!Boolean.TRUE.equals(driver.evaluate(IndeedSelectors.ERROR_SCREEN_JS))) {
+            return false;
+        }
+        LOG.log(Level.INFO, "Indeed error interstitial — clicking Try again");
+        try {
+            driver.clickFirstVisible(IndeedSelectors.TRY_AGAIN_BUTTON);
+        } catch (RuntimeException e) {
+            return false;   // no Try-again button — let the normal failure path report it
+        }
+        Thread.sleep(SETTLE_MS);
+        return true;
     }
 
     private boolean waitForApplyFlow() throws InterruptedException {

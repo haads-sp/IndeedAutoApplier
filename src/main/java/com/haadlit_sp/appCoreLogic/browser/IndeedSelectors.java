@@ -139,6 +139,22 @@ public final class IndeedSelectors {
     /** The final Submit button. Only clicked in the auto modes; exact text to be confirmed live. */
     public static final String SUBMIT_BUTTON = "button:has-text('Submit application')";
 
+    /**
+     * Indeed's own smartapply error interstitial ("Something went wrong / Our systems are having
+     * some trouble"), which appears sporadically between steps and just wants its Try-again clicked.
+     */
+    public static final String ERROR_SCREEN_JS = """
+        () => /our systems are having (some )?trouble/i.test(document.body ? document.body.innerText : '')
+        """;
+    public static final String TRY_AGAIN_BUTTON = "button:has-text('Try again')";
+
+    /**
+     * The "you don't meet these employer requirements" stop screen. It is advisory — an
+     * "Apply anyway" button continues the application, so the walkthrough clicks through it.
+     */
+    public static final String APPLY_ANYWAY_BUTTON =
+            "button:has-text('Apply anyway'), a:has-text('Apply anyway')";
+
     /** Whether the current module is the resume PICKER (select/upload) — not a later resume preview. */
     public static boolean isResumeModule(String module) {
         return module != null && module.startsWith("resume-selection");

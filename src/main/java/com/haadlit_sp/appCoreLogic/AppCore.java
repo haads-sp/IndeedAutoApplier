@@ -39,6 +39,7 @@ import java.lang.System.Logger.Level;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -123,6 +124,7 @@ public class AppCore {
     private volatile String searchMessage = "Not searched yet.";
     private volatile boolean searching = false;
     private volatile boolean applying = false;
+    private volatile boolean stopRequested = false;
     private volatile String applyMessage = "Search first, then apply one posting at a time.";
     private volatile int submittedCount = 0;
     private volatile SubmitMode submitMode = SubmitMode.REVIEW; // safe default: never auto-submit
@@ -404,24 +406,35 @@ public class AppCore {
 
     // ---- Apply (walk the next found posting through the application) ----
 
-    /** Apply to the next not-yet-handled found posting, on the browser worker. One at a time. */
+    /**
+     * Start applying on the browser worker. In REVIEW mode this handles ONE posting per click
+     * (the human reviews each in the browser). In the auto modes it runs the whole found list —
+     * posting after posting, success or fail — until done, stopped, or a Cloudflare check needs
+     * the human.
+     */
     public void applyToNextPosting() {
         if (applying) {
             return;
         }
-        JobPosting next = nextUnhandledPosting();
-        if (next == null) {
+        if (nextUnhandledPosting(Set.of()) == null) {
             applyMessage = foundPostings.isEmpty()
                     ? "Search for jobs first, then apply." : "All found postings have been handled.";
             return;
         }
         applying = true;
-        applyMessage = "Opening: " + next.title() + " @ " + next.company() + "…";
+        stopRequested = false;
+        applyMessage = "Starting…";
         browserWorker.submit(() -> {
             try {
-                ApplyResult result = new ApplyWalkthrough(connectedDriver(), answerer, qaBank)
-                        .apply(next, contactDetails, profileFacts, documents.resume(), submitMode);
-                recordAndReport(next, result);
+                waitForAiIfLoading();
+                if (submitMode == SubmitMode.REVIEW) {
+                    JobPosting next = nextUnhandledPosting(Set.of());
+                    if (next != null) {
+                        recordAndReport(next, applyOne(next));
+                    }
+                } else {
+                    runAutoLoop();
+                }
             } catch (Exception e) {
                 LOG.log(Level.ERROR, "Apply failed", e);
                 closeDriverQuietly();
@@ -432,9 +445,64 @@ public class AppCore {
         });
     }
 
-    private JobPosting nextUnhandledPosting() {
+    /** Ask the auto run to stop; it finishes the posting it is on first. */
+    public void stopApplying() {
+        stopRequested = true;
+        if (applying) {
+            applyMessage = "Stopping after the current posting…";
+        }
+    }
+
+    private ApplyResult applyOne(JobPosting posting) throws InterruptedException {
+        applyMessage = "Opening: " + posting.title() + " @ " + posting.company() + "…";
+        return new ApplyWalkthrough(connectedDriver(), answerer, qaBank)
+                .apply(posting, contactDetails, profileFacts, documents.resume(), submitMode);
+    }
+
+    /** The hands-off run: walk every unhandled posting; only a challenge or Stop ends it early. */
+    private void runAutoLoop() throws InterruptedException {
+        Set<String> attempted = new HashSet<>();   // includes FAILED ones, so they don't repeat
+        int handled = 0;
+        int submittedBefore = submittedCount;
+        while (!stopRequested) {
+            JobPosting next = nextUnhandledPosting(attempted);
+            if (next == null) {
+                break;
+            }
+            attempted.add(next.id());
+            ApplyResult result = applyOne(next);
+            handled++;
+            recordAndReport(next, result);
+            if (result.status() == ApplyResult.Status.CHALLENGED) {
+                return;   // recordAndReport already told the user what to do
+            }
+            // Human-ish pause between postings; nobody applies to two jobs in the same second.
+            Thread.sleep(4_000 + java.util.concurrent.ThreadLocalRandom.current().nextLong(6_000));
+        }
+        applyMessage = (stopRequested ? "Stopped. " : "Run finished — ")
+                + handled + " posting(s) handled, " + (submittedCount - submittedBefore)
+                + " submitted. Postings that needed you are marked in the list.";
+    }
+
+    /** In AI mode, give a still-loading model a chance before the first posting (bounded). */
+    private void waitForAiIfLoading() throws InterruptedException {
+        if (llmRuntime == null || llmRuntime.isReady()) {
+            return;
+        }
+        long deadline = System.currentTimeMillis() + 90_000;
+        while (System.currentTimeMillis() < deadline && !llmRuntime.isReady()
+                && !aiStatus.contains("unavailable") && !aiStatus.contains("failed")) {
+            applyMessage = "Waiting for the local AI to finish loading… (" + aiStatus + ")";
+            Thread.sleep(1_000);
+        }
+    }
+
+    private JobPosting nextUnhandledPosting(Set<String> alsoExcluded) {
         Set<String> handled = applicationStore.appliedIds();
         for (JobPosting posting : foundPostings) {
+            if (alsoExcluded.contains(posting.id())) {
+                continue;
+            }
             if (!handled.contains(posting.id())) {
                 return posting;
             }

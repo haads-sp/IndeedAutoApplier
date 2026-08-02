@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 
 import com.haadlit_sp.appCoreLogic.model.AnswerMode;
 import com.haadlit_sp.appCoreLogic.model.JobPosting;
+import com.haadlit_sp.appCoreLogic.model.SubmitMode;
 import com.haadlit_sp.appRenderLogic.App;
 import com.haadlit_sp.appRenderLogic.components.Header;
 import com.haadlit_sp.appRenderLogic.components.ResultsPanel;
@@ -48,7 +49,13 @@ public class Page4 extends JPanel implements LivePage {
         add(pageUtil.stepNav(app, "Page3", null, null), BorderLayout.SOUTH);
 
         searchBtn.addActionListener(e -> app.core().startSearch());
-        applyBtn.addActionListener(e -> app.core().applyToNextPosting());
+        applyBtn.addActionListener(e -> {
+            if (app.core().isApplying()) {
+                app.core().stopApplying();
+            } else {
+                app.core().applyToNextPosting();
+            }
+        });
         modeSelector.onChange(app.core()::setSubmitMode);
         refresh();
     }
@@ -97,9 +104,12 @@ public class Page4 extends JPanel implements LivePage {
         searchBtn.setText(searching ? "Searching…" : "Find matching jobs");
 
         boolean applying = app.core().isApplying();
+        boolean auto = app.core().submitMode() != SubmitMode.REVIEW;
         applyStatus.setText(app.core().applyMessage());
-        applyBtn.setEnabled(!applying);
-        applyBtn.setText(applying ? "Applying…" : "Apply to next posting");
+        // In the auto modes the run is hands-off, so the button becomes its own Stop.
+        applyBtn.setEnabled(!applying || auto);
+        applyBtn.setText(applying ? (auto ? "Stop" : "Applying…")
+                : (auto ? "Apply to all found jobs" : "Apply to next posting"));
 
         String ai = app.core().aiStatus();
         boolean showAi = app.core().answerMode() == AnswerMode.AI_ENHANCED && !ai.isBlank();
