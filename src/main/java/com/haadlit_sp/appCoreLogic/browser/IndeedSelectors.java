@@ -202,6 +202,38 @@ public final class IndeedSelectors {
           && /\\.pdf\\b/i.test(e.textContent || ''))
         """;
 
+    /** Whether the current module is the final review/submit step. */
+    public static boolean isReviewModule(String module) {
+        return module != null && module.startsWith("review-module");
+    }
+
+    /**
+     * The review step renders a "Preparing review" spinner for several seconds before the real
+     * page — including its Submit button — exists. Deciding anything before this is true means
+     * judging a half-rendered page.
+     */
+    public static final String REVIEW_PREPARING_JS = """
+        () => /preparing review/i.test(document.body ? document.body.innerText : '')
+        """;
+
+    /**
+     * State of the final Submit button: {@code none}, {@code disabled} or {@code enabled}.
+     * Indeed greys Submit out until the human clears the verification above it, so "disabled"
+     * means "a person still has to do something", not "broken".
+     */
+    public static final String SUBMIT_STATE_JS = """
+        () => {
+          const nodes = [...document.querySelectorAll('button, input[type=submit], [role=button]')];
+          const submit = nodes.find(b => b.offsetParent !== null
+            && /submit (your )?application|^submit$/i.test(((b.textContent || b.value || '')).trim()));
+          if (!submit) return 'none';
+          const off = submit.disabled === true
+            || submit.getAttribute('aria-disabled') === 'true'
+            || /disabled/i.test(submit.className || '');
+          return off ? 'disabled' : 'enabled';
+        }
+        """;
+
     /** Whether the current module is the final one (a visible Submit button is present). */
     public static final String HAS_SUBMIT_JS = """
         () => [...document.querySelectorAll('button')].some(b => b.offsetParent !== null

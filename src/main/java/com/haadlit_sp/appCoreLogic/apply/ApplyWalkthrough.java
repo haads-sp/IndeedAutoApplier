@@ -39,6 +39,8 @@ public class ApplyWalkthrough {
     /** How long to stand by while the human completes a verification on the final step. */
     private static final long CAPTCHA_WAIT_MS = 240_000;
     private static final long CAPTCHA_POLL_MS = 2_000;
+    /** "Preparing review" can run for a while on the final step; 30s before giving up on it. */
+    private static final int REVIEW_READY_ATTEMPTS = 60;
 
     private final BrowserDriver driver;
     private final QuestionAnswerer answerer;
@@ -136,6 +138,12 @@ public class ApplyWalkthrough {
             }
 
             String module = IndeedSelectors.applyModule(driver.currentUrl());
+            if (IndeedSelectors.isReviewModule(module)) {
+                // "Preparing review" renders for seconds before the real page exists. Reading it
+                // early yields 0 questions and no Submit button — which used to be misread as a
+                // broken step and threw away a finished application.
+                waitForReviewReady();
+            }
             List<ScreenerQuestion> questions = reader.read(driver);
             LOG.log(Level.INFO, "Module ''{0}'': {1} question(s)", module, questions.size());
             journal.step("module", module + " — " + questions.size() + " question(s)");
@@ -152,11 +160,13 @@ public class ApplyWalkthrough {
                 Thread.sleep(POST_FILL_MS); // let React register the fills before validating / advancing
                 everythingKnown &= requiredUnfilled.isEmpty() && allFilled(questions, contact, facts);
 
-                if (hasSubmit()) {
+                boolean onReview = IndeedSelectors.isReviewModule(module);
+                if (onReview || hasSubmit()) {
                     if (mode.autoSubmits(posting.easyApply(), everythingKnown) && requiredUnfilled.isEmpty()) {
-                        // A captcha is the human's click — but the application is otherwise DONE,
-                        // so stand by while they do it instead of throwing the work away.
-                        if (hasVisibleCaptchaSettled()) {
+                        // Submit is greyed out until the human clears the verification above it,
+                        // and a captcha is their click — but the application is otherwise DONE, so
+                        // stand by while they do it instead of throwing the work away.
+                        if (submitBlocked()) {
                             ApplyResult waited = waitOutVerification();
                             if (waited != null) {
                                 return waited;
@@ -332,6 +342,43 @@ public class ApplyWalkthrough {
         return Boolean.TRUE.equals(driver.evaluate(IndeedSelectors.VISIBLE_CAPTCHA_JS));
     }
 
+    /** {@code none} / {@code disabled} / {@code enabled} for the final Submit button. */
+    private String submitState() {
+        Object state = driver.evaluate(IndeedSelectors.SUBMIT_STATE_JS);
+        return state == null ? "none" : state.toString();
+    }
+
+    /**
+     * Whether something is standing between us and Submit: a verification widget, or a Submit
+     * button Indeed has greyed out (which means the same thing — the check above it is unsolved).
+     */
+    private boolean submitBlocked() throws InterruptedException {
+        return "disabled".equals(submitState()) || hasVisibleCaptchaSettled();
+    }
+
+    /**
+     * Wait out the review step's "Preparing review" spinner, until a Submit button exists (in any
+     * state) or the wait runs out. Everything downstream reads a real page instead of a skeleton.
+     */
+    private void waitForReviewReady() throws InterruptedException {
+        for (int i = 0; i < REVIEW_READY_ATTEMPTS; i++) {
+            boolean preparing = Boolean.TRUE.equals(
+                    driver.evaluate(IndeedSelectors.REVIEW_PREPARING_JS));
+            if (!preparing && !"none".equals(submitState())) {
+                Thread.sleep(SETTLE_MS);   // let the rendered page settle before reading it
+                journal.step("wait", "review page ready (Submit is " + submitState() + ")");
+                return;
+            }
+            if (!IndeedSelectors.inApplyFlow(driver.currentUrl()) || isChallenged()) {
+                return;   // something else happened; the main loop will work out what
+            }
+            status.accept("Preparing the final review…");
+            Thread.sleep(WAIT_MS);
+        }
+        journal.step("wait", "review page never finished preparing (Submit is "
+                + submitState() + ")");
+    }
+
     /**
      * A captcha that is still there after the page settles. The review module reports a widget
      * mid-hydration that then collapses to the invisible one, so a single reading is not enough
@@ -403,12 +450,15 @@ public class ApplyWalkthrough {
             if (leftFlow()) {
                 return finishedResult();
             }
-            if (!hasVisibleCaptcha()) {
-                return null;   // cleared — the caller submits
+            // Done when Indeed re-enables Submit and no check is on screen — the greyed-out
+            // button IS the signal that the verification above it is still unsolved.
+            if (!"disabled".equals(submitState()) && !hasVisibleCaptcha()) {
+                journal.step("interstitial", "verification cleared — Submit is now clickable");
+                return null;   // the caller submits
             }
             long left = (deadline - System.currentTimeMillis()) / 1000;
-            status.accept("Verification needed — complete the check in the browser. "
-                    + "Everything else is filled in; waiting " + left + "s…");
+            status.accept("Verification needed — complete the check in the browser (Submit "
+                    + "unlocks once it passes). Everything else is filled in; waiting " + left + "s…");
             Thread.sleep(CAPTCHA_POLL_MS);
         }
         return ApplyResult.of(ApplyResult.Status.NEEDS_INPUT,

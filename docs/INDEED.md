@@ -48,6 +48,13 @@ Observed modules, in order:
 5. `questions-module` — the employer's screener questions
 6. `review-module` — the final review and Submit
 
+The review step is the one with real traps. It renders a **"Preparing review" spinner for several
+seconds** before the page (and its Submit button) exist at all, so anything decided on arrival is
+decided against a skeleton. Its Submit button is then **greyed out until the human clears the
+verification above it** — typically an interactive "select all images with…" challenge, not a
+checkbox. A disabled Submit is therefore a *state*, not a fault: it means a person still has to act.
+There is no Continue button on this step.
+
 Contact and location modules are often **skipped entirely** once Indeed knows those details, so the
 walkthrough must handle a flow starting at any module — it does, via a generic loop.
 

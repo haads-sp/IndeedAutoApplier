@@ -565,9 +565,10 @@ public class AppCore {
             }
             attempted.add(next.id());
             ApplyResult result = applyOne(next);
-            if (result.status() == ApplyResult.Status.NEEDS_INPUT && !stopRequested) {
-                // Don't walk away the moment we hand off: the user is often finishing it right
-                // now, and moving on both wastes their work and loses the confirmation.
+            if ((result.status() == ApplyResult.Status.NEEDS_INPUT
+                    || result.status() == ApplyResult.Status.FAILED) && !stopRequested) {
+                // Don't walk away the moment we stop: the user is often finishing it right now,
+                // and moving on both wastes their work and loses the confirmation.
                 result = standByForHuman(next, result);
             }
             handled++;
