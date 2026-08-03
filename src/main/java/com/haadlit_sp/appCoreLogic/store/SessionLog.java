@@ -38,9 +38,14 @@ public class SessionLog {
     public record Event(Instant at, String postingId, String title, String company,
                         String status, String detail) {}
 
+    /** One fine-grained action inside an application (see {@code ApplyJournal}). */
+    public record Step(Instant at, String postingId, String phase, String detail) {}
+
     private final Path dir;
     private final List<Event> events = new ArrayList<>();
-    private final Instant startedAt = Instant.now();
+    private final List<Step> steps = new ArrayList<>();
+    /** Reset per run: it stamps the filename, so runs in one app session must not collide. */
+    private Instant startedAt = Instant.now();
     private String header = "";
 
     public SessionLog() {
@@ -54,11 +59,19 @@ public class SessionLog {
     /** Describe the run's setup (search, modes) — recorded verbatim at the top of the file. */
     public void start(String header) {
         this.header = header;
+        this.startedAt = Instant.now();
         events.clear();
+        steps.clear();
     }
 
     public void add(Event event) {
         events.add(event);
+    }
+
+    /** Record one action inside the application currently being walked. Thread-safe enough: the
+     *  browser worker is the only writer. */
+    public void addStep(Step step) {
+        steps.add(step);
     }
 
     /** Write the session file. Returns the file, or null when it could not be written. */
@@ -98,7 +111,7 @@ public class SessionLog {
             out.append('\n');
         }
 
-        out.append("## Notes\n\n").append(notes(summary));
+        out.append(detail()).append("## Notes\n\n").append(notes(summary));
         try {
             Files.createDirectories(dir);
             Path file = dir.resolve(FILE_STAMP.format(startedAt) + ".md");
@@ -108,6 +121,39 @@ public class SessionLog {
             LOG.log(Level.WARNING, "Could not write the session log", e);
             return null;
         }
+    }
+
+    /**
+     * Blow-by-blow of each application: modules entered, questions asked, the answer chosen and
+     * where it came from, whether it landed in the field, clicks, waits and interstitials. This is
+     * the section that explains WHY an application stopped where it did.
+     */
+    private String detail() {
+        if (steps.isEmpty()) {
+            return "";
+        }
+        StringBuilder out = new StringBuilder("## What happened, step by step\n\n");
+        String currentPosting = null;
+        for (Step step : steps) {
+            if (!step.postingId().equals(currentPosting)) {
+                currentPosting = step.postingId();
+                out.append("\n### ").append(titleFor(currentPosting)).append("\n\n");
+            }
+            out.append("- `").append(READABLE.format(step.at()).substring(11)).append("` **")
+                    .append(step.phase()).append("** — ").append(cell(step.detail())).append('\n');
+        }
+        return out.append('\n').toString();
+    }
+
+    /** The posting's title from its outcome event, so the detail section reads in plain language. */
+    private String titleFor(String postingId) {
+        for (Event event : events) {
+            if (event.postingId().equals(postingId)) {
+                return event.title() + (event.company().isBlank() ? "" : " @ " + event.company())
+                        + " — " + event.status();
+            }
+        }
+        return postingId;
     }
 
     /** Plain-language read of the run, derived from its own events. */

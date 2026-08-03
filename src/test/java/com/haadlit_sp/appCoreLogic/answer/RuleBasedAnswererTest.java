@@ -73,6 +73,35 @@ class RuleBasedAnswererTest {
     }
 
     @Test
+    void howDidYouHearPrefersIndeedThenJobBoardThenOther() {
+        var withIndeed = new ScreenerQuestion("q1", "How did you hear about this job?",
+                QuestionType.SINGLE_CHOICE, List.of("A friend", "Indeed", "Other"), true);
+        assertEquals("Indeed", answerer.answer(withIndeed, facts, bank()).orElseThrow().primary());
+
+        var withBoard = new ScreenerQuestion("q1", "How did you hear about this job?",
+                QuestionType.SINGLE_CHOICE, List.of("A friend", "Job board", "Other"), true);
+        assertEquals("Job board", answerer.answer(withBoard, facts, bank()).orElseThrow().primary());
+
+        var otherOnly = new ScreenerQuestion("q1", "How did you hear about this position?",
+                QuestionType.SINGLE_CHOICE, List.of("A friend", "Career fair", "Other"), true);
+        assertEquals("Other", answerer.answer(otherOnly, facts, bank()).orElseThrow().primary());
+    }
+
+    @Test
+    void howDidYouHearAsFreeTextSaysIndeed() {
+        var q = new ScreenerQuestion("q1", "How did you hear about this job?",
+                QuestionType.TEXT, List.of(), true);
+        assertEquals("Indeed", answerer.answer(q, facts, bank()).orElseThrow().primary());
+    }
+
+    @Test
+    void openEndedAvailabilityGetsAFlexibleAnswer() {
+        var q = new ScreenerQuestion("q1", "Please detail your days and hours of working "
+                + "availability below.", QuestionType.TEXT, List.of(), true);
+        assertTrue(answerer.answer(q, facts, bank()).orElseThrow().primary().startsWith("Flexible"));
+    }
+
+    @Test
     void skillSpecificYearsWithRangeOptionsAlsoDeclines() {
         var q = new ScreenerQuestion("q1", "How many years of AZ driving experience do you have?",
                 QuestionType.SINGLE_CHOICE,

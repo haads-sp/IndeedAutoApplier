@@ -9,6 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -58,6 +60,38 @@ class SessionLogTest {
         String text = Files.readString(file);
         assertTrue(text.contains("Cloudflare"), "challenge note");
         assertTrue(text.contains("Unknown issue"), "all-failed pattern note");
+    }
+
+    @Test
+    void eachRunWritesItsOwnFileStampedWhenTheRunStarted() throws Exception {
+        SessionLog log = new SessionLog(dir);   // one instance, reused across runs like AppCore does
+        // A distinctive marker: ordinary words like "one" appear in the template ("Abandoned").
+        log.start("first run");
+        log.add(event("SUBMITTED_VERIFIED", "FIRST_RUN_MARKER"));
+        Path first = log.write(new RunSummary(1, 0, 1, 0, 0, 1, 1, 1), "finished");
+
+        Thread.sleep(1100);   // the stamp has second resolution
+        log.start("second run");
+        log.add(event("FAILED", "SECOND_RUN_MARKER"));
+        Path second = log.write(new RunSummary(1, 0, 1, 1, 0, 0, 0, 0), "finished");
+
+        assertNotEquals(first.getFileName(), second.getFileName(), "runs must not share a file");
+        assertTrue(Files.readString(first).contains("FIRST_RUN_MARKER"));
+        assertFalse(Files.readString(second).contains("FIRST_RUN_MARKER"),
+                "second run must not inherit the first run's events");
+    }
+
+    @Test
+    void recordsStepDetailPerPosting() throws IOException {
+        SessionLog log = new SessionLog(dir);
+        log.start("run");
+        log.addStep(new SessionLog.Step(Instant.now(), "jk1", "question",
+                "How many years of Java experience do you have? -> \"0\" (AI) — filled"));
+        log.add(event("SUBMITTED_VERIFIED", "done"));
+        String text = Files.readString(log.write(new RunSummary(1, 0, 1, 0, 0, 1, 1, 1), "finished"));
+        assertTrue(text.contains("What happened, step by step"));
+        assertTrue(text.contains("**question**"));
+        assertTrue(text.contains("IT Support @ Acme — SUBMITTED_VERIFIED"), "steps grouped by posting");
     }
 
     @Test

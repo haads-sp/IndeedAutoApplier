@@ -137,6 +137,8 @@ public class AppCore {
     private volatile boolean searching = false;
     private volatile boolean applying = false;
     private volatile boolean stopRequested = false;
+    /** How long an auto run watches an application it handed to the user before moving on. */
+    private static final long HANDOFF_WAIT_MS = 120_000;
     private volatile String applyMessage = "Search first, then apply one posting at a time.";
     private volatile int submittedCount = 0;
     // Run-summary tallies; reset when a run starts so the panel shows THIS run.
@@ -542,10 +544,13 @@ public class AppCore {
 
     private ApplyResult applyOne(JobPosting posting) throws InterruptedException {
         applyMessage = "Opening: " + posting.title() + " @ " + posting.company() + "…";
-        // The walkthrough reports its own waits (e.g. standing by for a verification), so the
-        // user can see the app is holding the application open rather than hung.
-        return new ApplyWalkthrough(connectedDriver(), answerer, qaBank, msg -> applyMessage = msg)
-                .apply(posting, contactDetails, profileFacts, documents.resume(), submitMode);
+        // The walkthrough reports its own waits (so the user can see it is holding an application
+        // open rather than hung) and journals every step into the session file.
+        ApplyWalkthrough walkthrough = new ApplyWalkthrough(connectedDriver(), answerer, qaBank,
+                msg -> applyMessage = msg,
+                (phase, detail) -> sessionLog.addStep(new SessionLog.Step(
+                        java.time.Instant.now(), posting.id(), phase, detail)));
+        return walkthrough.apply(posting, contactDetails, profileFacts, documents.resume(), submitMode);
     }
 
     /** The hands-off run: walk every unhandled posting; only a challenge or Stop ends it early. */
@@ -560,6 +565,11 @@ public class AppCore {
             }
             attempted.add(next.id());
             ApplyResult result = applyOne(next);
+            if (result.status() == ApplyResult.Status.NEEDS_INPUT && !stopRequested) {
+                // Don't walk away the moment we hand off: the user is often finishing it right
+                // now, and moving on both wastes their work and loses the confirmation.
+                result = standByForHuman(next, result);
+            }
             handled++;
             recordAndReport(next, result);
             if (result.status() == ApplyResult.Status.CHALLENGED) {
@@ -571,6 +581,35 @@ public class AppCore {
         applyMessage = (stopRequested ? "Stopped. " : "Run finished — ")
                 + handled + " posting(s) handled, " + (submittedCount - submittedBefore)
                 + " submitted (" + verifiedCount + " confirmed). See the run summary below.";
+    }
+
+    /**
+     * Watch a handed-off application for a couple of minutes: if the user finishes it themselves,
+     * Indeed's confirmation appears and the run gets to record it as submitted instead of losing
+     * it. Returns the original result if nothing happens (or the user moves the browser elsewhere).
+     */
+    private ApplyResult standByForHuman(JobPosting posting, ApplyResult original)
+            throws InterruptedException {
+        long deadline = System.currentTimeMillis() + HANDOFF_WAIT_MS;
+        while (System.currentTimeMillis() < deadline && !stopRequested) {
+            try {
+                if (Boolean.TRUE.equals(driver.evaluate(IndeedSelectors.SUBMITTED_CONFIRMATION_JS))) {
+                    sessionLog.addStep(new SessionLog.Step(java.time.Instant.now(), posting.id(),
+                            "handoff", "you finished it — confirmation detected"));
+                    return new ApplyResult(ApplyResult.Status.SUBMITTED_VERIFIED,
+                            "Submitted — confirmed (you finished it in the browser).");
+                }
+            } catch (RuntimeException e) {
+                return original;   // browser gone or navigated away; nothing more to watch
+            }
+            long left = (deadline - System.currentTimeMillis()) / 1000;
+            applyMessage = "Needs you: " + original.detail()
+                    + " Finish it in the browser — waiting " + left + "s before moving on…";
+            Thread.sleep(2_000);
+        }
+        sessionLog.addStep(new SessionLog.Step(java.time.Instant.now(), posting.id(),
+                "handoff", "moved on after waiting " + HANDOFF_WAIT_MS / 1000 + "s"));
+        return original;
     }
 
     /** In AI mode, give a still-loading model a chance before the first posting (bounded). */

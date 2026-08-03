@@ -157,10 +157,14 @@ public final class IndeedSelectors {
     public static final String SUBMITTED_CONFIRMATION_JS = """
         () => {
           const text = document.body ? document.body.innerText : '';
+          // Wordings seen live: "Your application was submitted to <employer>", plus the
+          // email-confirmation line that accompanies it.
           return /post[- ]?apply|\\/applied\\b/i.test(location.href)
-            || /your application (has been |was )?(submitted|sent)/i.test(text)
-            || /application submitted/i.test(text)
-            || /you(’|')?ve applied|applied to this job/i.test(text);
+            || /your application (has been |was )?(successfully )?(submitted|sent)/i.test(text)
+            || /application (submitted|sent)( to | successfully)?/i.test(text)
+            || /you(’|')?ve applied|applied to this job/i.test(text)
+            || /you will get an email confirmation/i.test(text)
+            || /thank(s| you) for applying/i.test(text);
         }
         """;
 

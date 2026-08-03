@@ -47,33 +47,43 @@ public class ApplyWalkthrough {
     private final ApplyFormReader reader = new ApplyFormReader();
     private final ApplyFiller filler;
     private final java.util.function.Consumer<String> status;
+    private final ApplyJournal journal;
 
     public ApplyWalkthrough(BrowserDriver driver, QuestionAnswerer answerer, QaBankStore qaBank) {
-        this(driver, answerer, qaBank, msg -> { });
+        this(driver, answerer, qaBank, msg -> { }, ApplyJournal.NONE);
     }
 
-    /** @param status live progress for the UI — used while waiting on the human for a check */
+    /**
+     * @param status  live progress for the UI — used while waiting on the human for a check
+     * @param journal fine-grained record of every step, for the session log
+     */
     public ApplyWalkthrough(BrowserDriver driver, QuestionAnswerer answerer, QaBankStore qaBank,
-                            java.util.function.Consumer<String> status) {
+                            java.util.function.Consumer<String> status, ApplyJournal journal) {
         this.driver = driver;
         this.answerer = answerer;
         this.qaBank = qaBank;
         this.status = status;
+        this.journal = journal;
         this.filler = new ApplyFiller(driver);
     }
 
     public ApplyResult apply(JobPosting posting, ContactDetails contact, ProfileFacts facts,
                              Path resume, SubmitMode mode) throws InterruptedException {
+        journal.step("open", posting.url());
         driver.navigate(posting.url());
         Thread.sleep(SETTLE_MS);
         if (isChallenged()) {
+            journal.step("interstitial", "Cloudflare challenge on the posting page");
             return ApplyResult.of(ApplyResult.Status.CHALLENGED, "Cloudflare check on the posting page.");
         }
         if (!driver.exists(IndeedSelectors.APPLY_BUTTON)) {
+            journal.step("skip", "no Indeed apply button (external posting)");
             return ApplyResult.of(ApplyResult.Status.SKIPPED, "No Indeed apply button (external posting).");
         }
+        journal.step("click", "Apply");
         driver.click(IndeedSelectors.APPLY_BUTTON);
         if (!waitForApplyFlow()) {
+            journal.step("wait", "apply flow never opened (" + driver.currentUrl() + ")");
             return ApplyResult.of(ApplyResult.Status.FAILED, "The application form did not open.");
         }
 
@@ -87,6 +97,7 @@ public class ApplyWalkthrough {
                 // A challenge page never becomes "module ready", so ask WHY before blaming the
                 // load — mid-run Cloudflare walls looked like generic failures until now.
                 if (isChallenged()) {
+                    journal.step("interstitial", "Cloudflare challenge mid-application");
                     return ApplyResult.of(ApplyResult.Status.CHALLENGED,
                             "Cloudflare check during the application.");
                 }
@@ -94,12 +105,15 @@ public class ApplyWalkthrough {
                     continue;   // Indeed hiccup — the module reloads; redo it (answers are banked)
                 }
                 if (isErrorScreen()) {
+                    journal.step("interstitial", "Indeed error screen with no Try again");
                     return ApplyResult.of(ApplyResult.Status.FAILED,
                             "Indeed's system error ended this application (no retry offered).");
                 }
+                journal.step("wait", "module never became ready at " + driver.currentUrl());
                 return ApplyResult.of(ApplyResult.Status.FAILED, "A step did not finish loading.");
             }
             if (isChallenged()) {
+                journal.step("interstitial", "Cloudflare challenge mid-application");
                 return ApplyResult.of(ApplyResult.Status.CHALLENGED, "Cloudflare check during the application.");
             }
             if (leftFlow()) {
@@ -109,12 +123,14 @@ public class ApplyWalkthrough {
                 continue;
             }
             if (isErrorScreen()) {
+                journal.step("interstitial", "Indeed error screen with no Try again");
                 return ApplyResult.of(ApplyResult.Status.FAILED,
                         "Indeed's system error ended this application (no retry offered).");
             }
             // "You don't meet these employer requirements" is advisory — apply anyway, as the
             // human would; the employer still sees the real answers.
             if (driver.exists(IndeedSelectors.APPLY_ANYWAY_BUTTON)) {
+                journal.step("interstitial", "\"don't meet requirements\" screen — clicking Apply anyway");
                 driver.clickFirstVisible(IndeedSelectors.APPLY_ANYWAY_BUTTON);
                 Thread.sleep(SETTLE_MS);
                 continue;
@@ -123,6 +139,7 @@ public class ApplyWalkthrough {
             String module = IndeedSelectors.applyModule(driver.currentUrl());
             List<ScreenerQuestion> questions = reader.read(driver);
             LOG.log(Level.INFO, "Module ''{0}'': {1} question(s)", module, questions.size());
+            journal.step("module", module + " — " + questions.size() + " question(s)");
 
             requiredUnfilled = List.of();
             if (IndeedSelectors.isResumeModule(module)) {
@@ -157,11 +174,14 @@ public class ApplyWalkthrough {
             // (work-experience title/company, optional extras) are skippable, and the form's own
             // validation is the real authority — it simply refuses to advance when one matters.
             try {
+                journal.step("click", "Continue");
                 driver.clickFirstVisible(IndeedSelectors.CONTINUE_BUTTON);
             } catch (RuntimeException e) {
+                journal.step("click", "no visible Continue button on " + module);
                 return ApplyResult.of(ApplyResult.Status.FAILED, "No Continue button on step: " + module);
             }
             if (!waitForAdvance(module, questions)) {
+                journal.step("wait", "form refused to advance past " + module);
                 if (clickTryAgainOnErrorScreen()) {
                     continue;   // the error screen ate the Continue click — redo this module
                 }
@@ -239,8 +259,17 @@ public class ApplyWalkthrough {
                                               ContactDetails contact, ProfileFacts facts) {
         List<ScreenerQuestion> requiredUnfilled = new ArrayList<>();
         for (ScreenerQuestion q : questions) {
-            String value = resolve(q, contact, facts);
+            Answer answer = resolveAnswer(q, contact, facts);
+            String value = answer == null ? null : answer.primary();
             boolean filled = value != null && filler.fill(q, value);
+            // The one record that explains an empty box afterwards: what was asked, what we
+            // decided, where it came from, and whether it actually landed in the field.
+            journal.step("question", q.text()
+                    + "  [" + q.type() + (q.required() ? ", required" : "")
+                    + (q.options().isEmpty() ? "" : ", options: " + String.join(" | ", q.options()))
+                    + "]  ->  " + (value == null ? "NO ANSWER"
+                            : "\"" + value + "\" (" + answer.source() + ")")
+                    + (value == null ? "" : filled ? " — filled" : " — FILL FAILED"));
             if (!filled && q.required()) {
                 requiredUnfilled.add(q);
             }
@@ -261,12 +290,19 @@ public class ApplyWalkthrough {
 
     /** A value for this question from the user's details, else the answerer, else null (must ask). */
     private String resolve(ScreenerQuestion q, ContactDetails contact, ProfileFacts facts) {
+        Answer answer = resolveAnswer(q, contact, facts);
+        return answer == null ? null : answer.primary();
+    }
+
+    /** As {@link #resolve} but keeps the source, so the journal can say where an answer came from. */
+    private Answer resolveAnswer(ScreenerQuestion q, ContactDetails contact, ProfileFacts facts) {
         String fromContact = contactValue(q, contact);
         if (fromContact != null && !fromContact.isBlank()) {
-            return fromContact;
+            return Answer.of(fromContact, Answer.Source.USER);
         }
-        Optional<Answer> answer = answerer.answer(q, facts, qaBank);
-        return answer.map(Answer::primary).filter(v -> !v.isBlank()).orElse(null);
+        return answerer.answer(q, facts, qaBank)
+                .filter(a -> !a.primary().isBlank())
+                .orElse(null);
     }
 
     /** Map the known contact/location fields to the user's details; null if not a contact field. */
@@ -317,12 +353,16 @@ public class ApplyWalkthrough {
      */
     private ApplyResult submitAndVerify() throws InterruptedException {
         status.accept("Submitting…");
+        journal.step("submit", "clicking Submit");
         driver.clickFirstVisible(IndeedSelectors.SUBMIT_BUTTON);
         waitToLeaveFlow();
         if (confirmationVisible()) {
+            journal.step("submit", "confirmation seen at " + driver.currentUrl());
             return ApplyResult.of(ApplyResult.Status.SUBMITTED_VERIFIED, "Submitted — confirmed.");
         }
         if (leftFlow()) {
+            journal.step("submit", "left the apply flow with no confirmation matched at "
+                    + driver.currentUrl());
             return ApplyResult.of(ApplyResult.Status.SUBMITTED,
                     "Submitted (no confirmation screen seen).");
         }
@@ -353,6 +393,8 @@ public class ApplyWalkthrough {
      * check is cleared and this app should do the submitting.
      */
     private ApplyResult waitOutVerification() throws InterruptedException {
+        journal.step("interstitial", "verification on the final step — standing by for the human ("
+                + CAPTCHA_WAIT_MS / 1000 + "s)");
         long deadline = System.currentTimeMillis() + CAPTCHA_WAIT_MS;
         while (System.currentTimeMillis() < deadline) {
             if (confirmationVisible()) {

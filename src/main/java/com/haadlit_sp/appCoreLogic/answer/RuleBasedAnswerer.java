@@ -61,6 +61,19 @@ public class RuleBasedAnswerer implements QuestionAnswerer {
             // They gave us a city and radius, so willingness to commute within it is implied.
             return yes(question);
         }
+        if (asksHowYouHeard(text)) {
+            Optional<Answer> heard = answerHowYouHeard(question);
+            if (heard.isPresent()) {
+                return heard;
+            }
+        }
+        if (asksAvailability(text) && question.type() == QuestionType.TEXT) {
+            // Open-ended availability: state flexibility rather than inventing a timetable the
+            // profile does not contain. A yes/no or choice version is left to the AI/user.
+            return Optional.of(Answer.of(
+                    "Flexible — available for the hours this role requires, including a "
+                            + "mix of weekdays and weekends.", Answer.Source.RULE));
+        }
         if (asksAboutMoney(text) && question.type() == QuestionType.TEXT) {
             // The standard human non-answer for free-text pay questions. A NUMBER pay field still
             // pauses — inventing a figure is worse than asking.
@@ -120,6 +133,41 @@ public class RuleBasedAnswerer implements QuestionAnswerer {
 
     private static boolean asksSponsorship(String text) {
         return text.contains("sponsorship") || (text.contains("sponsor") && text.contains("work"));
+    }
+
+    private static boolean asksHowYouHeard(String text) {
+        return (text.contains("how did you hear") || text.contains("how were you referred")
+                || text.contains("where did you hear") || text.contains("how you heard"))
+                || (text.contains("hear about") && text.contains("position"));
+    }
+
+    /** Availability / schedule / shift-commitment questions. */
+    private static boolean asksAvailability(String text) {
+        return text.contains("availability") || text.contains("days and hours")
+                || text.contains("hours of work") || text.contains("work schedule")
+                || (text.contains("available") && (text.contains("hours") || text.contains("days")
+                        || text.contains("shift")));
+    }
+
+    /**
+     * We heard about it on Indeed — that is simply true, and it is the answer the user would give.
+     * Prefers a matching option ("Indeed", a job-board option, then "Other"); free text gets
+     * "Indeed".
+     */
+    private static Optional<Answer> answerHowYouHeard(ScreenerQuestion question) {
+        if (question.options().isEmpty()) {
+            return question.type() == QuestionType.TEXT
+                    ? Optional.of(Answer.of("Indeed", Answer.Source.RULE)) : Optional.empty();
+        }
+        for (String wanted : List.of("indeed", "job board", "online job board", "job site",
+                "online", "other")) {
+            for (String option : question.options()) {
+                if (option.toLowerCase(Locale.ROOT).contains(wanted)) {
+                    return Optional.of(Answer.of(option, Answer.Source.RULE));
+                }
+            }
+        }
+        return Optional.empty();
     }
 
     /** Pay/salary/compensation questions (shared wording with the AI answerer's guard). */
