@@ -72,6 +72,12 @@ label that starts empty with `" "`); `BorderLayout.NORTH` starves `CENTER` (give
 `setVisibleRowCount` and wrap pages in `Theme.scroll`); FlatLaf collapses whitespace between two
 styled HTML runs (use an em space or a visible separator).
 
+### Regenerate the city list
+
+`src/main/resources/cities.tsv` comes from GeoNames `cities15000.zip` + `admin1CodesASCII.txt`,
+filtered to population ≥15k for US/CA and ≥50k elsewhere, and written in population order (file
+order *is* the relevance ranking). Keep the CC BY 4.0 attribution shown in the UI.
+
 ### Add persisted state
 
 Add the path to `store/AppPaths`, then a store class beside the others. Follow the existing shape:

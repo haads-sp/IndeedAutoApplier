@@ -4,8 +4,12 @@ Java 21 Swing desktop app that applies to Indeed postings automatically, driving
 window and answering screener questions with rules plus a locally-run language model.
 
 **Read [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) first** for the component map, then
-[docs/EXTENDING.md](docs/EXTENDING.md) for conventions and recipes. [ISSUES.md](ISSUES.md) is the
-live record of what is broken, what was fixed, and what is confirmed.
+[docs/EXTENDING.md](docs/EXTENDING.md) for conventions and recipes.
+[docs/DECISIONS.md](docs/DECISIONS.md) explains why things are the way they are — check it before
+"fixing" something that looks odd, since most of it was settled by measurement.
+[docs/INDEED.md](docs/INDEED.md) holds the live-site knowledge (apply flow, DOM traps,
+interstitials). [ISSUES.md](ISSUES.md) is the live record of what is broken, what was fixed, and
+what is confirmed.
 
 ## Environment
 

@@ -75,6 +75,10 @@ Your password is never seen, typed, or stored by the app — you sign in directl
 
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — what every component does and how a run flows
   through them.
+- [docs/DECISIONS.md](docs/DECISIONS.md) — why the app is built this way, and the measurements
+  behind the choices.
+- [docs/INDEED.md](docs/INDEED.md) — what we know about the live site: the apply flow, DOM traps,
+  interstitials.
 - [docs/EXTENDING.md](docs/EXTENDING.md) — how to add or change behaviour, with the conventions
   this codebase follows.
 - [ISSUES.md](ISSUES.md) — known issues, their diagnosis, and whether the fix is confirmed.
