@@ -113,7 +113,7 @@ public class ApplyWalkthrough {
 
                 if (hasSubmit()) {
                     if (mode.autoSubmits(posting.easyApply(), everythingKnown) && requiredUnfilled.isEmpty()) {
-                        if (hasVisibleCaptcha()) {
+                        if (hasVisibleCaptchaSettled()) {
                             // A captcha is a "prove you're human" gate — that click is the user's.
                             return ApplyResult.of(ApplyResult.Status.NEEDS_INPUT,
                                     "A verification check is on the final step — complete it and "
@@ -275,6 +275,19 @@ public class ApplyWalkthrough {
 
     private boolean hasVisibleCaptcha() {
         return Boolean.TRUE.equals(driver.evaluate(IndeedSelectors.VISIBLE_CAPTCHA_JS));
+    }
+
+    /**
+     * A captcha that is still there after the page settles. The review module reports a widget
+     * mid-hydration that then collapses to the invisible one, so a single reading is not enough
+     * to give up an otherwise-complete application.
+     */
+    private boolean hasVisibleCaptchaSettled() throws InterruptedException {
+        if (!hasVisibleCaptcha()) {
+            return false;
+        }
+        Thread.sleep(SETTLE_MS);
+        return hasVisibleCaptcha();
     }
 
     /**

@@ -155,7 +155,8 @@ public class PlaywrightBrowserDriver implements BrowserDriver {
 
     @Override
     public void screenshot(java.nio.file.Path file) {
-        page.screenshot(new Page.ScreenshotOptions().setPath(file));
+        // Full page, not viewport — what a run died on is often below the fold.
+        page.screenshot(new Page.ScreenshotOptions().setPath(file).setFullPage(true));
     }
 
     @Override

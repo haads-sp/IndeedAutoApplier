@@ -198,11 +198,18 @@ public final class IndeedSelectors {
      */
     public static final String VISIBLE_CAPTCHA_JS = """
         () => {
-          const visible = e => e && e.offsetParent !== null;
+          // offsetParent alone is not enough: invisible-mode reCAPTCHA renders its widget
+          // COLLAPSED (near-zero box) while still "visible" to layout checks. A checkbox the
+          // human must click is ~300x78; a challenge grid is bigger. So require real size.
+          const shown = f => {
+            if (!f || f.offsetParent === null) return false;
+            const r = f.getBoundingClientRect();
+            return r.width > 40 && r.height > 40;
+          };
           const iframes = [...document.querySelectorAll('iframe')];
-          const challenge = iframes.some(f => visible(f)
+          const challenge = iframes.some(f => shown(f)
             && /bframe|hcaptcha|turnstile|challenges\\.cloudflare/i.test(f.src || ''));
-          const checkbox = iframes.some(f => visible(f)
+          const checkbox = iframes.some(f => shown(f)
             && /recaptcha.*(anchor|api2)/i.test(f.src || '')
             && !f.closest('.grecaptcha-badge'));
           return challenge || checkbox;
