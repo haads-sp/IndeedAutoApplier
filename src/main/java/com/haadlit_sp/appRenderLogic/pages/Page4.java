@@ -48,7 +48,9 @@ public class Page4 extends JPanel implements LivePage {
 
         add(new Header("Run", "Search for matching postings, then apply to them one at a time — "
                 + "the app fills what it can and pauses in the browser when it needs you."), BorderLayout.NORTH);
-        add(buildBody(), BorderLayout.CENTER);
+        // Scrolled: the controls plus a results list tall enough to be useful outgrow the window,
+        // and BorderLayout would otherwise hand the leftovers (nothing) to the list.
+        add(Theme.scroll(buildBody()), BorderLayout.CENTER);
         add(pageUtil.stepNav(app, "Page3", null, null), BorderLayout.SOUTH);
 
         searchBtn.addActionListener(e -> app.core().startSearch());
@@ -78,14 +80,8 @@ public class Page4 extends JPanel implements LivePage {
                 Theme.vGap(Theme.SPACE_MD),
                 modeSelector);
 
-        JComponent summary = Theme.card(
-                Theme.heading("This run"),
-                Theme.vGap(Theme.SPACE_XS),
-                Theme.muted("Every posting the run touched lands in one bucket. \"Confirmed\" means "
-                        + "Indeed showed a submission confirmation — the only real proof it was sent."),
-                Theme.vGap(Theme.SPACE_MD),
-                summaryPanel);
-
+        // The run scoreboard lives inside the Apply card: it is the same subject, and a separate
+        // card cost enough height to squeeze the results list down to a single row.
         JComponent apply = Theme.card(
                 Theme.heading("Apply"),
                 Theme.vGap(Theme.SPACE_XS),
@@ -95,10 +91,17 @@ public class Page4 extends JPanel implements LivePage {
                 Theme.row(applyBtn),
                 Theme.vGap(Theme.SPACE_MD),
                 Theme.row(applyStatus),
-                Theme.row(aiStatus));
+                Theme.row(aiStatus),
+                Theme.vGap(Theme.SPACE_LG),
+                Theme.eyebrow("This run"),
+                Theme.vGap(Theme.SPACE_XS),
+                Theme.muted("\"Confirmed\" means Indeed showed a submission confirmation — the only "
+                        + "real proof it was sent."),
+                Theme.vGap(Theme.SPACE_MD),
+                summaryPanel);
 
         JComponent top = Theme.stack(search, Theme.vGap(Theme.SPACE_LG), applyMode,
-                Theme.vGap(Theme.SPACE_LG), apply, Theme.vGap(Theme.SPACE_LG), summary);
+                Theme.vGap(Theme.SPACE_LG), apply);
 
         JPanel body = new JPanel(new BorderLayout(0, Theme.SPACE_LG));
         body.setOpaque(false);

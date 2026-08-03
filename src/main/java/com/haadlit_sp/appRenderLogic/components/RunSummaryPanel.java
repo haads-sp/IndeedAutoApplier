@@ -37,6 +37,12 @@ public class RunSummaryPanel extends JPanel {
         setSummary(RunSummary.empty());
     }
 
+    /** Stay one row tall inside a vertical card — BoxLayout would otherwise stretch the grid. */
+    @Override
+    public java.awt.Dimension getMaximumSize() {
+        return new java.awt.Dimension(Integer.MAX_VALUE, getPreferredSize().height);
+    }
+
     public void setSummary(RunSummary summary) {
         found.set(summary.found());
         skipped.set(summary.skipped());

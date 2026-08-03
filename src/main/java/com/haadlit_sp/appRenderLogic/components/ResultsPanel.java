@@ -15,6 +15,7 @@ import javax.swing.SwingConstants;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,6 +26,8 @@ public class ResultsPanel extends JPanel {
 
     private static final String LIST = "list";
     private static final String EMPTY = "empty";
+    /** Postings visible without scrolling the list itself. */
+    private static final int VISIBLE_ROWS = 7;
 
     private final DefaultListModel<JobPosting> model = new DefaultListModel<>();
     private final CardLayout swap = new CardLayout();
@@ -40,6 +43,9 @@ public class ResultsPanel extends JPanel {
         JList<JobPosting> list = new JList<>(model);
         list.setBackground(Theme.SURFACE);
         list.setFixedCellHeight(52);
+        // Ask for room for several postings at once. Without this the list has no opinion about
+        // its height and whatever is above it squeezes the results down to a single row.
+        list.setVisibleRowCount(VISIBLE_ROWS);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setCellRenderer(new PostingRenderer());
 
@@ -84,14 +90,21 @@ public class ResultsPanel extends JPanel {
             String tag = applied
                     ? "<span style='color:#8A96A3'>APPLIED</span>"
                     : "<span style='color:#0B6363'>NEW</span>";
-            String easy = p.easyApply()
-                    ? " &nbsp;<span style='color:#0E7A4F'>Easy apply</span>" : "";
             String location = p.location().isBlank() ? "" : " · " + escape(p.location());
             Integer score = fitScores.get(p.id());
-            String fit = score == null ? ""
-                    : " &nbsp;<span style='color:" + fitColor(score) + "'><b>" + score + "% fit</b></span>";
+            // Badges are joined with an EM SPACE (U+2003). Under FlatLaf every ordinary space
+            // form (&nbsp;, &#160;, literal U+00A0) is collapsed BETWEEN two styled runs, which
+            // ran the badges together ("Easy apply54% fit"); an em space survives.
+            List<String> badges = new ArrayList<>(2);
+            if (p.easyApply()) {
+                badges.add("<font color='#0E7A4F'>Easy apply</font>");
+            }
+            if (score != null) {
+                badges.add("<font color='" + fitColor(score) + "'><b>" + score + "% fit</b></font>");
+            }
+            String badgeText = badges.isEmpty() ? "" : "&nbsp;&nbsp;" + String.join(" ", badges);
 
-            setText("<html><b>" + escape(p.title()) + "</b>" + easy + fit
+            setText("<html><b>" + escape(p.title()) + "</b>" + badgeText
                     + "<br><span style='color:#5B6776'>" + tag + " &nbsp; "
                     + escape(p.company()) + location + "</span></html>");
             setBorder(Theme.pad(Theme.SPACE_SM, Theme.SPACE_MD, Theme.SPACE_SM, Theme.SPACE_MD));
