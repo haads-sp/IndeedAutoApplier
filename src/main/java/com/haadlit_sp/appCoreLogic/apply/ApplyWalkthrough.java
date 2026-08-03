@@ -37,17 +37,28 @@ public class ApplyWalkthrough {
     private static final long WAIT_MS = 500;
     private static final long SETTLE_MS = 1200;
     private static final long POST_FILL_MS = 800;
+    /** How long to stand by while the human completes a verification on the final step. */
+    private static final long CAPTCHA_WAIT_MS = 240_000;
+    private static final long CAPTCHA_POLL_MS = 2_000;
 
     private final BrowserDriver driver;
     private final QuestionAnswerer answerer;
     private final QaBankStore qaBank;
     private final ApplyFormReader reader = new ApplyFormReader();
     private final ApplyFiller filler;
+    private final java.util.function.Consumer<String> status;
 
     public ApplyWalkthrough(BrowserDriver driver, QuestionAnswerer answerer, QaBankStore qaBank) {
+        this(driver, answerer, qaBank, msg -> { });
+    }
+
+    /** @param status live progress for the UI — used while waiting on the human for a check */
+    public ApplyWalkthrough(BrowserDriver driver, QuestionAnswerer answerer, QaBankStore qaBank,
+                            java.util.function.Consumer<String> status) {
         this.driver = driver;
         this.answerer = answerer;
         this.qaBank = qaBank;
+        this.status = status;
         this.filler = new ApplyFiller(driver);
     }
 
@@ -70,22 +81,36 @@ public class ApplyWalkthrough {
         List<ScreenerQuestion> requiredUnfilled = List.of();
         for (int step = 0; step < MAX_MODULES; step++) {
             if (!waitForModuleReady()) {
-                if (!IndeedSelectors.inApplyFlow(driver.currentUrl())) {
-                    return ApplyResult.of(ApplyResult.Status.SUBMITTED, "Application completed.");
+                if (leftFlow()) {
+                    return finishedResult();
+                }
+                // A challenge page never becomes "module ready", so ask WHY before blaming the
+                // load — mid-run Cloudflare walls looked like generic failures until now.
+                if (isChallenged()) {
+                    return ApplyResult.of(ApplyResult.Status.CHALLENGED,
+                            "Cloudflare check during the application.");
                 }
                 if (clickTryAgainOnErrorScreen()) {
                     continue;   // Indeed hiccup — the module reloads; redo it (answers are banked)
+                }
+                if (isErrorScreen()) {
+                    return ApplyResult.of(ApplyResult.Status.FAILED,
+                            "Indeed's system error ended this application (no retry offered).");
                 }
                 return ApplyResult.of(ApplyResult.Status.FAILED, "A step did not finish loading.");
             }
             if (isChallenged()) {
                 return ApplyResult.of(ApplyResult.Status.CHALLENGED, "Cloudflare check during the application.");
             }
-            if (!IndeedSelectors.inApplyFlow(driver.currentUrl())) {
-                return ApplyResult.of(ApplyResult.Status.SUBMITTED, "Application completed.");
+            if (leftFlow()) {
+                return finishedResult();
             }
             if (clickTryAgainOnErrorScreen()) {
                 continue;
+            }
+            if (isErrorScreen()) {
+                return ApplyResult.of(ApplyResult.Status.FAILED,
+                        "Indeed's system error ended this application (no retry offered).");
             }
             // "You don't meet these employer requirements" is advisory — apply anyway, as the
             // human would; the employer still sees the real answers.
@@ -113,20 +138,15 @@ public class ApplyWalkthrough {
 
                 if (hasSubmit()) {
                     if (mode.autoSubmits(posting.easyApply(), everythingKnown) && requiredUnfilled.isEmpty()) {
+                        // A captcha is the human's click — but the application is otherwise DONE,
+                        // so stand by while they do it instead of throwing the work away.
                         if (hasVisibleCaptchaSettled()) {
-                            // A captcha is a "prove you're human" gate — that click is the user's.
-                            return ApplyResult.of(ApplyResult.Status.NEEDS_INPUT,
-                                    "A verification check is on the final step — complete it and "
-                                            + "click Submit in the browser.");
+                            ApplyResult waited = waitOutVerification();
+                            if (waited != null) {
+                                return waited;
+                            }
                         }
-                        driver.clickFirstVisible(IndeedSelectors.SUBMIT_BUTTON);
-                        waitToLeaveFlow();
-                        if (!IndeedSelectors.inApplyFlow(driver.currentUrl())) {
-                            return ApplyResult.of(ApplyResult.Status.SUBMITTED, "Submitted.");
-                        }
-                        return ApplyResult.of(ApplyResult.Status.NEEDS_INPUT, hasVisibleCaptcha()
-                                ? "A verification appeared after Submit — complete it in the browser."
-                                : "Submit did not go through — finish this one in the browser.");
+                        return submitAndVerify();
                     }
                     return ApplyResult.of(ApplyResult.Status.REVIEW_READY,
                             "Filled and ready — review and click Submit in the browser.");
@@ -291,11 +311,94 @@ public class ApplyWalkthrough {
     }
 
     /**
+     * Click Submit, then find out whether it actually went through. A click is not proof: we wait
+     * for the flow to end and look for Indeed's confirmation, and if a verification appears at
+     * this point we stand by for the human rather than abandoning a finished application.
+     */
+    private ApplyResult submitAndVerify() throws InterruptedException {
+        status.accept("Submitting…");
+        driver.clickFirstVisible(IndeedSelectors.SUBMIT_BUTTON);
+        waitToLeaveFlow();
+        if (confirmationVisible()) {
+            return ApplyResult.of(ApplyResult.Status.SUBMITTED_VERIFIED, "Submitted — confirmed.");
+        }
+        if (leftFlow()) {
+            return ApplyResult.of(ApplyResult.Status.SUBMITTED,
+                    "Submitted (no confirmation screen seen).");
+        }
+        if (hasVisibleCaptcha()) {
+            ApplyResult waited = waitOutVerification();
+            if (waited != null) {
+                return waited;
+            }
+            return submitAfterVerification();
+        }
+        return ApplyResult.of(ApplyResult.Status.NEEDS_INPUT,
+                "Submit did not go through — finish this one in the browser.");
+    }
+
+    /** Submit once more after a human cleared a check; the click before it never landed. */
+    private ApplyResult submitAfterVerification() throws InterruptedException {
+        if (!hasSubmit()) {
+            return ApplyResult.of(ApplyResult.Status.NEEDS_INPUT,
+                    "The final step changed after the check — finish this one in the browser.");
+        }
+        return submitAndVerify();
+    }
+
+    /**
+     * Stand by while the human completes a verification on the final step, reporting the wait so
+     * they know the app is holding the application open for them. Returns a finished result if the
+     * application completes during the wait (they often click Submit themselves), null once the
+     * check is cleared and this app should do the submitting.
+     */
+    private ApplyResult waitOutVerification() throws InterruptedException {
+        long deadline = System.currentTimeMillis() + CAPTCHA_WAIT_MS;
+        while (System.currentTimeMillis() < deadline) {
+            if (confirmationVisible()) {
+                return ApplyResult.of(ApplyResult.Status.SUBMITTED_VERIFIED,
+                        "Submitted — confirmed (you completed the verification).");
+            }
+            if (leftFlow()) {
+                return finishedResult();
+            }
+            if (!hasVisibleCaptcha()) {
+                return null;   // cleared — the caller submits
+            }
+            long left = (deadline - System.currentTimeMillis()) / 1000;
+            status.accept("Verification needed — complete the check in the browser. "
+                    + "Everything else is filled in; waiting " + left + "s…");
+            Thread.sleep(CAPTCHA_POLL_MS);
+        }
+        return ApplyResult.of(ApplyResult.Status.NEEDS_INPUT,
+                "A verification check is on the final step — complete it and click Submit in the browser.");
+    }
+
+    /** Left the apply flow: either a real confirmation, or at least a completed application. */
+    private ApplyResult finishedResult() {
+        return confirmationVisible()
+                ? ApplyResult.of(ApplyResult.Status.SUBMITTED_VERIFIED, "Submitted — confirmed.")
+                : ApplyResult.of(ApplyResult.Status.SUBMITTED, "Application completed.");
+    }
+
+    private boolean leftFlow() {
+        return !IndeedSelectors.inApplyFlow(driver.currentUrl());
+    }
+
+    private boolean confirmationVisible() {
+        return Boolean.TRUE.equals(driver.evaluate(IndeedSelectors.SUBMITTED_CONFIRMATION_JS));
+    }
+
+    private boolean isErrorScreen() {
+        return Boolean.TRUE.equals(driver.evaluate(IndeedSelectors.ERROR_SCREEN_JS));
+    }
+
+    /**
      * Indeed's sporadic "Our systems are having some trouble" screen just wants Try again clicked.
      * Returns true when it was there and was clicked (the caller redoes the current module).
      */
     private boolean clickTryAgainOnErrorScreen() throws InterruptedException {
-        if (!Boolean.TRUE.equals(driver.evaluate(IndeedSelectors.ERROR_SCREEN_JS))) {
+        if (!isErrorScreen()) {
             return false;
         }
         LOG.log(Level.INFO, "Indeed error interstitial — clicking Try again");

@@ -32,8 +32,10 @@ import com.haadlit_sp.appCoreLogic.search.PostingEnumerator;
 import com.haadlit_sp.appCoreLogic.session.LoginStrategy;
 import com.haadlit_sp.appCoreLogic.session.LoginStrategyFactory;
 import com.haadlit_sp.appCoreLogic.store.ApplicationHistoryStore;
+import com.haadlit_sp.appCoreLogic.model.RunSummary;
 import com.haadlit_sp.appCoreLogic.store.ContactDetailsStore;
 import com.haadlit_sp.appCoreLogic.store.DiagnosticsLog;
+import com.haadlit_sp.appCoreLogic.store.SessionLog;
 
 import java.io.IOException;
 import java.lang.System.Logger;
@@ -137,6 +139,15 @@ public class AppCore {
     private volatile boolean stopRequested = false;
     private volatile String applyMessage = "Search first, then apply one posting at a time.";
     private volatile int submittedCount = 0;
+    // Run-summary tallies; reset when a run starts so the panel shows THIS run.
+    private volatile int skippedCount = 0;
+    private volatile int attemptedCount = 0;
+    private volatile int abandonedCount = 0;
+    private volatile int needsInputCount = 0;
+    private volatile int finishedCount = 0;
+    private volatile int verifiedCount = 0;
+    private final SessionLog sessionLog = new SessionLog();
+    private volatile Path lastSessionFile = null;
     private volatile SubmitMode submitMode = SubmitMode.REVIEW; // safe default: never auto-submit
     private SessionDocuments documents = SessionDocuments.empty();
     private SearchCriteria criteria = SearchCriteria.blank();
@@ -480,7 +491,9 @@ public class AppCore {
         applying = true;
         stopRequested = false;
         applyMessage = "Starting…";
+        startRunRecord();
         browserWorker.submit(() -> {
+            String ended = "finished";
             try {
                 waitForAiIfLoading();
                 if (submitMode == SubmitMode.REVIEW) {
@@ -490,15 +503,33 @@ public class AppCore {
                     }
                 } else {
                     runAutoLoop();
+                    ended = stopRequested ? "stopped by the user" : "all postings handled";
                 }
             } catch (Exception e) {
                 LOG.log(Level.ERROR, "Apply failed", e);
                 closeDriverQuietly();
                 applyMessage = describeBrowserFailure(e);
+                ended = "error: " + e.getClass().getSimpleName();
             } finally {
                 applying = false;
+                lastSessionFile = sessionLog.write(runSummary(), ended);
             }
         });
+    }
+
+    /** Zero the per-run tallies and open a session record for the run about to start. */
+    private void startRunRecord() {
+        skippedCount = 0;
+        attemptedCount = 0;
+        abandonedCount = 0;
+        needsInputCount = 0;
+        finishedCount = 0;
+        submittedCount = 0;
+        verifiedCount = 0;
+        sessionLog.start("Search: **" + criteria.jobQuery() + "** in " + criteria.city()
+                + " (" + criteria.radius().label() + ", " + criteria.datePosted().label() + ")  \n"
+                + "Answering: **" + answerMode.label() + "** · Submit mode: **" + submitMode.label()
+                + "**  \n" + "Postings found: " + foundPostings.size());
     }
 
     /** Ask the auto run to stop; it finishes the posting it is on first. */
@@ -511,7 +542,9 @@ public class AppCore {
 
     private ApplyResult applyOne(JobPosting posting) throws InterruptedException {
         applyMessage = "Opening: " + posting.title() + " @ " + posting.company() + "…";
-        return new ApplyWalkthrough(connectedDriver(), answerer, qaBank)
+        // The walkthrough reports its own waits (e.g. standing by for a verification), so the
+        // user can see the app is holding the application open rather than hung.
+        return new ApplyWalkthrough(connectedDriver(), answerer, qaBank, msg -> applyMessage = msg)
                 .apply(posting, contactDetails, profileFacts, documents.resume(), submitMode);
     }
 
@@ -537,7 +570,7 @@ public class AppCore {
         }
         applyMessage = (stopRequested ? "Stopped. " : "Run finished — ")
                 + handled + " posting(s) handled, " + (submittedCount - submittedBefore)
-                + " submitted. Postings that needed you are marked in the list.";
+                + " submitted (" + verifiedCount + " confirmed). See the run summary below.";
     }
 
     /** In AI mode, give a still-loading model a chance before the first posting (bounded). */
@@ -576,7 +609,7 @@ public class AppCore {
             default -> { }
         }
         AppliedPosting.Outcome outcome = switch (result.status()) {
-            case SUBMITTED -> AppliedPosting.Outcome.SUBMITTED;
+            case SUBMITTED_VERIFIED, SUBMITTED -> AppliedPosting.Outcome.SUBMITTED;
             case REVIEW_READY -> AppliedPosting.Outcome.REVIEW_READY;
             case NEEDS_INPUT -> AppliedPosting.Outcome.NEEDS_INPUT;
             case SKIPPED -> AppliedPosting.Outcome.SKIPPED;
@@ -586,15 +619,14 @@ public class AppCore {
             applicationStore.record(new AppliedPosting(posting.id(), java.time.Instant.now(),
                     outcome, posting.title(), posting.company()));
         }
-        if (result.status() == ApplyResult.Status.SUBMITTED) {
-            submittedCount++;
-        }
+        countOutcome(posting, result);
         if (result.status() == ApplyResult.Status.CHALLENGED) {
             // Same as search: detach so the human clears the check unobserved; next Apply re-attaches.
             closeDriverQuietly();
         }
         applyMessage = switch (result.status()) {
-            case SUBMITTED -> "Submitted: " + posting.title() + ". Click Apply next for the next one.";
+            case SUBMITTED_VERIFIED -> "Submitted and confirmed: " + posting.title() + ".";
+            case SUBMITTED -> "Submitted: " + posting.title() + " (no confirmation screen seen).";
             case REVIEW_READY -> "Filled and ready — review and Submit \"" + posting.title()
                     + "\" in the browser, then Apply next.";
             case NEEDS_INPUT -> "Needs you: " + result.detail() + " Finish it in the browser, then Apply next.";
@@ -603,6 +635,39 @@ public class AppCore {
             case SKIPPED -> "Skipped (not Easy Apply): " + posting.title() + ". Apply next.";
             case FAILED -> "Couldn't apply to \"" + posting.title() + "\": " + result.detail();
         };
+    }
+
+    /** Tally one posting into the run summary and the session timeline. */
+    private void countOutcome(JobPosting posting, ApplyResult result) {
+        attemptedCount++;
+        switch (result.status()) {
+            case SUBMITTED_VERIFIED -> {
+                finishedCount++;
+                submittedCount++;
+                verifiedCount++;
+            }
+            case SUBMITTED -> {
+                finishedCount++;
+                submittedCount++;
+            }
+            case REVIEW_READY -> finishedCount++;
+            case NEEDS_INPUT -> needsInputCount++;
+            case SKIPPED -> skippedCount++;
+            case FAILED, CHALLENGED -> abandonedCount++;
+        }
+        sessionLog.add(new SessionLog.Event(java.time.Instant.now(), posting.id(), posting.title(),
+                posting.company(), result.status().name(), result.detail()));
+    }
+
+    /** Counters for the run in progress (or the one that just finished). */
+    public RunSummary runSummary() {
+        return new RunSummary(foundPostings.size(), skippedCount, attemptedCount, abandonedCount,
+                needsInputCount, finishedCount, submittedCount, verifiedCount);
+    }
+
+    /** The session file written by the last finished run, or null. */
+    public Path lastSessionFile() {
+        return lastSessionFile;
     }
 
     /** Screenshot + issues.tsv line for a not-successful posting. Must never break the run. */

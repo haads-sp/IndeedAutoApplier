@@ -146,9 +146,23 @@ public final class IndeedSelectors {
      * some trouble"), which appears sporadically between steps and just wants its Try-again clicked.
      */
     public static final String ERROR_SCREEN_JS = """
-        () => /our systems are having (some )?trouble/i.test(document.body ? document.body.innerText : '')
+        () => /our systems are (still )?having (some )?trouble/i.test(document.body ? document.body.innerText : '')
         """;
     public static final String TRY_AGAIN_BUTTON = "button:has-text('Try again')";
+
+    /**
+     * The confirmation that an application actually reached the employer. Checked after Submit —
+     * a click alone is not proof, and "did we really apply?" is the one thing worth being sure of.
+     */
+    public static final String SUBMITTED_CONFIRMATION_JS = """
+        () => {
+          const text = document.body ? document.body.innerText : '';
+          return /post[- ]?apply|\\/applied\\b/i.test(location.href)
+            || /your application (has been |was )?(submitted|sent)/i.test(text)
+            || /application submitted/i.test(text)
+            || /you(’|')?ve applied|applied to this job/i.test(text);
+        }
+        """;
 
     /**
      * The "you don't meet these employer requirements" stop screen. It is advisory — an
