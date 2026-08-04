@@ -70,7 +70,9 @@ no raw colours or fonts.
 Swing traps that have bitten this project: `Theme.row` freezes its height at build time (seed a
 label that starts empty with `" "`); `BorderLayout.NORTH` starves `CENTER` (give lists a
 `setVisibleRowCount` and wrap pages in `Theme.scroll`); FlatLaf collapses whitespace between two
-styled HTML runs (use an em space or a visible separator).
+styled HTML runs, so badges run together — only an em space survives, and it is built from its
+codepoint (`ResultsPanel.BADGE_GAP`) because a literal one is invisible in source and *has* been
+silently dropped by an edit.
 
 ### Regenerate the city list
 
