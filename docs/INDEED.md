@@ -7,13 +7,31 @@ them and the traps that are invisible from the markup.
 Treat this as perishable — Indeed changes. When something here turns out to be stale, re-verify and
 update it rather than working around it.
 
-## Domains and sign-in
+## Domains and regions
 
-Indeed redirects to a country domain; this account resolves to **`ca.indeed.com`** (hence kilometre
-radii). `SEARCH_HOST` is the single place that is written down; other regions would make it a
-setting.
+**Indeed is region-specific: the domain decides which country you are searching.** Searching a
+Dubai location on `ca.indeed.com` does not return Dubai jobs. So the country from the chosen city
+picks the domain — `ae.indeed.com` for the UAE, `pk.indeed.com` for Pakistan, and so on.
 
-Signed-in detection uses the account menu `[data-gnav-element-name='AccountMenu']`, which renders
+Two domains break the two-letter pattern: the United States is **`www`** (not `us`) and the United
+Kingdom is **`uk`** (not `gb`). `IndeedSelectors.hostFor()` holds the whole mapping.
+
+**Verified 2026-08-05:** with the account's own region set to Canada, `ae.indeed.com/jobs?l=Dubai`
+served genuine UAE results ("200+ Receptionist Jobs … in Dubai", locations Dubai / Al Satwa) and
+did **not** redirect back to `ca`. A posting URL on the same domain
+(`ae.indeed.com/viewjob?jk=…`) also stayed put. So switching the account's region through
+Profile → Country and language is **not** required — the domain alone is enough, which avoids
+several extra page loads and leaves the user's account settings alone.
+
+Not yet verified: the United States case specifically. `www.indeed.com` is both the US site and
+Indeed's auto-detect entry point, so it *may* redirect a non-US account to its own region. Worth a
+probe before trusting US searches.
+
+Radius units differ by region: the US and UK read `radius` as **miles**, everywhere else as
+kilometres. The app converts, so "within 50 km" stays 50 km rather than silently becoming 80.
+
+Sign-in detection uses the account menu `[data-gnav-element-name='AccountMenu']`, which renders
+
 **only when signed in**. It is deliberately a single *positive* check so it fails closed. Never
 reintroduce "signed in == the sign-in link is absent" — that reports success whenever the selector
 merely breaks.

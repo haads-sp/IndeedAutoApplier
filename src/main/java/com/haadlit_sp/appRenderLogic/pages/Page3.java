@@ -77,8 +77,11 @@ public class Page3 extends JPanel {
                     "City required", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        // The country routes the search to the right Indeed domain, so resolve it now while we
+        // still have the text the user picked ("Dubai, Dubai, United Arab Emirates").
         app.core().setSearchCriteria(app.core().searchCriteria()
-                .withLocation(cityText, (SearchRadius) radius.getSelectedItem())
+                .withLocation(cityText, app.core().countryFor(cityText),
+                        (SearchRadius) radius.getSelectedItem())
                 .withDatePosted((DatePosted) datePosted.getSelectedItem()));
         app.showPage("Page4");
     }

@@ -352,6 +352,24 @@ public class AppCore {
         return locationSuggester.suggest(typed, limit);
     }
 
+    /**
+     * The country for a location the user entered, used to pick Indeed's regional domain.
+     * A picked suggestion ends with its country ("Dubai, Dubai, United Arab Emirates"); for text
+     * typed freehand we look the place up instead. Empty when we cannot tell.
+     */
+    public String countryFor(String cityText) {
+        if (cityText == null || cityText.isBlank()) {
+            return "";
+        }
+        String[] parts = cityText.split(",");
+        String tail = parts[parts.length - 1].strip();
+        if (IndeedSelectors.knowsCountry(tail)) {
+            return tail;
+        }
+        List<CityLocation> matches = locationSuggester.suggest(cityText, 1);
+        return matches.isEmpty() ? "" : matches.get(0).country();
+    }
+
     // ---- Search (read-only: find & list postings; applying comes in a later slice) ----
 
     /** Run one search on the browser worker; the UI polls {@link #searchMessage()} / {@link #foundPostings()}. */

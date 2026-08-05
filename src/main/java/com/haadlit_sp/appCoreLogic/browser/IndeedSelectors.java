@@ -1,5 +1,9 @@
 package com.haadlit_sp.appCoreLogic.browser;
 
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
 
 /**
  * THE single source of truth for every Indeed URL and CSS selector.
@@ -17,30 +21,75 @@ public final class IndeedSelectors {
     public static final String HOME_URL  = "https://www.indeed.com/";
 
     /**
-     * Host the search runs on. Indeed serves results per country domain; this user's account
-     * resolves to ca.indeed.com (radii are km). If we later support other regions this moves to a
-     * setting — it is the one place the domain is written.
+     * Host used when the country is unknown. Indeed is region-specific: searching a Dubai location
+     * on the Canadian domain returns nothing useful, so the country decides the domain.
      */
     public static final String SEARCH_HOST = "https://ca.indeed.com";
 
     /**
-     * Builds a job-search URL from the user's criteria.
+     * Country → Indeed domain, for every country the bundled city list can produce. Two are not
+     * the obvious two-letter code: the United States is {@code www}, the United Kingdom is
+     * {@code uk} (not {@code gb}).
+     */
+    private static final Map<String, String> HOSTS = Map.ofEntries(
+            Map.entry("australia", "au"), Map.entry("austria", "at"),
+            Map.entry("bahrain", "bh"), Map.entry("belgium", "be"),
+            Map.entry("brazil", "br"), Map.entry("canada", "ca"),
+            Map.entry("denmark", "dk"), Map.entry("finland", "fi"),
+            Map.entry("france", "fr"), Map.entry("germany", "de"),
+            Map.entry("india", "in"), Map.entry("ireland", "ie"),
+            Map.entry("italy", "it"), Map.entry("japan", "jp"),
+            Map.entry("kuwait", "kw"), Map.entry("mexico", "mx"),
+            Map.entry("netherlands", "nl"), Map.entry("new zealand", "nz"),
+            Map.entry("norway", "no"), Map.entry("oman", "om"),
+            Map.entry("pakistan", "pk"), Map.entry("poland", "pl"),
+            Map.entry("portugal", "pt"), Map.entry("qatar", "qa"),
+            Map.entry("saudi arabia", "sa"), Map.entry("singapore", "sg"),
+            Map.entry("south africa", "za"), Map.entry("spain", "es"),
+            Map.entry("sweden", "se"), Map.entry("switzerland", "ch"),
+            Map.entry("united arab emirates", "ae"), Map.entry("united kingdom", "uk"),
+            Map.entry("united states", "www"));
+
+    /** Countries where Indeed reads {@code radius} as MILES rather than kilometres. */
+    private static final Set<String> MILES = Set.of("united states", "united kingdom");
+
+    /** The Indeed host for this country, or {@link #SEARCH_HOST} when it isn't one we know. */
+    public static String hostFor(String country) {
+        String key = country == null ? "" : country.strip().toLowerCase(Locale.ROOT);
+        String subdomain = HOSTS.get(key);
+        return subdomain == null ? SEARCH_HOST : "https://" + subdomain + ".indeed.com";
+    }
+
+    /** Whether this country is a known one — i.e. whether we can route a search to its domain. */
+    public static boolean knowsCountry(String country) {
+        return country != null && HOSTS.containsKey(country.strip().toLowerCase(Locale.ROOT));
+    }
+
+    /**
+     * Builds a job-search URL from the user's criteria, on the domain for {@code country}.
      *
      * @param fromageDays days-back filter, or null for no date filter
      */
-    public static String searchUrl(String query, String city, int radiusKm, Integer fromageDays) {
-        return searchUrl(query, city, radiusKm, fromageDays, 0);
+    public static String searchUrl(String query, String city, String country, int radiusKm,
+                                   Integer fromageDays) {
+        return searchUrl(query, city, country, radiusKm, fromageDays, 0);
     }
 
     /** @param start result offset for pagination — Indeed pages in steps of 10 ({@code &start=10}) */
-    public static String searchUrl(String query, String city, int radiusKm, Integer fromageDays,
-                                   int start) {
-        StringBuilder url = new StringBuilder(SEARCH_HOST).append("/jobs?q=").append(encode(query));
+    public static String searchUrl(String query, String city, String country, int radiusKm,
+                                   Integer fromageDays, int start) {
+        StringBuilder url = new StringBuilder(hostFor(country))
+                .append("/jobs?q=").append(encode(query));
         if (city != null && !city.isBlank()) {
             url.append("&l=").append(encode(city));
         }
         if (radiusKm > 0) {
-            url.append("&radius=").append(radiusKm);
+            // The user picked kilometres; on a miles domain the same number would mean a much
+            // wider search than they asked for.
+            int radius = MILES.contains(country == null ? "" : country.strip().toLowerCase(Locale.ROOT))
+                    ? Math.max(1, Math.round(radiusKm / 1.609f))
+                    : radiusKm;
+            url.append("&radius=").append(radius);
         }
         if (fromageDays != null) {
             url.append("&fromage=").append(fromageDays);
@@ -99,7 +148,12 @@ public final class IndeedSelectors {
      * redirect for sponsored results, so we never navigate to it — we go straight to the job.
      */
     public static String jobUrl(String jobKey) {
-        return SEARCH_HOST + "/viewjob?jk=" + jobKey;
+        return jobUrl(jobKey, null);
+    }
+
+    /** The posting must be opened on the SAME regional domain the search ran on. */
+    public static String jobUrl(String jobKey, String country) {
+        return hostFor(country) + "/viewjob?jk=" + jobKey;
     }
 
     /**

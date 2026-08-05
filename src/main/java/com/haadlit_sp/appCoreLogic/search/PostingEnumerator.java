@@ -47,7 +47,7 @@ public class PostingEnumerator {
         Set<String> seen = new HashSet<>();
         for (int page = 0; page < MAX_PAGES; page++) {
             String url = IndeedSelectors.searchUrl(
-                    criteria.jobQuery(), criteria.city(),
+                    criteria.jobQuery(), criteria.city(), criteria.country(),
                     criteria.radius().km(), criteria.datePosted().days(), page * PAGE_STEP);
             LOG.log(Level.INFO, "Searching page {0}: {1}", page + 1, url);
             driver.navigate(url);
@@ -60,7 +60,8 @@ public class PostingEnumerator {
                     return all.isEmpty() ? EnumerationResult.challenged() : EnumerationResult.ok(all);
                 }
                 if (resultsReady()) {
-                    pagePostings = toPostings(driver.evaluate(IndeedSelectors.SCRAPE_POSTINGS_JS));
+                    pagePostings = toPostings(driver.evaluate(IndeedSelectors.SCRAPE_POSTINGS_JS),
+                            criteria.country());
                     break;
                 }
                 Thread.sleep(WAIT_MS);
@@ -98,8 +99,12 @@ public class PostingEnumerator {
         return Boolean.TRUE.equals(driver.evaluate(IndeedSelectors.RESULTS_READY_JS));
     }
 
-    /** The driver hands back a List of Maps (JS array of objects); map each row to a posting. */
-    private List<JobPosting> toPostings(Object raw) {
+    /**
+     * The driver hands back a List of Maps (JS array of objects); map each row to a posting.
+     * Posting URLs are built on the search's own regional domain, so opening one later stays in
+     * the same region.
+     */
+    private List<JobPosting> toPostings(Object raw, String country) {
         if (!(raw instanceof List<?> rows)) {
             return List.of();
         }
@@ -117,7 +122,7 @@ public class PostingEnumerator {
                     str(map.get("title")),
                     str(map.get("company")),
                     str(map.get("location")),
-                    IndeedSelectors.jobUrl(jk),
+                    IndeedSelectors.jobUrl(jk, country),
                     Boolean.TRUE.equals(map.get("easilyApply")),
                     str(map.get("snippet"))));
         }
