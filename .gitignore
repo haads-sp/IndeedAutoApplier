@@ -4,11 +4,16 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+### Documents — never commit anything that may carry personal data.
+### A real resume was committed here once (src/main/resources/Resume.pdf) and reached git history.
+### Test fixtures must be synthetic and live under src/test/resources/fixtures/.
+*.pdf
+*.doc
+*.docx
+!src/test/resources/fixtures/*.pdf
+
 ### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
+.idea/
 *.iws
 *.iml
 *.ipr

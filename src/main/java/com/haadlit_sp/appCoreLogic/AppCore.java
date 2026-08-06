@@ -17,10 +17,8 @@ import com.haadlit_sp.appCoreLogic.model.AnswerMode;
 import com.haadlit_sp.appCoreLogic.model.AppliedPosting;
 import com.haadlit_sp.appCoreLogic.model.CityLocation;
 import com.haadlit_sp.appCoreLogic.model.ContactDetails;
-import com.haadlit_sp.appCoreLogic.model.HistoryEntry;
 import com.haadlit_sp.appCoreLogic.model.JobPosting;
 import com.haadlit_sp.appCoreLogic.model.ProfileFacts;
-import com.haadlit_sp.appCoreLogic.model.RunStatus;
 import com.haadlit_sp.appCoreLogic.model.SearchCriteria;
 import com.haadlit_sp.appCoreLogic.model.SessionDocuments;
 import com.haadlit_sp.appCoreLogic.store.QaBankStore;
@@ -53,12 +51,16 @@ import java.util.concurrent.Executors;
 
 
 /**
- * Facade: the single class the UI talks to. It owns (will own) the browser driver,
- * PDF parser, answerers and stores, and exposes a small verb API.
+ * Facade: the single class the UI talks to. It owns the browser driver, the PDF parser, the
+ * answerers, the local AI runtime and every store, and exposes a small verb API.
  *
- * <p>For this skeleton slice the automation verbs are logged stubs that mutate in-memory
- * state so the UI is demoable. The real engines (browser, PDF, answerers, stores) arrive
- * in later slices behind their own interfaces + factories, without changing this API.
+ * <p>The UI never touches the browser, the model, or the disk — it calls a verb here and reads
+ * plain state back on a timer, so nothing on the EDT ever blocks. Long work runs on one of three
+ * single-threaded workers (see the fields below); state the UI reads is {@code volatile}.
+ *
+ * <p>Every engine sits behind an interface plus a factory ({@code BrowserDriver},
+ * {@code QuestionAnswerer}, {@code LlmRuntime}, {@code LocationSuggester}), so an implementation
+ * can be swapped without any page changing.
  */
 public class AppCore {
 
@@ -87,8 +89,10 @@ public class AppCore {
     private final LlmRuntime llmRuntime;   // null in STANDARD mode
     private final JobFitScorer fitScorer;  // null in STANDARD mode
     private final Map<String, Integer> fitScores = new ConcurrentHashMap<>();
-    private volatile int fitScoresVersion = 0;
-    private volatile int scoreGeneration = 0;
+    /** Bumped from both the browser worker (new search) and the llm worker (a score landed). */
+    private final java.util.concurrent.atomic.AtomicInteger fitScoresVersion =
+            new java.util.concurrent.atomic.AtomicInteger();
+    private volatile int scoreGeneration = 0;   // written only on the browser worker
 
     private final PdfTextExtractor pdfText = new PdfTextExtractor();
     private final ProfileFactsExtractor factsExtractor = new ProfileFactsExtractor();
@@ -151,10 +155,9 @@ public class AppCore {
     private final SessionLog sessionLog = new SessionLog();
     private volatile Path lastSessionFile = null;
     private volatile SubmitMode submitMode = SubmitMode.REVIEW; // safe default: never auto-submit
-    private SessionDocuments documents = SessionDocuments.empty();
-    private SearchCriteria criteria = SearchCriteria.blank();
-    private volatile RunStatus status = RunStatus.idle();
-    private final List<HistoryEntry> history = new ArrayList<>();
+    // Set on the EDT, read on the browser worker while an application runs — hence volatile.
+    private volatile SessionDocuments documents = SessionDocuments.empty();
+    private volatile SearchCriteria criteria = SearchCriteria.blank();
 
     // ---- Session / login ----
 
@@ -431,7 +434,7 @@ public class AppCore {
         }
         int generation = ++scoreGeneration;
         fitScores.clear();
-        fitScoresVersion++;
+        fitScoresVersion.incrementAndGet();
         for (JobPosting posting : postings) {
             llmWorker.submit(() -> {
                 try {
@@ -446,7 +449,7 @@ public class AppCore {
                     }
                     fitScorer.score(posting, profileFacts, contactDetails).ifPresent(score -> {
                         fitScores.put(posting.id(), score);
-                        fitScoresVersion++;
+                        fitScoresVersion.incrementAndGet();
                     });
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
@@ -462,7 +465,7 @@ public class AppCore {
 
     /** Bumps whenever a score lands — lets the UI rebuild the list only when something changed. */
     public int fitScoresVersion() {
-        return fitScoresVersion;
+        return fitScoresVersion.get();
     }
 
     public List<JobPosting> foundPostings() {
@@ -759,34 +762,5 @@ public class AppCore {
 
     public int submittedCount() {
         return submittedCount;
-    }
-
-    // ---- Run control ----
-
-    public void startRun() {
-        status = new RunStatus(true, false, "—",
-                status.submitted(), status.skipped(), status.failed(),
-                "Run started (stub) — the automation engine arrives in a later slice");
-        LOG.log(Level.INFO, "startRun (stub)");
-    }
-
-    public void pauseRun() {
-        status = new RunStatus(status.running(), true, status.currentPosting(),
-                status.submitted(), status.skipped(), status.failed(), "Paused");
-        LOG.log(Level.INFO, "pauseRun (stub)");
-    }
-
-    public void stopRun() {
-        status = new RunStatus(false, false, "—",
-                status.submitted(), status.skipped(), status.failed(), "Stopped");
-        LOG.log(Level.INFO, "stopRun (stub)");
-    }
-
-    public RunStatus status() {
-        return status;
-    }
-
-    public List<HistoryEntry> history() {
-        return List.copyOf(history);
     }
 }

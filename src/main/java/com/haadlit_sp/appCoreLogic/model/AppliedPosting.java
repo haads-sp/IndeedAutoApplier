@@ -13,8 +13,4 @@ public record AppliedPosting(String jobId, Instant appliedAt, Outcome outcome,
                              String title, String company) {
 
     public enum Outcome { SUBMITTED, REVIEW_READY, NEEDS_INPUT, SKIPPED, FAILED }
-
-    public HistoryEntry toHistoryEntry() {
-        return new HistoryEntry(title, company, appliedAt, outcome.name().toLowerCase());
-    }
 }
